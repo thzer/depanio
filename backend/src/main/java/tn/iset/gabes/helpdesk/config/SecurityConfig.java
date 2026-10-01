@@ -38,15 +38,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    /** Chemins accessibles sans authentification. */
-    private static final String[] PUBLIC_PATHS = {
+    /** Points d'entree de l'API ouverts sans authentification. */
+    private static final String[] PUBLIC_API_PATHS = {
             "/api/auth/login",
             "/api/auth/refresh",
             "/api/public/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/actuator/health"
+            "/actuator/health",
+            "/actuator/health/**"
     };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -62,13 +63,25 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(entryPoint))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_PATHS).permitAll()
+                        .requestMatchers(PUBLIC_API_PATHS).permitAll()
                         // Les requetes de pre-verification CORS ne portent pas de jeton
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        // Le canal temps reel est ouvert au handshake ; les
-                        // destinations personnelles restent liees a la session
+                        // Le canal temps reel est ouvert au handshake ; l'identite
+                        // est etablie a la trame CONNECT par l'intercepteur STOMP
                         .requestMatchers("/ws/**", "/ws-sockjs/**").permitAll()
-                        .anyRequest().authenticated()
+
+                        // Toutes les donnees passent par l'API : c'est elle qui
+                        // est protegee, point par point.
+                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/actuator/**").authenticated()
+
+                        // Le reste est l'application Angular elle-meme : son code
+                        // et ses adresses de navigation. Ces fichiers sont publics
+                        // par nature, puisque tout navigateur les telecharge avant
+                        // meme qu'un utilisateur se soit identifie. Les proteger
+                        // n'apporterait rien et empecherait simplement l'ecran de
+                        // connexion de s'afficher.
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter,
                         org.springframework.security.web.authentication

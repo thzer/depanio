@@ -1,53 +1,88 @@
 /* ==========================================================================
-   Helpdesk - Feuille de style globale
-   Projet de Fin d'Etudes - ISET Gabes
+   Depanio — Système de design
+   Assistance technique pour cafés et restaurants
 
-   Les couleurs, espacements et rayons sont declares une seule fois sous
-   forme de variables CSS. Changer la couleur principale de l'application
-   ne demande donc qu'une seule modification ici.
+   Un seul endroit définit les couleurs, les espacements, les rayons et les
+   ombres. Changer l'identité visuelle du produit — pour une revente en
+   marque blanche, par exemple — ne demande que de modifier les jetons
+   déclarés dans le bloc :root ci-dessous.
    ========================================================================== */
 
-/* ----------------------------------------------------------- Jetons de style */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+/* ========================================================== 1. Jetons */
 
 :root {
-  /* Couleur principale */
-  --primary: #1e5f8c;
-  --primary-dark: #164a6e;
-  --primary-light: #e8f1f7;
+  /* ---- Couleur de marque : sarcelle profonde ---- */
+  --brand-50: #eefbf8;
+  --brand-100: #d3f3ec;
+  --brand-200: #a9e7dc;
+  --brand-300: #72d3c5;
+  --brand-400: #3cb6a7;
+  --brand-500: #1f998d;
+  --brand-600: #0f766e;
+  --brand-700: #115e59;
+  --brand-800: #134e4a;
+  --brand-900: #0f3c39;
 
-  /* Couleurs de statut */
-  --success: #1f7a4d;
-  --success-light: #e6f4ec;
-  --warning: #b06d00;
-  --warning-light: #fdf3e3;
-  --danger: #b3261e;
-  --danger-light: #fdecea;
-  --info: #0b5d82;
-  --info-light: #e7f3f9;
+  /* ---- Accent ambré : urgence et délais ---- */
+  --accent-50: #fff8eb;
+  --accent-100: #fdecc8;
+  --accent-200: #fbd88c;
+  --accent-300: #f8bd4f;
+  --accent-400: #f5a524;
+  --accent-500: #d97706;
+  --accent-600: #b45309;
+  --accent-700: #92400e;
 
-  /* Niveaux de gris */
-  --gray-50: #f8f9fa;
-  --gray-100: #f1f3f5;
-  --gray-200: #e4e7eb;
-  --gray-300: #cfd4da;
-  --gray-400: #adb5bd;
-  --gray-500: #868e96;
-  --gray-600: #5c636a;
-  --gray-700: #41474d;
-  --gray-800: #2b3035;
-  --gray-900: #16191c;
+  /* ---- Neutres : légère teinte froide, plus moderne qu'un gris pur ---- */
+  --ink-25: #fbfcfd;
+  --ink-50: #f6f8fa;
+  --ink-100: #eef1f5;
+  --ink-200: #e2e7ee;
+  --ink-300: #cbd3de;
+  --ink-400: #97a3b6;
+  --ink-500: #6b7892;
+  --ink-600: #4d5a73;
+  --ink-700: #37425a;
+  --ink-800: #212b3f;
+  --ink-900: #0f1626;
+  --ink-950: #080d18;
 
-  /* Surfaces */
-  --bg: #f4f6f8;
+  /* ---- Couleurs sémantiques ---- */
+  --success: #047857;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+  --warning: #b45309;
+  --warning-bg: #fffbeb;
+  --warning-border: #fcd9a0;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+  --danger-border: #fecdca;
+  --info: #175cd3;
+  --info-bg: #eff8ff;
+  --info-border: #b2ddff;
+  --purple: #6941c6;
+  --purple-bg: #f4f3ff;
+
+  /* ---- Surfaces ---- */
+  --bg: var(--ink-50);
   --surface: #ffffff;
-  --border: var(--gray-200);
+  --surface-sunken: var(--ink-50);
+  --border: var(--ink-200);
+  --border-strong: var(--ink-300);
 
-  /* Texte */
-  --text: var(--gray-800);
-  --text-muted: var(--gray-600);
-  --text-faint: var(--gray-500);
+  /* ---- Texte ---- */
+  --text: var(--ink-800);
+  --text-muted: var(--ink-600);
+  --text-faint: var(--ink-500);
 
-  /* Espacements */
+  /* ---- Typographie ---- */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Plus Jakarta Sans', var(--font-sans);
+  --font-mono: 'Cascadia Mono', 'SF Mono', Consolas, monospace;
+
+  /* ---- Espacements ---- */
   --sp-1: 4px;
   --sp-2: 8px;
   --sp-3: 12px;
@@ -55,21 +90,33 @@
   --sp-5: 24px;
   --sp-6: 32px;
   --sp-7: 48px;
+  --sp-8: 64px;
 
-  /* Rayons et ombres */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --shadow: 0 2px 8px rgba(16, 24, 40, 0.08);
-  --shadow-lg: 0 8px 24px rgba(16, 24, 40, 0.12);
+  /* ---- Rayons ---- */
+  --radius-sm: 7px;
+  --radius: 11px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
 
-  /* Dimensions de la mise en page */
-  --sidebar-width: 248px;
-  --topbar-height: 60px;
+  /* ---- Ombres : empilées pour un rendu plus naturel ---- */
+  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
+  --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow: 0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --shadow-xl: 0 20px 24px -4px rgba(16, 24, 40, 0.1), 0 8px 8px -4px rgba(16, 24, 40, 0.04);
+
+  /* ---- Anneau de focus, identique partout pour l'accessibilité ---- */
+  --ring: 0 0 0 4px rgba(15, 118, 110, 0.14);
+
+  /* ---- Mise en page ---- */
+  --sidebar-width: 256px;
+  --topbar-height: 64px;
+
+  /* ---- Transitions ---- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* --------------------------------------------------------------- Reinitialisation */
+/* =================================================== 2. Réinitialisation */
 
 *,
 *::before,
@@ -85,13 +132,14 @@ body {
 }
 
 body {
-  font-family:
-    'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.55;
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'tnum';
 }
 
 h1,
@@ -99,16 +147,18 @@ h2,
 h3,
 h4 {
   margin: 0;
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--gray-900);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.021em;
+  color: var(--ink-900);
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 h2 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 h3 {
   font-size: 1rem;
@@ -119,19 +169,27 @@ p {
 }
 
 a {
-  color: var(--primary);
+  color: var(--brand-600);
   text-decoration: none;
+  transition: color 0.14s var(--ease);
 }
 
 a:hover {
+  color: var(--brand-700);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-/* ----------------------------------------------------------------- Mise en page */
+:focus-visible {
+  outline: 2px solid var(--brand-500);
+  outline-offset: 2px;
+}
+
+/* ======================================================= 3. Mise en page */
 
 .page {
-  padding: var(--sp-5);
-  max-width: 1400px;
+  padding: var(--sp-6) var(--sp-6) var(--sp-8);
+  max-width: 1480px;
   margin: 0 auto;
 }
 
@@ -147,6 +205,7 @@ a:hover {
 .page-header__subtitle {
   color: var(--text-muted);
   margin-top: var(--sp-1);
+  max-width: 68ch;
 }
 
 .grid {
@@ -155,11 +214,11 @@ a:hover {
 }
 
 .grid--kpi {
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .grid--2 {
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
 }
 
 .stack {
@@ -179,13 +238,14 @@ a:hover {
   flex: 1;
 }
 
-/* ---------------------------------------------------------------------- Cartes */
+/* ============================================================ 4. Cartes */
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow 0.18s var(--ease);
 }
 
 .card__header {
@@ -198,9 +258,11 @@ a:hover {
 }
 
 .card__title {
+  font-family: var(--font-display);
   font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--gray-800);
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--ink-900);
 }
 
 .card__body {
@@ -210,39 +272,68 @@ a:hover {
 .card__footer {
   padding: var(--sp-3) var(--sp-5);
   border-top: 1px solid var(--border);
-  background: var(--gray-50);
-  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--surface-sunken);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 
-/* -------------------------------------------------------------- Indicateurs cles */
+/* =============================================== 5. Indicateurs clés */
 
 .kpi {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-4) var(--sp-5);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+
+/* Filet coloré en haut de la carte, qui porte le sens de l'indicateur */
+.kpi::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--brand-500);
+  opacity: 0.85;
+}
+
+.kpi--danger::before {
+  background: var(--danger);
+}
+.kpi--success::before {
+  background: var(--success);
+}
+.kpi--warning::before {
+  background: var(--accent-500);
+}
+.kpi--neutral::before {
+  background: var(--ink-300);
 }
 
 .kpi__label {
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.055em;
   color: var(--text-faint);
   font-weight: 600;
 }
 
 .kpi__value {
-  font-size: 1.9rem;
-  font-weight: 700;
-  color: var(--gray-900);
-  line-height: 1.2;
-  margin-top: var(--sp-1);
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink-900);
+  line-height: 1.1;
+  margin-top: var(--sp-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .kpi__hint {
   font-size: 0.8rem;
   color: var(--text-muted);
+  margin-top: var(--sp-1);
 }
 
 .kpi--danger .kpi__value {
@@ -252,10 +343,10 @@ a:hover {
   color: var(--success);
 }
 .kpi--warning .kpi__value {
-  color: var(--warning);
+  color: var(--accent-600);
 }
 
-/* -------------------------------------------------------------------- Tableaux */
+/* ========================================================== 6. Tableaux */
 
 .table-wrapper {
   overflow-x: auto;
@@ -270,36 +361,41 @@ table.data {
 table.data th {
   text-align: left;
   padding: var(--sp-3) var(--sp-4);
-  background: var(--gray-50);
+  background: var(--surface-sunken);
   border-bottom: 1px solid var(--border);
-  font-size: 0.74rem;
+  font-size: 0.71rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.055em;
   color: var(--text-faint);
   font-weight: 600;
   white-space: nowrap;
 }
 
 table.data td {
-  padding: var(--sp-3) var(--sp-4);
-  border-bottom: 1px solid var(--gray-100);
+  padding: var(--sp-4);
+  border-bottom: 1px solid var(--ink-100);
   vertical-align: middle;
 }
 
-table.data tbody tr:hover {
-  background: var(--gray-50);
+table.data tbody tr {
+  transition: background 0.12s var(--ease);
 }
 
-table.data tbody tr.clickable {
-  cursor: pointer;
+table.data tbody tr:hover {
+  background: var(--ink-25);
+}
+
+table.data tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .mono {
-  font-family: 'Cascadia Mono', Consolas, 'Courier New', monospace;
-  font-size: 0.85em;
+  font-family: var(--font-mono);
+  font-size: 0.83em;
+  letter-spacing: -0.01em;
 }
 
-/* ---------------------------------------------------------------- Formulaires */
+/* ======================================================= 7. Formulaires */
 
 .field {
   display: flex;
@@ -310,40 +406,54 @@ table.data tbody tr.clickable {
 .field__label {
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--ink-700);
 }
 
 .field__hint {
   font-size: 0.78rem;
   color: var(--text-faint);
+  line-height: 1.5;
 }
 
 .field__error {
   font-size: 0.78rem;
   color: var(--danger);
+  font-weight: 500;
 }
 
 input,
 select,
 textarea {
   width: 100%;
-  padding: 9px var(--sp-3);
+  padding: 10px var(--sp-3);
   font: inherit;
   color: var(--text);
   background: var(--surface);
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-xs);
   transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
+    border-color 0.14s var(--ease),
+    box-shadow 0.14s var(--ease);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-400);
+}
+
+input:hover:not(:disabled),
+select:hover:not(:disabled),
+textarea:hover:not(:disabled) {
+  border-color: var(--ink-400);
 }
 
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(30, 95, 140, 0.14);
+  border-color: var(--brand-500);
+  box-shadow: var(--ring);
 }
 
 input.invalid,
@@ -352,59 +462,86 @@ textarea.invalid {
   border-color: var(--danger);
 }
 
+input.invalid:focus,
+select.invalid:focus,
+textarea.invalid:focus {
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.12);
+}
+
 textarea {
   resize: vertical;
-  min-height: 96px;
+  min-height: 104px;
+  line-height: 1.6;
 }
 
 input:disabled,
 select:disabled,
 textarea:disabled {
-  background: var(--gray-100);
+  background: var(--ink-100);
   color: var(--text-faint);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* ---------------------------------------------------------------------- Boutons */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7892' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 34px;
+}
+
+/* ========================================================== 8. Boutons */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
-  padding: 9px var(--sp-4);
+  padding: 10px var(--sp-4);
   font: inherit;
   font-weight: 600;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: var(--shadow-xs);
   transition:
-    background 0.15s,
-    border-color 0.15s,
-    opacity 0.15s;
+    background 0.14s var(--ease),
+    border-color 0.14s var(--ease),
+    box-shadow 0.14s var(--ease),
+    transform 0.08s var(--ease);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0.5px);
 }
 
 .btn:disabled {
-  opacity: 0.55;
+  opacity: 0.52;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 .btn--primary {
-  background: var(--primary);
+  background: var(--brand-600);
   color: #fff;
 }
 .btn--primary:hover:not(:disabled) {
-  background: var(--primary-dark);
+  background: var(--brand-700);
+}
+.btn--primary:focus-visible {
+  box-shadow: var(--ring);
 }
 
 .btn--secondary {
   background: var(--surface);
-  color: var(--gray-700);
-  border-color: var(--gray-300);
+  color: var(--ink-700);
+  border-color: var(--border-strong);
 }
 .btn--secondary:hover:not(:disabled) {
-  background: var(--gray-50);
+  background: var(--ink-50);
+  border-color: var(--ink-400);
 }
 
 .btn--danger {
@@ -425,86 +562,115 @@ textarea:disabled {
 
 .btn--ghost {
   background: transparent;
-  color: var(--primary);
+  color: var(--brand-600);
+  box-shadow: none;
 }
 .btn--ghost:hover:not(:disabled) {
-  background: var(--primary-light);
+  background: var(--brand-50);
 }
 
 .btn--sm {
-  padding: 5px var(--sp-3);
+  padding: 6px var(--sp-3);
   font-size: 0.82rem;
 }
 
-/* --------------------------------------------------------------------- Pastilles */
+.btn--lg {
+  padding: 13px var(--sp-5);
+  font-size: 0.95rem;
+}
+
+/* ======================================================== 9. Pastilles */
 
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-1);
-  padding: 3px 9px;
+  gap: 5px;
+  padding: 3px 10px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.745rem;
   font-weight: 600;
   white-space: nowrap;
+  border: 1px solid transparent;
+  line-height: 1.5;
 }
 
-/* Statuts des tickets */
+/* Un point coloré rend le statut lisible sans dépendre de la couleur
+   seule, ce qui aide les personnes daltoniennes. */
+.badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* ---- Statuts ---- */
 .status-new {
-  background: var(--info-light);
+  background: var(--info-bg);
   color: var(--info);
+  border-color: var(--info-border);
 }
 .status-assigned {
-  background: #ede7f6;
-  color: #5e35b1;
+  background: var(--purple-bg);
+  color: var(--purple);
+  border-color: #d9d2fb;
 }
 .status-progress {
-  background: var(--warning-light);
+  background: var(--warning-bg);
   color: var(--warning);
+  border-color: var(--warning-border);
 }
 .status-waiting {
-  background: var(--gray-200);
-  color: var(--gray-700);
+  background: var(--ink-100);
+  color: var(--ink-600);
+  border-color: var(--ink-200);
 }
 .status-resolved {
-  background: var(--success-light);
+  background: var(--success-bg);
   color: var(--success);
+  border-color: var(--success-border);
 }
 .status-closed {
-  background: var(--gray-100);
-  color: var(--gray-600);
+  background: var(--ink-50);
+  color: var(--ink-500);
+  border-color: var(--ink-200);
 }
 .status-cancelled {
-  background: var(--gray-100);
-  color: var(--gray-500);
-  text-decoration: line-through;
+  background: var(--ink-50);
+  color: var(--ink-400);
+  border-color: var(--ink-200);
 }
 
-/* Priorites */
+/* ---- Priorités ---- */
 .priority-critical {
-  background: var(--danger-light);
+  background: var(--danger-bg);
   color: var(--danger);
+  border-color: var(--danger-border);
 }
 .priority-high {
-  background: #fff1e6;
+  background: #fff4ed;
   color: #c2410c;
+  border-color: #fdd9c4;
 }
 .priority-medium {
-  background: var(--warning-light);
+  background: var(--warning-bg);
   color: var(--warning);
+  border-color: var(--warning-border);
 }
 .priority-low {
-  background: var(--gray-100);
-  color: var(--gray-600);
+  background: var(--ink-50);
+  color: var(--ink-500);
+  border-color: var(--ink-200);
 }
 
-/* Etat du delai contractuel */
+/* ---- Délais contractuels ---- */
 .sla-ok {
   color: var(--success);
   font-weight: 600;
 }
 .sla-soon {
-  color: var(--warning);
+  color: var(--accent-600);
   font-weight: 600;
 }
 .sla-breached {
@@ -512,36 +678,49 @@ textarea:disabled {
   font-weight: 700;
 }
 
-/* ----------------------------------------------------------------- Etats vides */
+/* ===================================================== 10. États vides */
 
 .empty {
   text-align: center;
-  padding: var(--sp-7) var(--sp-5);
+  padding: var(--sp-8) var(--sp-5);
   color: var(--text-muted);
 }
 
+.empty__icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto var(--sp-4);
+  border-radius: 50%;
+  background: var(--ink-100);
+  color: var(--ink-400);
+}
+
 .empty__title {
-  font-weight: 600;
-  color: var(--gray-700);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink-800);
   margin-bottom: var(--sp-2);
 }
 
-/* ------------------------------------------------------------------ Chargement */
+/* ====================================================== 11. Chargement */
 
 .loader {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--sp-3);
-  padding: var(--sp-7);
+  padding: var(--sp-8);
   color: var(--text-muted);
 }
 
 .loader__spinner {
   width: 22px;
   height: 22px;
-  border: 2.5px solid var(--gray-300);
-  border-top-color: var(--primary);
+  border: 2.5px solid var(--ink-200);
+  border-top-color: var(--brand-600);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -552,7 +731,7 @@ textarea:disabled {
   }
 }
 
-/* ---------------------------------------------------------------- Utilitaires */
+/* ===================================================== 12. Utilitaires */
 
 .text-muted {
   color: var(--text-muted);
@@ -566,6 +745,9 @@ textarea:disabled {
 .text-success {
   color: var(--success);
 }
+.text-brand {
+  color: var(--brand-600);
+}
 .text-sm {
   font-size: 0.82rem;
 }
@@ -575,6 +757,9 @@ textarea:disabled {
 .fw-600 {
   font-weight: 600;
 }
+.fw-700 {
+  font-weight: 700;
+}
 .text-center {
   text-align: center;
 }
@@ -583,6 +768,9 @@ textarea:disabled {
 }
 .nowrap {
   white-space: nowrap;
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
 
 .mt-2 {
@@ -603,11 +791,31 @@ textarea:disabled {
 .mb-4 {
   margin-bottom: var(--sp-4);
 }
+.mb-5 {
+  margin-bottom: var(--sp-5);
+}
 
-/* -------------------------------------------------------- Impression QR */
+/* ======================================================= 13. Impression */
 
 @media print {
   .no-print {
     display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+}
+
+/* ============================================= 14. Mouvement réduit */
+
+/* Respecte le réglage système des personnes sensibles aux animations. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

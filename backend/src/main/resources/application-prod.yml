@@ -1,30 +1,93 @@
 # ============================================================
 #  Profil PRODUCTION
-#  Toutes les valeurs sensibles proviennent de variables
-#  d'environnement : aucun secret n'est stocke dans le code.
+#
+#  Aucune valeur sensible n'a de defaut : l'application refuse de
+#  demarrer si la configuration est absente, plutot que de se rabattre
+#  silencieusement sur une base de developpement.
+#
+#  Sur Google Cloud Run, ces variables sont fournies par la commande de
+#  deploiement, et les secrets proviennent de Secret Manager.
 # ============================================================
 spring:
   datasource:
+    # Connexion a Cloud SQL par socket Unix : la base n'est jamais
+    # exposee sur l'Internet public, seul le service autorise y accede.
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
+      # Cloud Run peut demarrer plusieurs instances : chacune garde un
+      # petit pool, afin de ne pas saturer les connexions de Cloud SQL.
+      maximum-pool-size: ${DB_POOL_MAX:8}
+      minimum-idle: 2
+      connection-timeout: 10000
+      idle-timeout: 300000
+      max-lifetime: 1500000
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      # validate et non update : le schema de production n'est jamais
+      # modifie automatiquement par l'application.
+      ddl-auto: ${JPA_DDL_AUTO:validate}
     open-in-view: false
     show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          time_zone: Africa/Tunis
 
 server:
+  # Cloud Run impose le port par la variable PORT
+  port: ${PORT:8080}
   error:
     include-message: never
     include-binding-errors: never
+    include-stacktrace: never
+  # Cloud Run termine le TLS en amont : l'application doit lire les
+  # en-tetes transmis pour construire des URL correctes.
+  forward-headers-strategy: framework
+  compression:
+    enabled: true
+    mime-types: text/html,text/css,application/javascript,application/json,image/svg+xml
+    min-response-size: 1024
+
+helpdesk:
+  frontend-url: ${FRONTEND_URL}
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION:43200000}
+      refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+  cors:
+    # Le frontend etant servi par la meme application, cette liste ne
+    # sert que si une application mobile ou un domaine tiers l'appelle.
+    allowed-origins: ${CORS_ORIGINS:${FRONTEND_URL}}
+
+springdoc:
+  # La documentation interactive est fermee par defaut en production :
+  # elle decrit toute la surface de l'API a un visiteur anonyme.
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
 
 logging:
   level:
     root: WARN
     tn.iset.gabes.helpdesk: INFO
+  pattern:
+    # Format sur une seule ligne, lisible par Cloud Logging
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n'

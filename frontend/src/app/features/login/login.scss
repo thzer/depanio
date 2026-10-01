@@ -3,112 +3,259 @@
 .auth {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: minmax(360px, 460px) 1fr;
+  grid-template-columns: minmax(400px, 520px) 1fr;
+  background: var(--surface);
 }
 
 .auth__panel {
-  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: var(--sp-7) var(--sp-6);
+}
+
+.auth__inner {
+  width: 100%;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: var(--sp-6);
 }
 
-.auth__brand {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-4);
-}
-
-.auth__logo {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: var(--primary);
-  color: #fff;
-  font-weight: 700;
-  flex-shrink: 0;
+.auth__intro h1 {
+  font-size: 1.7rem;
+  margin-bottom: var(--sp-2);
 }
 
 .auth__submit {
   width: 100%;
-  padding: 11px var(--sp-4);
 }
 
+/* ---- Champ mot de passe avec bascule de visibilite ---- */
+
+.password {
+  position: relative;
+}
+
+.password input {
+  padding-right: 78px;
+}
+
+.password__toggle {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--brand-600);
+  cursor: pointer;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.password__toggle:hover {
+  background: var(--brand-50);
+}
+
+/* ---- Message d erreur ---- */
+
 .auth__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
   padding: var(--sp-3) var(--sp-4);
   border-radius: var(--radius-sm);
-  background: var(--danger-light);
-  border: 1px solid var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
   color: var(--danger);
   font-size: 0.85rem;
+  font-weight: 500;
 }
+
+/* ---- Comptes de demonstration ---- */
 
 .auth__demo {
   padding-top: var(--sp-5);
   border-top: 1px solid var(--border);
 }
 
-/* ------------------------------------------------------------- Partie droite */
+.auth__demo-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-bottom: var(--sp-3);
+}
+
+.auth__demo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+}
+
+.demo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--sp-3) var(--sp-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--ink-600);
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.3;
+  transition:
+    border-color 0.14s var(--ease),
+    background 0.14s var(--ease),
+    color 0.14s var(--ease);
+}
+
+.demo-card:hover {
+  border-color: var(--brand-400);
+  background: var(--brand-50);
+  color: var(--brand-700);
+}
+
+.auth__legal {
+  font-size: 0.73rem;
+  color: var(--text-faint);
+}
+
+/* ============================================= Partie droite */
 
 .auth__aside {
-  background: linear-gradient(145deg, var(--primary-dark), #0d2f45);
+  background:
+    radial-gradient(900px 500px at 85% 15%, rgba(15, 118, 110, 0.35), transparent 60%),
+    radial-gradient(700px 500px at 10% 90%, rgba(245, 165, 36, 0.14), transparent 55%),
+    linear-gradient(155deg, var(--ink-900), var(--ink-950));
   color: #fff;
   padding: var(--sp-7) var(--sp-6);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--sp-5);
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Trame discrete, pour eviter un aplat de couleur trop plat */
+.auth__aside::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.6;
+}
+
+.auth__aside-inner {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.auth__eyebrow {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.86);
+  margin-bottom: var(--sp-5);
 }
 
 .auth__aside h2 {
   color: #fff;
-  font-size: 1.6rem;
-  max-width: 460px;
+  font-size: 2rem;
+  line-height: 1.22;
+  margin-bottom: var(--sp-6);
 }
 
 .auth__list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 var(--sp-6);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
-  max-width: 460px;
+  gap: var(--sp-4);
 }
 
 .auth__list li {
-  position: relative;
-  padding-left: var(--sp-5);
-  color: rgba(255, 255, 255, 0.86);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
 }
 
-.auth__list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
+.auth__list app-icon {
+  color: var(--brand-300);
+  margin-top: 2px;
 }
 
-.auth__footer {
-  margin-top: var(--sp-5);
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.5);
+.auth__list strong {
+  display: block;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 2px;
 }
 
-@media (max-width: 880px) {
+.auth__list span {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.auth__quote {
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 2px solid var(--accent-400);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.auth__quote p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  font-style: italic;
+  margin-bottom: var(--sp-2);
+}
+
+.auth__quote span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.02em;
+}
+
+/* ============================================ Petits ecrans */
+
+@media (max-width: 1024px) {
   .auth {
     grid-template-columns: 1fr;
   }
 
   .auth__aside {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth__demo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-card {
+    flex-direction: row;
+    justify-content: center;
   }
 }

@@ -1,0 +1,283 @@
+<div class="landing">
+  <!-- ================================ En-tete ================================ -->
+  <header class="nav">
+    <div class="nav__inner">
+      <app-logo [size]="36" [showTagline]="false" />
+
+      <nav class="nav__links">
+        <a href="#fonctionnement">Fonctionnement</a>
+        <a href="#fonctionnalites">Fonctionnalites</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#questions">Questions</a>
+      </nav>
+
+      <div class="nav__actions">
+        <a class="btn btn--secondary btn--sm" routerLink="/login">Se connecter</a>
+        <a class="btn btn--primary btn--sm" routerLink="/login">Voir la demonstration</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================================= Hero ================================== -->
+  <section class="hero">
+    <div class="hero__inner">
+      <span class="pill">
+        <span class="pill__dot"></span>
+        Concu pour les societes de maintenance en Tunisie
+      </span>
+
+      <h1>
+        La caisse est en panne.<br />
+        <span class="hero__accent">Qui s en occupe, et depuis quand ?</span>
+      </h1>
+
+      <p class="hero__lead">
+        Depanio remplace les appels et les messages perdus par un circuit ecrit :
+        chaque panne de caisse, de terminal ou de machine a cafe devient un ticket
+        numerote, priorise, affecte et mesure.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary btn--lg" routerLink="/login">
+          Essayer la demonstration
+          <app-icon name="chevronRight" [size]="17" />
+        </a>
+        <a class="btn btn--secondary btn--lg" href="#fonctionnement">Voir comment</a>
+      </div>
+
+      <p class="hero__note">
+        Demonstration complete, avec de vraies donnees. Aucune carte bancaire.
+      </p>
+
+      <!-- Apercu du produit, reconstitue en elements reels plutot qu en image -->
+      <div class="preview" aria-hidden="true">
+        <div class="preview__bar">
+          <span></span><span></span><span></span>
+          <div class="preview__url">depanio.app/tableau-de-bord</div>
+        </div>
+        <div class="preview__body">
+          <div class="preview__kpis">
+            <div class="preview__kpi">
+              <span class="preview__kpi-label">Tickets ouverts</span>
+              <span class="preview__kpi-value">10</span>
+            </div>
+            <div class="preview__kpi preview__kpi--danger">
+              <span class="preview__kpi-label">Delais depasses</span>
+              <span class="preview__kpi-value">4</span>
+            </div>
+            <div class="preview__kpi preview__kpi--success">
+              <span class="preview__kpi-label">Respect des delais</span>
+              <span class="preview__kpi-value">76%</span>
+            </div>
+            <div class="preview__kpi">
+              <span class="preview__kpi-label">Delai moyen</span>
+              <span class="preview__kpi-value">6 h</span>
+            </div>
+          </div>
+
+          <div class="preview__rows">
+            <div class="preview__row">
+              <span class="preview__ref">TK-2026-0007</span>
+              <span class="preview__title">Tablette de commande ne se charge plus</span>
+              <span class="badge priority-medium">Moyenne</span>
+              <span class="badge status-progress">En cours</span>
+              <span class="sla-breached">Depasse de 30 h</span>
+            </div>
+            <div class="preview__row">
+              <span class="preview__ref">TK-2026-0003</span>
+              <span class="preview__title">Vitrine refrigeree ne descend plus en temperature</span>
+              <span class="badge priority-critical">Critique</span>
+              <span class="badge status-progress">En cours</span>
+              <span class="sla-breached">Depasse de 4 h</span>
+            </div>
+            <div class="preview__row">
+              <span class="preview__ref">TK-2026-0002</span>
+              <span class="preview__title">Terminal de paiement refuse les cartes</span>
+              <span class="badge priority-high">Haute</span>
+              <span class="badge status-assigned">Affecte</span>
+              <span class="sla-ok">3 h restantes</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== Le probleme ============================== -->
+  <section class="section section--dark">
+    <div class="section__inner">
+      <div class="problem">
+        <div>
+          <span class="eyebrow">Le quotidien sans Depanio</span>
+          <h2>Quatre appels, trois messages, et une panne oubliee.</h2>
+        </div>
+        <ul class="problem__list">
+          <li>
+            <app-icon name="close" [size]="16" />
+            Un appel recu en deplacement que personne ne note nulle part
+          </li>
+          <li>
+            <app-icon name="close" [size]="16" />
+            Une caisse hors service traitee apres une demande de menu
+          </li>
+          <li>
+            <app-icon name="close" [size]="16" />
+            Aucun moyen de dire combien de temps la reparation a pris
+          </li>
+          <li>
+            <app-icon name="close" [size]="16" />
+            Une machine qui tombe en panne chaque mois, sans que personne ne le voie
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= Fonctionnement ============================ -->
+  <section class="section" id="fonctionnement">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">Fonctionnement</span>
+        <h2>De la panne a la preuve, en quatre etapes</h2>
+        <p>Aucune formation necessaire. Chacun ne voit que ce qui le concerne.</p>
+      </div>
+
+      <div class="steps">
+        @for (step of steps; track step.number) {
+          <div class="step">
+            <span class="step__number">{{ step.number }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.text }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ Fonctionnalites ============================ -->
+  <section class="section section--sunken" id="fonctionnalites">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">Fonctionnalites</span>
+        <h2>Ce que la plateforme fait a votre place</h2>
+      </div>
+
+      <div class="features">
+        @for (feature of features; track feature.title) {
+          <article class="feature">
+            <span class="feature__icon">
+              <app-icon [name]="feature.icon" [size]="21" />
+            </span>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.text }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================ Tarifs ================================= -->
+  <section class="section" id="tarifs">
+    <div class="section__inner">
+      <div class="section__head">
+        <span class="eyebrow">Tarifs</span>
+        <h2>Un prix par societe, pas par technicien</h2>
+        <p>
+          Vos techniciens ne vous coutent pas plus cher parce qu ils travaillent
+          mieux. Engagement mensuel, resiliable a tout moment.
+        </p>
+      </div>
+
+      <div class="plans">
+        @for (plan of plans; track plan.name) {
+          <article class="plan" [class.plan--highlight]="plan.highlighted">
+            @if (plan.highlighted) {
+              <span class="plan__flag">Le plus choisi</span>
+            }
+            <h3>{{ plan.name }}</h3>
+            <p class="plan__pitch">{{ plan.pitch }}</p>
+
+            <div class="plan__price">
+              <span class="plan__amount">{{ plan.price }}</span>
+              @if (plan.unit) {
+                <span class="plan__unit">{{ plan.unit }}</span>
+              }
+            </div>
+
+            <a
+              class="btn btn--lg plan__cta"
+              [class.btn--primary]="plan.highlighted"
+              [class.btn--secondary]="!plan.highlighted"
+              routerLink="/login"
+            >
+              {{ plan.cta }}
+            </a>
+
+            <ul class="plan__features">
+              @for (item of plan.features; track item) {
+                <li>
+                  <app-icon name="check" [size]="15" />
+                  {{ item }}
+                </li>
+              }
+            </ul>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================== Questions =============================== -->
+  <section class="section section--sunken" id="questions">
+    <div class="section__inner section__inner--narrow">
+      <div class="section__head">
+        <span class="eyebrow">Questions frequentes</span>
+        <h2>Ce qu on nous demande avant de signer</h2>
+      </div>
+
+      <div class="faq">
+        @for (item of questions; track item.q; let i = $index) {
+          <div class="faq__item" [class.faq__item--open]="openQuestion() === i">
+            <button type="button" class="faq__question" (click)="toggleQuestion(i)">
+              <span>{{ item.q }}</span>
+              <app-icon [name]="openQuestion() === i ? 'close' : 'plus'" [size]="17" />
+            </button>
+            @if (openQuestion() === i) {
+              <p class="faq__answer">{{ item.a }}</p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= Appel final =============================== -->
+  <section class="cta">
+    <div class="cta__inner">
+      <h2>Essayez avec de vraies donnees, maintenant.</h2>
+      <p>
+        La demonstration contient quatre etablissements, dix machines et une
+        quinzaine de tickets a differents stades. Un clic suffit pour entrer.
+      </p>
+      <a class="btn btn--lg cta__btn" routerLink="/login">
+        Ouvrir la demonstration
+        <app-icon name="chevronRight" [size]="17" />
+      </a>
+    </div>
+  </section>
+
+  <!-- ================================= Pied ================================== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <app-logo [size]="32" [showTagline]="false" />
+        <p class="footer__text">
+          L assistance technique des cafes et des restaurants.
+        </p>
+      </div>
+      <div class="footer__legal">
+        &copy; {{ year }} Depanio. Tous droits reserves.
+      </div>
+    </div>
+  </footer>
+</div>

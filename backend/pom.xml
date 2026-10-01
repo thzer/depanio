@@ -106,6 +106,21 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--
+            Connecteur Cloud SQL.
+            Permet a l'application deployee sur Cloud Run de joindre la base
+            par une socket Unix plutot que par une adresse IP publique : la
+            base reste alors invisible depuis l'Internet, et l'autorisation
+            repose sur le compte de service et non sur une liste d'adresses.
+            Inutilise en developpement local, ou la connexion reste classique.
+        -->
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>mysql-socket-factory-connector-j-8</artifactId>
+            <version>1.21.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Reduction du code repetitif -->
         <dependency>
             <groupId>org.projectlombok</groupId>

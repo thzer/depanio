@@ -1,0 +1,36 @@
+# Fichiers exclus du contexte de construction de l image.
+# Les exclure accelere chaque build et evite d embarquer par megarde un
+# fichier de configuration local contenant des identifiants.
+
+# Dependances et resultats de compilation : reconstruits dans l image
+**/node_modules
+**/dist
+**/target
+**/.angular
+
+# Le frontend compile est produit par le Dockerfile lui-meme
+backend/src/main/resources/static
+
+# Historique et outillage
+.git
+.github
+.claude
+.idea
+.vscode
+*.iml
+
+# Documentation et fichiers de travail
+docs
+*.md
+!README.md
+
+# Secrets et configuration locale
+.env
+.env.*
+**/application-local.yml
+
+# Journaux et fichiers systeme
+*.log
+Thumbs.db
+Desktop.ini
+.DS_Store

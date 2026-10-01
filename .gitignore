@@ -4,6 +4,11 @@ backend/target/
 *.jar
 *.war
 
+# Le frontend compile est copie ici par le Dockerfile au moment de la
+# construction de l image : c est un resultat de compilation, il n a pas
+# sa place dans le depot.
+backend/src/main/resources/static/
+
 # ===== Node / Angular =====
 frontend/node_modules/
 frontend/dist/

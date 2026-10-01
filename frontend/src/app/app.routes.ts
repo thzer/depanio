@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { publicOnlyGuard } from './core/guards/public-only.guard';
 import { roleGuard } from './core/guards/role.guard';
 
 /**
@@ -15,8 +16,18 @@ import { roleGuard } from './core/guards/role.guard';
  */
 export const routes: Routes = [
   {
+    // Vitrine commerciale : premiere page vue par un visiteur.
+    // Un utilisateur deja connecte est renvoye a son tableau de bord.
+    path: '',
+    pathMatch: 'full',
+    title: 'Depanio — Assistance technique pour cafes et restaurants',
+    canActivate: [publicOnlyGuard],
+    loadComponent: () => import('./features/landing/landing').then((m) => m.LandingPage),
+  },
+
+  {
     path: 'login',
-    title: 'Connexion',
+    title: 'Connexion — Depanio',
     loadComponent: () => import('./features/login/login').then((m) => m.LoginPage),
   },
 
@@ -25,8 +36,6 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/shell/shell').then((m) => m.Shell),
     canActivate: [authGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'tableau-de-bord' },
-
       {
         path: 'tableau-de-bord',
         title: 'Tableau de bord',

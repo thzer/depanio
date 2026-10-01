@@ -1,0 +1,72 @@
+# =============================================================================
+#  Depanio — pile complete en local
+#
+#  Permet de verifier l image de production exactement telle qu elle sera
+#  deployee, avec sa propre base de donnees, avant de la publier sur
+#  Google Cloud. Une difference de comportement se decouvre ainsi ici et
+#  non chez le client.
+#
+#  Demarrer :  docker compose up --build
+#  Ouvrir   :  http://localhost:8080
+#  Arreter  :  docker compose down          (les donnees sont conservees)
+#              docker compose down -v       (les donnees sont effacees)
+# =============================================================================
+
+services:
+  base:
+    image: mysql:8.4
+    container_name: depanio-base
+    environment:
+      MYSQL_DATABASE: depanio
+      MYSQL_USER: depanio
+      MYSQL_PASSWORD: depanio_local
+      MYSQL_ROOT_PASSWORD: root_local
+      TZ: Africa/Tunis
+    ports:
+      # Expose pour pouvoir inspecter la base avec un client externe
+      - '3307:3306'
+    volumes:
+      - donnees-mysql:/var/lib/mysql
+    healthcheck:
+      # L application ne demarre qu une fois la base reellement prete :
+      # sans cela, le premier demarrage echoue sur un refus de connexion.
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-proot_local']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: depanio-application
+    depends_on:
+      base:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      PORT: 8080
+
+      DB_URL: jdbc:mysql://base:3306/depanio?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Africa/Tunis&characterEncoding=UTF-8
+      DB_USERNAME: depanio
+      DB_PASSWORD: depanio_local
+
+      # En local uniquement : le schema est cree automatiquement, alors
+      # qu en production il est seulement verifie.
+      JPA_DDL_AUTO: update
+
+      FRONTEND_URL: http://localhost:8080
+
+      # Cle de signature de developpement. Celle de production provient
+      # de Secret Manager et n apparait jamais dans un fichier.
+      JWT_SECRET: bG9jYWwtZGV2ZWxvcG1lbnQtc2lnbmluZy1rZXktbm90LWZvci1wcm9kdWN0aW9uLXVzZQ==
+
+      # Documentation de l API accessible pendant les essais locaux
+      SWAGGER_ENABLED: 'true'
+    ports:
+      - '8080:8080'
+    restart: unless-stopped
+
+volumes:
+  donnees-mysql:

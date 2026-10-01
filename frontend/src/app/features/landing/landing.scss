@@ -1,0 +1,665 @@
+/* Page d accueil commerciale de Depanio. */
+
+.landing {
+  background: var(--surface);
+}
+
+/* ================================================= Barre de navigation */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--sp-3) var(--sp-5);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+.nav__links {
+  display: flex;
+  gap: var(--sp-5);
+  margin-left: var(--sp-5);
+  flex: 1;
+}
+
+.nav__links a {
+  color: var(--ink-600);
+  font-size: 0.885rem;
+  font-weight: 500;
+}
+
+.nav__links a:hover {
+  color: var(--brand-600);
+  text-decoration: none;
+}
+
+.nav__actions {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+/* =============================================================== Hero */
+
+.hero {
+  padding: var(--sp-8) var(--sp-5) var(--sp-7);
+  background:
+    radial-gradient(900px 440px at 50% -8%, var(--brand-50), transparent 70%),
+    var(--surface);
+}
+
+.hero__inner {
+  max-width: 940px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--brand-50);
+  border: 1px solid var(--brand-200);
+  color: var(--brand-700);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-500);
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 5.2vw, 3.3rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  margin: var(--sp-5) 0 var(--sp-4);
+}
+
+.hero__accent {
+  color: var(--brand-600);
+}
+
+.hero__lead {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 620px;
+  margin: 0 auto var(--sp-6);
+}
+
+.hero__actions {
+  display: flex;
+  gap: var(--sp-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero__note {
+  margin-top: var(--sp-4);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------- Apercu du produit */
+
+.preview {
+  margin-top: var(--sp-7);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  text-align: left;
+}
+
+.preview__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px var(--sp-4);
+  background: var(--ink-100);
+  border-bottom: 1px solid var(--border);
+}
+
+.preview__bar > span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink-300);
+}
+
+.preview__url {
+  flex: 1;
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--ink-500);
+  font-family: var(--font-mono);
+}
+
+.preview__body {
+  padding: var(--sp-5);
+  background: var(--ink-50);
+}
+
+.preview__kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.preview__kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--brand-500);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.preview__kpi--danger {
+  border-top-color: var(--danger);
+}
+.preview__kpi--success {
+  border-top-color: var(--success);
+}
+
+.preview__kpi-label {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.preview__kpi-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ink-900);
+}
+
+.preview__rows {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.preview__row {
+  display: grid;
+  grid-template-columns: 110px 1fr auto auto auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--ink-100);
+  font-size: 0.8rem;
+}
+
+.preview__row:last-child {
+  border-bottom: none;
+}
+
+.preview__ref {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--brand-600);
+  font-weight: 600;
+}
+
+.preview__title {
+  color: var(--ink-700);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================ Sections */
+
+.section {
+  padding: var(--sp-8) var(--sp-5);
+}
+
+.section--sunken {
+  background: var(--ink-50);
+  border-block: 1px solid var(--border);
+}
+
+.section--dark {
+  background: var(--ink-950);
+  color: #fff;
+}
+
+.section__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.section__inner--narrow {
+  max-width: 780px;
+}
+
+.section__head {
+  text-align: center;
+  max-width: 660px;
+  margin: 0 auto var(--sp-7);
+}
+
+.section__head h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  margin: var(--sp-3) 0;
+}
+
+.section__head p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--brand-600);
+}
+
+.section--dark .eyebrow {
+  color: var(--brand-300);
+}
+
+/* -------------------------------------------------- Le probleme */
+
+.problem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-7);
+  align-items: center;
+}
+
+.problem h2 {
+  color: #fff;
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+  margin-top: var(--sp-3);
+}
+
+.problem__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.problem__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.problem__list app-icon {
+  color: var(--danger-border);
+  margin-top: 2px;
+}
+
+/* ------------------------------------------------------- Etapes */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--sp-5);
+}
+
+.step {
+  position: relative;
+  padding-top: var(--sp-5);
+  border-top: 2px solid var(--border);
+}
+
+.step__number {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--brand-500);
+  letter-spacing: 0.06em;
+}
+
+.step h3 {
+  margin: var(--sp-2) 0 var(--sp-2);
+  font-size: 1.02rem;
+}
+
+.step p {
+  color: var(--text-muted);
+  font-size: 0.89rem;
+  line-height: 1.6;
+}
+
+/* ----------------------------------------------- Fonctionnalites */
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--sp-4);
+}
+
+.feature {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-xs);
+  transition:
+    transform 0.18s var(--ease),
+    box-shadow 0.18s var(--ease);
+}
+
+.feature:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feature__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-50);
+  color: var(--brand-600);
+  margin-bottom: var(--sp-4);
+}
+
+.feature h3 {
+  font-size: 1rem;
+  margin-bottom: var(--sp-2);
+}
+
+.feature p {
+  color: var(--text-muted);
+  font-size: 0.89rem;
+  line-height: 1.62;
+}
+
+/* ------------------------------------------------------- Tarifs */
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.plan {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-6) var(--sp-5);
+  box-shadow: var(--shadow-xs);
+}
+
+.plan--highlight {
+  border-color: var(--brand-500);
+  border-width: 2px;
+  box-shadow: var(--shadow-lg);
+}
+
+.plan__flag {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--brand-600);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.plan h3 {
+  font-size: 1.12rem;
+}
+
+.plan__pitch {
+  margin-top: var(--sp-2);
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  min-height: 44px;
+}
+
+.plan__price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: var(--sp-5) 0;
+  flex-wrap: wrap;
+}
+
+.plan__amount {
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--ink-900);
+}
+
+.plan__unit {
+  font-size: 0.86rem;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+.plan__cta {
+  width: 100%;
+}
+
+.plan__features {
+  list-style: none;
+  margin: var(--sp-5) 0 0;
+  padding: var(--sp-5) 0 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.plan__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  font-size: 0.86rem;
+  color: var(--ink-700);
+  line-height: 1.5;
+}
+
+.plan__features app-icon {
+  color: var(--success);
+  margin-top: 2px;
+}
+
+/* ---------------------------------------------------- Questions */
+
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.faq__item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.14s var(--ease);
+}
+
+.faq__item--open {
+  border-color: var(--brand-300);
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  width: 100%;
+  padding: var(--sp-4) var(--sp-5);
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.93rem;
+  color: var(--ink-800);
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq__question app-icon {
+  color: var(--brand-600);
+  flex-shrink: 0;
+}
+
+.faq__answer {
+  padding: 0 var(--sp-5) var(--sp-5);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.68;
+}
+
+/* ================================================== Appel final */
+
+.cta {
+  padding: var(--sp-8) var(--sp-5);
+  background:
+    radial-gradient(700px 360px at 50% 0%, rgba(15, 118, 110, 0.4), transparent 65%),
+    var(--ink-950);
+  text-align: center;
+}
+
+.cta__inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.cta h2 {
+  color: #fff;
+  font-size: clamp(1.6rem, 3.6vw, 2.3rem);
+  margin-bottom: var(--sp-4);
+}
+
+.cta p {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-bottom: var(--sp-6);
+}
+
+.cta__btn {
+  background: #fff;
+  color: var(--ink-900);
+}
+
+.cta__btn:hover {
+  background: var(--ink-100);
+  text-decoration: none;
+}
+
+/* ========================================================= Pied */
+
+.footer {
+  padding: var(--sp-6) var(--sp-5);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.footer__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.footer__text {
+  margin-top: var(--sp-2);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footer__legal {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+/* =============================================== Petits ecrans */
+
+@media (max-width: 900px) {
+  .nav__links {
+    display: none;
+  }
+
+  .problem {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+  }
+
+  .preview__kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .preview__row {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--sp-2);
+  }
+
+  .preview__title {
+    grid-column: 1 / -1;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav__actions .btn--secondary {
+    display: none;
+  }
+
+  .hero {
+    padding-top: var(--sp-7);
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+}
