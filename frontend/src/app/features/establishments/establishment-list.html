@@ -1,0 +1,126 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Etablissements</h1>
+      <p class="page-header__subtitle">
+        Cafes, restaurants et salons de the couverts par un contrat de maintenance
+      </p>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card__body">
+      <form class="filters" (ngSubmit)="load()">
+        <div class="field">
+          <label class="field__label" for="search">Recherche</label>
+          <input
+            id="search"
+            type="search"
+            name="search"
+            placeholder="Nom ou ville"
+            [(ngModel)]="search"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="type">Type</label>
+          <select id="type" name="type" [(ngModel)]="type">
+            <option value="">Tous les types</option>
+            @for (option of types(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="row">
+          <button type="submit" class="btn btn--primary" [disabled]="loading()">
+            Rechercher
+          </button>
+          <button type="button" class="btn btn--secondary" (click)="resetFilters()">
+            Reinitialiser
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    @if (loading()) {
+      <div class="loader">
+        <span class="loader__spinner"></span>
+        Chargement des etablissements...
+      </div>
+    } @else if (page(); as p) {
+      @if (p.content.length === 0) {
+        <div class="empty">
+          <div class="empty__title">Aucun etablissement</div>
+          <p>Aucun client ne correspond aux criteres de recherche.</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Etablissement</th>
+                <th>Type</th>
+                <th>Ville</th>
+                <th>Contact</th>
+                <th>Contrat</th>
+                <th class="text-center">Materiel</th>
+                <th class="text-center">Tickets ouverts</th>
+                <th>Etat</th>
+                @if (auth.isAdmin()) {
+                  <th></th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (establishment of p.content; track establishment.id) {
+                <tr>
+                  <td class="fw-600">{{ establishment.name }}</td>
+                  <td class="text-sm">{{ establishment.typeLabel }}</td>
+                  <td class="text-muted text-sm">{{ establishment.city }}</td>
+                  <td class="text-sm">
+                    {{ establishment.contactName ?? '—' }}
+                    @if (establishment.phone) {
+                      <div class="text-xs text-faint">{{ establishment.phone }}</div>
+                    }
+                  </td>
+                  <td class="mono text-sm">{{ establishment.contractNumber ?? '—' }}</td>
+                  <td class="text-center">{{ establishment.equipmentCount }}</td>
+                  <td class="text-center">
+                    @if (establishment.openTicketCount > 0) {
+                      <span class="badge status-progress">
+                        {{ establishment.openTicketCount }}
+                      </span>
+                    } @else {
+                      <span class="text-faint">0</span>
+                    }
+                  </td>
+                  <td>
+                    @if (establishment.active) {
+                      <span class="badge status-resolved">Actif</span>
+                    } @else {
+                      <span class="badge status-cancelled">Inactif</span>
+                    }
+                  </td>
+                  @if (auth.isAdmin()) {
+                    <td class="text-right">
+                      <button
+                        type="button"
+                        class="btn btn--ghost btn--sm"
+                        (click)="toggleActive(establishment)"
+                      >
+                        {{ establishment.active ? 'Desactiver' : 'Reactiver' }}
+                      </button>
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+  </div>
+</div>

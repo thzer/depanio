@@ -1,0 +1,83 @@
+# ============================================================
+#  Helpdesk - Configuration principale
+#  Projet de Fin d'Etudes - ISET Gabes
+# ============================================================
+spring:
+  application:
+    name: helpdesk
+  profiles:
+    active: dev
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+server:
+  # Le port 8080 est souvent deja pris sur un poste de developpement, par
+  # exemple par le listener Oracle ou par Tomcat de XAMPP. Le port est donc
+  # surchargeable par la variable d'environnement SERVER_PORT.
+  port: ${SERVER_PORT:8081}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# ------------------------------------------------------------
+#  Parametres metier de l'application
+# ------------------------------------------------------------
+helpdesk:
+  # URL publique du frontend (utilisee dans les QR codes)
+  frontend-url: http://localhost:4200
+
+  security:
+    jwt:
+      # IMPORTANT : en production, surcharger via la variable d'environnement JWT_SECRET
+      secret: ${JWT_SECRET:ZmE5YzQ4YjJlNzE2ZDMwNWE4YzFmNDdiOTJkNmUzMDhhNWMyZjc0YjFkOGU2YzNhOTViMmQ3ZTRmODFjNmEzYg==}
+      # Duree de validite du token d'acces (24 heures en millisecondes)
+      expiration: 86400000
+      # Duree de validite du refresh token (7 jours)
+      refresh-expiration: 604800000
+
+  # Delais de resolution contractuels (SLA) exprimes en heures
+  sla:
+    critical: 2
+    high: 8
+    medium: 24
+    low: 72
+    # Frequence de verification des SLA depasses (expression cron)
+    check-cron: "0 */5 * * * *"
+
+  cors:
+    allowed-origins: http://localhost:4200,http://127.0.0.1:4200
+
+# ------------------------------------------------------------
+#  Documentation de l'API
+# ------------------------------------------------------------
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+# ------------------------------------------------------------
+#  Supervision
+# ------------------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    tn.iset.gabes.helpdesk: DEBUG

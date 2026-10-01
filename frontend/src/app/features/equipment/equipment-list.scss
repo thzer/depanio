@@ -1,0 +1,75 @@
+/* Parc de materiel et mise en page de l etiquette QR imprimable. */
+
+.filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--sp-4);
+  align-items: end;
+}
+
+.filters__actions {
+  display: flex;
+  gap: var(--sp-2);
+  grid-column: 1 / -1;
+}
+
+.qr-card {
+  border-color: var(--primary);
+}
+
+.qr-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  padding: var(--sp-4);
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius);
+  max-width: 640px;
+}
+
+.qr-label img {
+  flex-shrink: 0;
+}
+
+.qr-label__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--sp-2);
+}
+
+.qr-label__name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.qr-label__hint {
+  margin: var(--sp-3) 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 280px;
+}
+
+@media (max-width: 900px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-label {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* A l impression, seule l etiquette doit apparaitre sur la feuille. */
+@media print {
+  .qr-card {
+    border: none;
+    box-shadow: none;
+  }
+
+  .qr-print {
+    padding: 0;
+  }
+}

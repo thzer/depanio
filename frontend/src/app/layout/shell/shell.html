@@ -1,0 +1,99 @@
+<div class="shell" [class.shell--sidebar-open]="sidebarOpen()">
+  <!-- ============================= Menu lateral ============================= -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <span class="sidebar__logo">HD</span>
+      <div>
+        <div class="sidebar__name">{{ appName }}</div>
+        <div class="sidebar__tagline">Cafes et restaurants</div>
+      </div>
+    </div>
+
+    <nav class="sidebar__nav">
+      @for (item of navItems(); track item.path) {
+        <a
+          class="nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="nav-link--active"
+          (click)="closeSidebar()"
+        >
+          <span class="nav-link__icon" aria-hidden="true">{{ item.icon[0].toUpperCase() }}</span>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    @if (canCreateTicket()) {
+      <div class="sidebar__cta">
+        <a class="btn btn--primary" routerLink="/tickets/nouveau" (click)="closeSidebar()">
+          Declarer une panne
+        </a>
+      </div>
+    }
+
+    <div class="sidebar__footer">
+      <div class="connection" [class.connection--on]="notifications.isConnected()">
+        <span class="connection__dot"></span>
+        {{ notifications.isConnected() ? 'Temps reel actif' : 'Temps reel inactif' }}
+      </div>
+      <div class="text-xs text-faint">ISET Gabes &mdash; PFE</div>
+    </div>
+  </aside>
+
+  <!-- Voile affiche derriere le menu sur petit ecran -->
+  <div class="overlay" (click)="closeSidebar()" aria-hidden="true"></div>
+
+  <!-- ============================ Zone principale =========================== -->
+  <div class="main">
+    <header class="topbar">
+      <button
+        type="button"
+        class="topbar__burger"
+        aria-label="Afficher le menu"
+        (click)="toggleSidebar()"
+      >
+        &#9776;
+      </button>
+
+      <div class="spacer"></div>
+
+      <a class="topbar__action" routerLink="/notifications" title="Notifications">
+        <span aria-hidden="true">&#9993;</span>
+        @if (notifications.unreadCount() > 0) {
+          <span class="topbar__badge">{{ notifications.unreadCount() }}</span>
+        }
+      </a>
+
+      <div class="profile">
+        <button type="button" class="profile__trigger" (click)="toggleProfile()">
+          <span class="profile__avatar">{{ auth.initials() }}</span>
+          <span class="profile__text">
+            <span class="profile__name">{{ auth.currentUser()?.fullName }}</span>
+            <span class="profile__role">{{ auth.currentUser()?.roleLabel }}</span>
+          </span>
+        </button>
+
+        @if (profileOpen()) {
+          <div class="profile__menu">
+            <div class="profile__menu-head">
+              <div class="fw-600">{{ auth.currentUser()?.fullName }}</div>
+              <div class="text-xs text-muted">{{ auth.currentUser()?.email }}</div>
+              @if (auth.currentUser()?.establishmentName) {
+                <div class="text-xs text-muted">
+                  {{ auth.currentUser()?.establishmentName }}
+                </div>
+              }
+            </div>
+            <button type="button" class="profile__menu-item" (click)="logout()">
+              Se deconnecter
+            </button>
+          </div>
+        }
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

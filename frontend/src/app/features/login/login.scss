@@ -1,0 +1,114 @@
+/* Ecran de connexion : formulaire a gauche, argumentaire a droite. */
+
+.auth {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(360px, 460px) 1fr;
+}
+
+.auth__panel {
+  background: var(--surface);
+  padding: var(--sp-7) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-6);
+}
+
+.auth__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.auth__logo {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.auth__submit {
+  width: 100%;
+  padding: 11px var(--sp-4);
+}
+
+.auth__error {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-sm);
+  background: var(--danger-light);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+.auth__demo {
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------- Partie droite */
+
+.auth__aside {
+  background: linear-gradient(145deg, var(--primary-dark), #0d2f45);
+  color: #fff;
+  padding: var(--sp-7) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-5);
+}
+
+.auth__aside h2 {
+  color: #fff;
+  font-size: 1.6rem;
+  max-width: 460px;
+}
+
+.auth__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  max-width: 460px;
+}
+
+.auth__list li {
+  position: relative;
+  padding-left: var(--sp-5);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.auth__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.auth__footer {
+  margin-top: var(--sp-5);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 880px) {
+  .auth {
+    grid-template-columns: 1fr;
+  }
+
+  .auth__aside {
+    display: none;
+  }
+}

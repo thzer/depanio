@@ -1,0 +1,204 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Tableau de bord</h1>
+      <p class="page-header__subtitle">
+        @if (auth.isClient()) {
+          Suivi des demandes de {{ auth.currentUser()?.establishmentName }}
+        } @else {
+          Vue d ensemble de l activite de maintenance
+        }
+      </p>
+    </div>
+    <button type="button" class="btn btn--secondary" (click)="load()" [disabled]="loading()">
+      Actualiser
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loader">
+      <span class="loader__spinner"></span>
+      Chargement des indicateurs...
+    </div>
+  } @else if (data(); as d) {
+    <!-- =========================== Indicateurs cles =========================== -->
+    <div class="grid grid--kpi mb-4">
+      <div class="kpi">
+        <div class="kpi__label">Tickets ouverts</div>
+        <div class="kpi__value">{{ d.openTickets }}</div>
+        <div class="kpi__hint">{{ d.totalTickets }} au total</div>
+      </div>
+
+      <div class="kpi" [class.kpi--danger]="d.breachedTickets > 0">
+        <div class="kpi__label">Delais depasses</div>
+        <div class="kpi__value">{{ d.breachedTickets }}</div>
+        <div class="kpi__hint">Engagement contractuel non tenu</div>
+      </div>
+
+      <div
+        class="kpi"
+        [class.kpi--success]="d.slaComplianceRate >= 90"
+        [class.kpi--warning]="d.slaComplianceRate < 90"
+      >
+        <div class="kpi__label">Respect des delais</div>
+        <div class="kpi__value">{{ d.slaComplianceRate }}%</div>
+        <div class="kpi__hint">Sur l ensemble des tickets</div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi__label">Delai moyen de resolution</div>
+        <div class="kpi__value">
+          @if (d.averageResolutionHours !== undefined && d.averageResolutionHours !== null) {
+            {{ d.averageResolutionHours | number: '1.0-1' }} h
+          } @else {
+            &mdash;
+          }
+        </div>
+        <div class="kpi__hint">De la declaration a la resolution</div>
+      </div>
+
+      <div class="kpi">
+        <div class="kpi__label">Ce mois-ci</div>
+        <div class="kpi__value">{{ d.ticketsThisMonth }}</div>
+        <div class="kpi__hint">Nouvelles demandes</div>
+      </div>
+    </div>
+
+    <!-- ======================== Tickets a traiter en priorite ================= -->
+    <div class="card mb-4">
+      <div class="card__header">
+        <span class="card__title">Echeances les plus proches</span>
+        <a routerLink="/tickets" class="btn btn--ghost btn--sm">Voir tous les tickets</a>
+      </div>
+
+      @if (d.urgentTickets.length === 0) {
+        <div class="empty">
+          <div class="empty__title">Aucun ticket ouvert</div>
+          <p>Toutes les demandes ont ete traitees.</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Objet</th>
+                <th>Etablissement</th>
+                <th>Priorite</th>
+                <th>Statut</th>
+                <th>Technicien</th>
+                <th>Delai</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (ticket of d.urgentTickets; track ticket.id) {
+                <tr>
+                  <td>
+                    <a class="mono" [routerLink]="['/tickets', ticket.id]">
+                      {{ ticket.reference }}
+                    </a>
+                  </td>
+                  <td>{{ ticket.title }}</td>
+                  <td class="text-muted">{{ ticket.establishmentName }}</td>
+                  <td>
+                    <app-priority-badge
+                      [priority]="ticket.priority"
+                      [label]="ticket.priorityLabel"
+                    />
+                  </td>
+                  <td>
+                    <app-status-badge [status]="ticket.status" [label]="ticket.statusLabel" />
+                  </td>
+                  <td class="text-muted">{{ ticket.assignedToName ?? 'Non affecte' }}</td>
+                  <td>
+                    <app-sla-indicator
+                      [hours]="ticket.hoursRemaining"
+                      [breached]="ticket.slaBreached"
+                      [dueAt]="ticket.slaDueAt"
+                    />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <!-- ============================== Graphiques ============================= -->
+    <div class="grid grid--2">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Repartition par statut</span></div>
+        <div class="card__body">
+          @if (d.byStatus.length) {
+            <app-chart-canvas [data]="d.byStatus" type="doughnut" [showLegend]="true" />
+          } @else {
+            <div class="empty">Aucune donnee</div>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Tickets ouverts par priorite</span>
+        </div>
+        <div class="card__body">
+          @if (d.byPriority.length) {
+            <app-chart-canvas [data]="d.byPriority" type="bar" />
+          } @else {
+            <div class="empty">Aucun ticket ouvert</div>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Volume des douze derniers mois</span>
+        </div>
+        <div class="card__body">
+          @if (d.monthlyTrend.length) {
+            <app-chart-canvas [data]="d.monthlyTrend" type="line" />
+          } @else {
+            <div class="empty">Aucun historique</div>
+          }
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Nature des problemes declares</span>
+        </div>
+        <div class="card__body">
+          @if (d.byCategory.length) {
+            <app-chart-canvas [data]="d.byCategory" type="bar" />
+          } @else {
+            <div class="empty">Aucune donnee</div>
+          }
+        </div>
+      </div>
+
+      @if (!auth.isClient() && d.byTechnician.length) {
+        <div class="card">
+          <div class="card__header">
+            <span class="card__title">Charge par technicien</span>
+          </div>
+          <div class="card__body">
+            <app-chart-canvas [data]="d.byTechnician" type="bar" />
+          </div>
+        </div>
+      }
+    </div>
+
+    <p class="text-xs text-faint mt-4">
+      Donnees arretees au {{ now() | date: "dd/MM/yyyy 'a' HH:mm" }}
+    </p>
+  } @else {
+    <div class="card">
+      <div class="empty">
+        <div class="empty__title">Indicateurs indisponibles</div>
+        <p>Le serveur n a pas repondu. Verifiez que l API est demarree.</p>
+        <button type="button" class="btn btn--primary mt-4" (click)="load()">Reessayer</button>
+      </div>
+    </div>
+  }
+</div>

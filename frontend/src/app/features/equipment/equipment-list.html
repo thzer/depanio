@@ -1,0 +1,185 @@
+<div class="page">
+  <div class="page-header no-print">
+    <div>
+      <h1>Materiel</h1>
+      <p class="page-header__subtitle">
+        @if (auth.isClient()) {
+          Equipements installes dans votre etablissement
+        } @else {
+          Parc installe chez les clients et etiquettes QR
+        }
+      </p>
+    </div>
+  </div>
+
+  <!-- ================================ Filtres ================================ -->
+  <div class="card mb-4 no-print">
+    <div class="card__body">
+      <form class="filters" (ngSubmit)="load()">
+        <div class="field">
+          <label class="field__label" for="search">Recherche</label>
+          <input
+            id="search"
+            type="search"
+            name="search"
+            placeholder="Nom ou numero de serie"
+            [(ngModel)]="search"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="type">Type de materiel</label>
+          <select id="type" name="type" [(ngModel)]="type">
+            <option value="">Tous les types</option>
+            @for (option of types(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        @if (!auth.isClient()) {
+          <div class="field">
+            <label class="field__label" for="establishment">Etablissement</label>
+            <select id="establishment" name="establishment" [(ngModel)]="establishmentId">
+              <option [ngValue]="null">Tous les etablissements</option>
+              @for (establishment of establishments(); track establishment.id) {
+                <option [ngValue]="establishment.id">{{ establishment.name }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <div class="filters__actions">
+          <button type="submit" class="btn btn--primary" [disabled]="loading()">
+            Rechercher
+          </button>
+          <button type="button" class="btn btn--secondary" (click)="resetFilters()">
+            Reinitialiser
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================ Etiquette agrandie ========================= -->
+  @if (qrEquipment(); as equipment) {
+    <div class="card mb-4 qr-card">
+      <div class="card__header no-print">
+        <span class="card__title">Etiquette a coller sur la machine</span>
+        <div class="row">
+          <button type="button" class="btn btn--primary btn--sm" (click)="printQrCode()">
+            Imprimer
+          </button>
+          <button type="button" class="btn btn--secondary btn--sm" (click)="closeQrCode()">
+            Fermer
+          </button>
+        </div>
+      </div>
+      <div class="card__body qr-print">
+        <div class="qr-label">
+          @if (qrImageUrl(); as url) {
+            <img [src]="url" alt="Etiquette QR" width="260" height="260" />
+          } @else {
+            <div class="loader"><span class="loader__spinner"></span></div>
+          }
+          <div class="qr-label__text">
+            <div class="qr-label__title">Un probleme avec cette machine ?</div>
+            <div class="qr-label__name">{{ equipment.name }}</div>
+            <div class="text-sm text-muted">
+              {{ equipment.brand }} {{ equipment.model }}
+            </div>
+            @if (equipment.location) {
+              <div class="text-sm text-muted">{{ equipment.location }}</div>
+            }
+            <div class="qr-label__hint">
+              Scannez ce code avec votre telephone pour declarer la panne.
+            </div>
+            <div class="text-xs text-faint mono">{{ equipment.establishmentName }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ================================ Resultats ============================== -->
+  <div class="card no-print">
+    @if (loading()) {
+      <div class="loader">
+        <span class="loader__spinner"></span>
+        Chargement du materiel...
+      </div>
+    } @else if (page(); as p) {
+      @if (p.content.length === 0) {
+        <div class="empty">
+          <div class="empty__title">Aucun materiel enregistre</div>
+          <p>Aucun equipement ne correspond aux criteres de recherche.</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Materiel</th>
+                <th>Type</th>
+                @if (!auth.isClient()) {
+                  <th>Etablissement</th>
+                }
+                <th>Emplacement</th>
+                <th>Numero de serie</th>
+                <th>Garantie</th>
+                <th>Etat</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (equipment of p.content; track equipment.id) {
+                <tr>
+                  <td>
+                    <div class="fw-600">{{ equipment.name }}</div>
+                    <div class="text-xs text-faint">
+                      {{ equipment.brand }} {{ equipment.model }}
+                    </div>
+                  </td>
+                  <td class="text-sm">{{ equipment.typeLabel }}</td>
+                  @if (!auth.isClient()) {
+                    <td class="text-muted text-sm">{{ equipment.establishmentName }}</td>
+                  }
+                  <td class="text-muted text-sm">{{ equipment.location ?? '—' }}</td>
+                  <td class="mono text-sm">{{ equipment.serialNumber ?? '—' }}</td>
+                  <td class="text-sm">
+                    @if (equipment.warrantyEnd) {
+                      <span [class.text-success]="equipment.underWarranty">
+                        {{ equipment.warrantyEnd | date: 'dd/MM/yyyy' }}
+                      </span>
+                      <div class="text-xs text-faint">
+                        {{ equipment.underWarranty ? 'Sous garantie' : 'Hors garantie' }}
+                      </div>
+                    } @else {
+                      <span class="text-faint">&mdash;</span>
+                    }
+                  </td>
+                  <td>
+                    @if (equipment.active) {
+                      <span class="badge status-resolved">En service</span>
+                    } @else {
+                      <span class="badge status-cancelled">Hors service</span>
+                    }
+                  </td>
+                  <td class="text-right">
+                    <button
+                      type="button"
+                      class="btn btn--ghost btn--sm"
+                      (click)="showQrCode(equipment)"
+                    >
+                      Etiquette QR
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+  </div>
+</div>

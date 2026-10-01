@@ -1,0 +1,373 @@
+<div class="page">
+  @if (loading()) {
+    <div class="loader">
+      <span class="loader__spinner"></span>
+      Chargement du ticket...
+    </div>
+  } @else if (ticket(); as t) {
+    <!-- =============================== En-tete =============================== -->
+    <div class="page-header">
+      <div>
+        <div class="row text-sm text-muted mb-3">
+          <a routerLink="/tickets">Tickets</a>
+          <span>/</span>
+          <span class="mono">{{ t.reference }}</span>
+        </div>
+        <h1>{{ t.title }}</h1>
+        <div class="row mt-3">
+          <app-status-badge [status]="t.status" [label]="t.statusLabel" />
+          <app-priority-badge [priority]="t.priority" [label]="t.priorityLabel" />
+          <span class="badge status-closed">{{ t.categoryLabel }}</span>
+          @if (t.slaBreached) {
+            <span class="badge priority-critical">Delai depasse</span>
+          }
+        </div>
+      </div>
+      <button type="button" class="btn btn--secondary" (click)="load()">Actualiser</button>
+    </div>
+
+    <div class="detail">
+      <!-- ========================== Colonne principale ======================= -->
+      <div class="stack">
+        <div class="card">
+          <div class="card__header"><span class="card__title">Probleme declare</span></div>
+          <div class="card__body">
+            <p class="description">{{ t.description }}</p>
+          </div>
+        </div>
+
+        @if (t.resolutionNote) {
+          <div class="card card--resolution">
+            <div class="card__header">
+              <span class="card__title">Solution appliquee</span>
+              @if (t.resolutionTimeHours !== undefined && t.resolutionTimeHours !== null) {
+                <span class="text-sm text-muted">
+                  Resolu en {{ t.resolutionTimeHours }} h
+                </span>
+              }
+            </div>
+            <div class="card__body">
+              <p class="description">{{ t.resolutionNote }}</p>
+              @if (t.satisfactionRating) {
+                <p class="text-sm text-muted mt-3">
+                  Satisfaction du client : {{ t.satisfactionRating }}/5
+                </p>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- ============================== Echanges ============================ -->
+        <div class="card">
+          <div class="card__header">
+            <span class="card__title">Echanges</span>
+            <span class="text-sm text-muted">{{ t.comments.length }} message(s)</span>
+          </div>
+
+          <div class="card__body stack">
+            @if (t.comments.length === 0) {
+              <p class="text-muted text-sm">Aucun echange pour le moment.</p>
+            } @else {
+              @for (comment of t.comments; track comment.id) {
+                <div class="comment" [class.comment--internal]="comment.internalNote">
+                  <div class="comment__head">
+                    <span class="comment__author">{{ comment.authorName }}</span>
+                    <span class="comment__role">{{ comment.authorRole }}</span>
+                    @if (comment.internalNote) {
+                      <span class="badge priority-medium">Note interne</span>
+                    }
+                    <div class="spacer"></div>
+                    <span class="text-xs text-faint">
+                      {{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                    </span>
+                  </div>
+                  <p class="comment__body">{{ comment.content }}</p>
+                </div>
+              }
+            }
+
+            <!-- Ajout d un message -->
+            <div class="comment-form">
+              <textarea
+                rows="3"
+                placeholder="Ecrire un message..."
+                [(ngModel)]="newComment"
+                name="newComment"
+              ></textarea>
+              <div class="row mt-3">
+                @if (!auth.isClient()) {
+                  <label class="check">
+                    <input type="checkbox" [(ngModel)]="internalNote" name="internalNote" />
+                    <span>Note interne, invisible par le client</span>
+                  </label>
+                }
+                <div class="spacer"></div>
+                <button
+                  type="button"
+                  class="btn btn--primary btn--sm"
+                  [disabled]="busy() || newComment.trim().length === 0"
+                  (click)="addComment()"
+                >
+                  Envoyer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================= Historique =========================== -->
+        <div class="card">
+          <div class="card__header">
+            <span class="card__title">Historique</span>
+            <span class="text-sm text-muted">
+              Piste d audit : {{ t.history.length }} evenement(s)
+            </span>
+          </div>
+          <div class="card__body">
+            <ol class="timeline">
+              @for (entry of t.history; track entry.id) {
+                <li class="timeline__item">
+                  <div class="timeline__dot"></div>
+                  <div>
+                    <div class="fw-600">{{ entry.actionLabel }}</div>
+                    @if (entry.oldValue || entry.newValue) {
+                      <div class="text-sm text-muted">
+                        @if (entry.oldValue) {
+                          {{ entry.oldValue }} &rarr;
+                        }
+                        {{ entry.newValue }}
+                      </div>
+                    }
+                    @if (entry.comment) {
+                      <div class="text-sm text-faint">{{ entry.comment }}</div>
+                    }
+                    <div class="text-xs text-faint">
+                      {{ entry.actorName }} &middot;
+                      {{ entry.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                    </div>
+                  </div>
+                </li>
+              }
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================ Colonne laterale ======================= -->
+      <div class="stack">
+        <!-- Actions -->
+        <div class="card">
+          <div class="card__header"><span class="card__title">Actions</span></div>
+          <div class="card__body stack">
+            @if (pendingStatus(); as status) {
+              <div class="confirm">
+                <div class="fw-600 mb-3">{{ actionLabel(status) }}</div>
+
+                @if (status === 'RESOLVED') {
+                  <div class="field mb-3">
+                    <label class="field__label" for="resolution">
+                      Solution appliquee
+                    </label>
+                    <textarea
+                      id="resolution"
+                      rows="4"
+                      placeholder="Decrivez l intervention realisee..."
+                      [(ngModel)]="resolutionNote"
+                      name="resolutionNote"
+                    ></textarea>
+                    <span class="field__hint">
+                      Obligatoire : cette note constitue la trace technique de
+                      l intervention.
+                    </span>
+                  </div>
+                }
+
+                @if (status === 'CLOSED' && auth.isClient()) {
+                  <div class="field mb-3">
+                    <span class="field__label">Votre satisfaction</span>
+                    <div class="row">
+                      @for (value of ratingValues; track value) {
+                        <button
+                          type="button"
+                          class="rating"
+                          [class.rating--on]="satisfaction === value"
+                          (click)="satisfaction = value"
+                        >
+                          {{ value }}
+                        </button>
+                      }
+                    </div>
+                  </div>
+                }
+
+                @if (status === 'CANCELLED') {
+                  <div class="field mb-3">
+                    <label class="field__label" for="cancelReason">
+                      Motif de l annulation
+                    </label>
+                    <textarea
+                      id="cancelReason"
+                      rows="3"
+                      [(ngModel)]="resolutionNote"
+                      name="cancelReason"
+                    ></textarea>
+                  </div>
+                }
+
+                <div class="row">
+                  <button
+                    type="button"
+                    class="btn btn--primary btn--sm"
+                    [disabled]="busy()"
+                    (click)="confirmStatusChange()"
+                  >
+                    Confirmer
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn--secondary btn--sm"
+                    (click)="cancelStatusChange()"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            } @else if (t.allowedTransitions.length === 0) {
+              <p class="text-muted text-sm">
+                Ce ticket est clos : aucune action n est plus possible.
+              </p>
+            } @else {
+              @for (status of t.allowedTransitions; track status) {
+                <button
+                  type="button"
+                  class="btn {{ actionClass(status) }}"
+                  (click)="openStatusChange(status)"
+                >
+                  {{ actionLabel(status) }}
+                </button>
+              }
+            }
+          </div>
+        </div>
+
+        <!-- Affectation -->
+        @if (!auth.isClient() && t.allowedTransitions.length > 0) {
+          <div class="card">
+            <div class="card__header"><span class="card__title">Affectation</span></div>
+            <div class="card__body stack">
+              <div class="field">
+                <label class="field__label" for="technician">Technicien en charge</label>
+                <select
+                  id="technician"
+                  name="technician"
+                  [(ngModel)]="selectedTechnicianId"
+                >
+                  <option [ngValue]="null">Non affecte</option>
+                  @for (technician of technicians(); track technician.id) {
+                    <option [ngValue]="technician.id">
+                      {{ technician.fullName }}
+                      @if (technician.speciality) {
+                        &mdash; {{ technician.speciality }}
+                      }
+                    </option>
+                  }
+                </select>
+              </div>
+              <div class="row">
+                <button
+                  type="button"
+                  class="btn btn--primary btn--sm"
+                  [disabled]="busy() || !selectedTechnicianId"
+                  (click)="assign()"
+                >
+                  Affecter
+                </button>
+                @if (auth.isTechnician() && !t.assignedToId) {
+                  <button
+                    type="button"
+                    class="btn btn--secondary btn--sm"
+                    [disabled]="busy()"
+                    (click)="takeOwnership()"
+                  >
+                    Prendre en charge
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Informations -->
+        <div class="card">
+          <div class="card__header"><span class="card__title">Informations</span></div>
+          <div class="card__body">
+            <dl class="info">
+              <dt>Reference</dt>
+              <dd class="mono">{{ t.reference }}</dd>
+
+              <dt>Etablissement</dt>
+              <dd>
+                {{ t.establishmentName }}
+                @if (t.establishmentCity) {
+                  <div class="text-xs text-faint">{{ t.establishmentCity }}</div>
+                }
+                @if (t.establishmentPhone) {
+                  <div class="text-xs text-faint">{{ t.establishmentPhone }}</div>
+                }
+              </dd>
+
+              @if (t.equipmentName) {
+                <dt>Materiel</dt>
+                <dd>
+                  {{ t.equipmentName }}
+                  @if (t.equipmentLocation) {
+                    <div class="text-xs text-faint">{{ t.equipmentLocation }}</div>
+                  }
+                </dd>
+              }
+
+              <dt>Declare par</dt>
+              <dd>{{ t.createdByName }}</dd>
+
+              <dt>Technicien</dt>
+              <dd>{{ t.assignedToName ?? 'Non affecte' }}</dd>
+
+              <dt>Declare le</dt>
+              <dd>{{ t.createdAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+
+              @if (t.assignedAt) {
+                <dt>Affecte le</dt>
+                <dd>{{ t.assignedAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+              }
+
+              @if (t.resolvedAt) {
+                <dt>Resolu le</dt>
+                <dd>{{ t.resolvedAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+              }
+
+              @if (t.closedAt) {
+                <dt>Cloture le</dt>
+                <dd>{{ t.closedAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+              }
+
+              <dt>Echeance</dt>
+              <dd>
+                @if (t.slaDueAt) {
+                  {{ t.slaDueAt | date: "dd/MM/yyyy 'a' HH:mm" }}
+                  <div class="text-xs">
+                    <app-sla-indicator
+                      [hours]="t.hoursRemaining"
+                      [breached]="t.slaBreached"
+                    />
+                  </div>
+                } @else {
+                  &mdash;
+                }
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

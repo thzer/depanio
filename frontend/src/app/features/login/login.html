@@ -1,0 +1,85 @@
+<div class="auth">
+  <div class="auth__panel">
+    <div class="auth__brand">
+      <span class="auth__logo">HD</span>
+      <div>
+        <h1>{{ appName }}</h1>
+        <p class="text-muted">Assistance technique pour cafes et restaurants</p>
+      </div>
+    </div>
+
+    <form class="stack" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="field__label" for="email">Adresse electronique</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          autocomplete="username"
+          placeholder="vous@exemple.tn"
+          [class.invalid]="form.controls.email.touched && form.controls.email.invalid"
+        />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <span class="field__error">
+            @if (form.controls.email.hasError('required')) {
+              Veuillez saisir votre adresse electronique.
+            } @else {
+              Le format de l adresse est invalide.
+            }
+          </span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="Votre mot de passe"
+          [class.invalid]="form.controls.password.touched && form.controls.password.invalid"
+        />
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+          <span class="field__error">Veuillez saisir votre mot de passe.</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <div class="auth__error">{{ errorMessage() }}</div>
+      }
+
+      <button type="submit" class="btn btn--primary auth__submit" [disabled]="submitting()">
+        {{ submitting() ? 'Connexion en cours...' : 'Se connecter' }}
+      </button>
+    </form>
+
+    @if (showDemoAccounts) {
+      <div class="auth__demo">
+        <div class="text-xs text-faint mb-3">Comptes de demonstration</div>
+        <div class="row">
+          @for (account of demoAccounts; track account.email) {
+            <button
+              type="button"
+              class="btn btn--secondary btn--sm"
+              (click)="fillDemoAccount(account.email)"
+            >
+              {{ account.label }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="auth__aside">
+    <h2>Un circuit clair, de la panne a la resolution</h2>
+    <ul class="auth__list">
+      <li>Chaque demande devient un ticket numerote et suivi</li>
+      <li>Un delai de resolution est engage selon l urgence</li>
+      <li>Une etiquette QR sur chaque machine declare la panne en un geste</li>
+      <li>Un historique complet, consultable a tout moment</li>
+    </ul>
+    <div class="auth__footer">Projet de Fin d Etudes &mdash; ISET Gabes</div>
+  </div>
+</div>

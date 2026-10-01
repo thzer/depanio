@@ -1,0 +1,146 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Utilisateurs</h1>
+      <p class="page-header__subtitle">
+        Comptes des administrateurs, des techniciens et des gerants clients
+      </p>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="stack">
+      <!-- ============================== Filtres ============================= -->
+      <div class="card">
+        <div class="card__body">
+          <form class="row" (ngSubmit)="load()">
+            <div class="field" style="flex: 1; min-width: 200px">
+              <label class="field__label" for="search">Recherche</label>
+              <input
+                id="search"
+                type="search"
+                name="search"
+                placeholder="Nom ou adresse electronique"
+                [(ngModel)]="search"
+              />
+            </div>
+
+            <div class="field" style="min-width: 170px">
+              <label class="field__label" for="role">Role</label>
+              <select id="role" name="role" [(ngModel)]="role">
+                <option value="">Tous les roles</option>
+                @for (option of roles(); track option.value) {
+                  <option [value]="option.value">{{ option.label }}</option>
+                }
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn--primary" [disabled]="loading()">
+              Rechercher
+            </button>
+            <button type="button" class="btn btn--secondary" (click)="resetFilters()">
+              Reinitialiser
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ============================= Resultats ============================ -->
+      <div class="card">
+        @if (loading()) {
+          <div class="loader">
+            <span class="loader__spinner"></span>
+            Chargement des comptes...
+          </div>
+        } @else if (page(); as p) {
+          @if (p.content.length === 0) {
+            <div class="empty">
+              <div class="empty__title">Aucun compte trouve</div>
+            </div>
+          } @else {
+            <div class="table-wrapper">
+              <table class="data">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Adresse electronique</th>
+                    <th>Role</th>
+                    <th>Rattachement</th>
+                    <th>Telephone</th>
+                    <th>Etat</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (user of p.content; track user.id) {
+                    <tr>
+                      <td class="fw-600">{{ user.fullName }}</td>
+                      <td class="text-sm">{{ user.email }}</td>
+                      <td>
+                        <span
+                          class="badge"
+                          [class.status-new]="user.role === 'ADMIN'"
+                          [class.status-assigned]="user.role === 'TECHNICIAN'"
+                          [class.status-closed]="user.role === 'CLIENT'"
+                        >
+                          {{ user.roleLabel }}
+                        </span>
+                      </td>
+                      <td class="text-muted text-sm">
+                        {{ user.establishmentName ?? user.speciality ?? '—' }}
+                      </td>
+                      <td class="text-sm">{{ user.phone ?? '—' }}</td>
+                      <td>
+                        @if (user.active) {
+                          <span class="badge status-resolved">Actif</span>
+                        } @else {
+                          <span class="badge status-cancelled">Desactive</span>
+                        }
+                      </td>
+                      <td class="text-right">
+                        <button
+                          type="button"
+                          class="btn btn--ghost btn--sm"
+                          (click)="toggleActive(user)"
+                        >
+                          {{ user.active ? 'Desactiver' : 'Reactiver' }}
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- ======================= Charge des techniciens ======================= -->
+    <div class="card">
+      <div class="card__header">
+        <span class="card__title">Charge des techniciens</span>
+      </div>
+      <div class="card__body">
+        @if (workload().length === 0) {
+          <p class="text-muted text-sm">Aucun technicien actif.</p>
+        } @else {
+          @for (technician of workload(); track technician.technicianId) {
+            <div class="workload">
+              <span class="workload__count">{{ technician.openTickets }}</span>
+              <div>
+                <div class="fw-600 text-sm">{{ technician.fullName }}</div>
+                @if (technician.speciality) {
+                  <div class="text-xs text-faint">{{ technician.speciality }}</div>
+                }
+              </div>
+            </div>
+          }
+          <p class="text-xs text-faint mt-3">
+            Nombre de tickets ouverts, du moins charge au plus charge.
+          </p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

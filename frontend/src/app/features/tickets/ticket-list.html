@@ -1,0 +1,171 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Tickets</h1>
+      <p class="page-header__subtitle">
+        @if (page(); as p) {
+          {{ p.totalElements }} ticket(s) correspondant aux criteres
+        } @else {
+          Suivi des demandes d intervention
+        }
+      </p>
+    </div>
+    <a class="btn btn--primary" routerLink="/tickets/nouveau">Declarer une panne</a>
+  </div>
+
+  <!-- ================================ Filtres ================================ -->
+  <div class="card mb-4">
+    <div class="card__body">
+      <form class="filters" (ngSubmit)="applyFilters()">
+        <div class="field filters__search">
+          <label class="field__label" for="search">Recherche</label>
+          <input
+            id="search"
+            type="search"
+            name="search"
+            placeholder="Reference ou objet du ticket"
+            [(ngModel)]="search"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="status">Statut</label>
+          <select id="status" name="status" [(ngModel)]="status">
+            <option value="">Tous les statuts</option>
+            @for (option of statuses(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="priority">Priorite</label>
+          <select id="priority" name="priority" [(ngModel)]="priority">
+            <option value="">Toutes les priorites</option>
+            @for (option of priorities(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <label class="filters__check">
+          <input type="checkbox" name="onlyOpen" [(ngModel)]="onlyOpen" />
+          <span>Masquer les tickets clos</span>
+        </label>
+
+        <div class="filters__actions">
+          <button type="submit" class="btn btn--primary" [disabled]="loading()">
+            Rechercher
+          </button>
+          <button type="button" class="btn btn--secondary" (click)="resetFilters()">
+            Reinitialiser
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================================ Resultats ============================== -->
+  <div class="card">
+    @if (loading()) {
+      <div class="loader">
+        <span class="loader__spinner"></span>
+        Chargement des tickets...
+      </div>
+    } @else if (page(); as p) {
+      @if (p.content.length === 0) {
+        <div class="empty">
+          <div class="empty__title">Aucun ticket trouve</div>
+          <p>Modifiez les criteres de recherche ou declarez une nouvelle panne.</p>
+        </div>
+      } @else {
+        <div class="table-wrapper">
+          <table class="data">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Objet</th>
+                @if (!auth.isClient()) {
+                  <th>Etablissement</th>
+                }
+                <th>Materiel</th>
+                <th>Priorite</th>
+                <th>Statut</th>
+                <th>Technicien</th>
+                <th>Declare le</th>
+                <th>Delai</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (ticket of p.content; track ticket.id) {
+                <tr>
+                  <td>
+                    <a class="mono fw-600" [routerLink]="['/tickets', ticket.id]">
+                      {{ ticket.reference }}
+                    </a>
+                  </td>
+                  <td>
+                    <a [routerLink]="['/tickets', ticket.id]">{{ ticket.title }}</a>
+                    <div class="text-xs text-faint">{{ ticket.categoryLabel }}</div>
+                  </td>
+                  @if (!auth.isClient()) {
+                    <td class="text-muted">{{ ticket.establishmentName }}</td>
+                  }
+                  <td class="text-muted text-sm">{{ ticket.equipmentName ?? '—' }}</td>
+                  <td>
+                    <app-priority-badge
+                      [priority]="ticket.priority"
+                      [label]="ticket.priorityLabel"
+                    />
+                  </td>
+                  <td>
+                    <app-status-badge [status]="ticket.status" [label]="ticket.statusLabel" />
+                  </td>
+                  <td class="text-muted text-sm">
+                    {{ ticket.assignedToName ?? 'Non affecte' }}
+                  </td>
+                  <td class="text-muted text-sm nowrap">
+                    {{ ticket.createdAt | date: 'dd/MM/yy HH:mm' }}
+                  </td>
+                  <td class="text-sm nowrap">
+                    <app-sla-indicator
+                      [hours]="ticket.hoursRemaining"
+                      [breached]="ticket.slaBreached"
+                      [dueAt]="ticket.slaDueAt"
+                    />
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (p.totalPages > 1) {
+          <div class="card__footer row">
+            <span class="text-sm text-muted">
+              Page {{ p.page + 1 }} sur {{ p.totalPages }}
+            </span>
+            <div class="spacer"></div>
+            <button
+              type="button"
+              class="btn btn--secondary btn--sm"
+              [disabled]="p.first"
+              (click)="goToPage(p.page - 1)"
+            >
+              Precedent
+            </button>
+            <button
+              type="button"
+              class="btn btn--secondary btn--sm"
+              [disabled]="p.last"
+              (click)="goToPage(p.page + 1)"
+            >
+              Suivant
+            </button>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>
+

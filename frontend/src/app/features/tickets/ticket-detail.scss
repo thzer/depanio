@@ -1,0 +1,162 @@
+/* Fiche d un ticket : contenu principal a gauche, actions a droite. */
+
+.detail {
+  display: grid;
+  grid-template-columns: 1fr 330px;
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.description {
+  white-space: pre-wrap;
+  line-height: 1.65;
+}
+
+.card--resolution {
+  border-left: 3px solid var(--success);
+}
+
+/* ------------------------------------------------------------ Commentaires */
+
+.comment {
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--gray-50);
+}
+
+.comment--internal {
+  background: var(--warning-light);
+  border-color: #f0dcb8;
+}
+
+.comment__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-2);
+}
+
+.comment__author {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.comment__role {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.comment__body {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.comment-form {
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--border);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.check input {
+  width: auto;
+}
+
+/* --------------------------------------------------------------- Historique */
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.timeline__item {
+  position: relative;
+  padding-left: var(--sp-5);
+  padding-bottom: var(--sp-4);
+}
+
+.timeline__item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 14px;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+.timeline__dot {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--primary);
+}
+
+/* ------------------------------------------------------------- Informations */
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+  margin: 0;
+}
+
+.info dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  font-weight: 600;
+}
+
+.info dd {
+  margin: 0 0 var(--sp-2);
+  font-size: 0.875rem;
+}
+
+/* ---------------------------------------------------------- Confirmations */
+
+.confirm {
+  padding: var(--sp-4);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+}
+
+.rating {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-300);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rating--on {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+@media (max-width: 1000px) {
+  .detail {
+    grid-template-columns: 1fr;
+  }
+}
