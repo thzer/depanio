@@ -123,6 +123,17 @@ public class Ticket extends BaseEntity {
     @Column(name = "resolved_at")
     private LocalDateTime resolvedAt;
 
+    /**
+     * Duree de traitement en minutes, figee au moment de la resolution.
+     * <p>
+     * Cette valeur pourrait se recalculer a partir des deux horodatages,
+     * mais la stocker rend le delai moyen calculable par une simple
+     * moyenne SQL, identique sur tous les moteurs. Le calcul reste en
+     * outre immediat quel que soit le volume de tickets.
+     */
+    @Column(name = "resolution_minutes")
+    private Long resolutionMinutes;
+
     @Column(name = "closed_at")
     private LocalDateTime closedAt;
 
@@ -187,10 +198,34 @@ public class Ticket extends BaseEntity {
      * @return la duree de resolution, ou null si le ticket n'est pas resolu
      */
     public Duration getResolutionTime() {
+        if (resolutionMinutes != null) {
+            return Duration.ofMinutes(resolutionMinutes);
+        }
         if (getCreatedAt() == null || resolvedAt == null) {
             return null;
         }
         return Duration.between(getCreatedAt(), resolvedAt);
+    }
+
+    /**
+     * Marque le ticket comme resolu a l'instant present et fige sa duree
+     * de traitement.
+     * <p>
+     * Les deux informations sont ecrites ensemble : elles ne peuvent donc
+     * pas se contredire, ce qui arriverait fatalement si chaque appelant
+     * devait penser a mettre la duree a jour de son cote.
+     */
+    public void markResolvedNow() {
+        this.resolvedAt = LocalDateTime.now();
+        this.resolutionMinutes = getCreatedAt() == null
+                ? null
+                : Duration.between(getCreatedAt(), this.resolvedAt).toMinutes();
+    }
+
+    /** Annule la resolution lors d'une reouverture. */
+    public void clearResolution() {
+        this.resolvedAt = null;
+        this.resolutionMinutes = null;
     }
 
     /** Ajoute un commentaire en maintenant la coherence des deux cotes de la relation. */

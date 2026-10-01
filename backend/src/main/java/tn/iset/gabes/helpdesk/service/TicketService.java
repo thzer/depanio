@@ -467,12 +467,12 @@ public class TicketService {
                                     + "pour resoudre un ticket.");
                 }
                 ticket.setResolutionNote(request.resolutionNote().trim());
-                ticket.setResolvedAt(LocalDateTime.now());
+                ticket.markResolvedNow();
             }
             case CLOSED -> {
                 ticket.setClosedAt(LocalDateTime.now());
                 if (ticket.getResolvedAt() == null) {
-                    ticket.setResolvedAt(LocalDateTime.now());
+                    ticket.markResolvedNow();
                 }
                 if (request.satisfactionRating() != null) {
                     ticket.setSatisfactionRating(request.satisfactionRating());
@@ -487,7 +487,7 @@ public class TicketService {
             case IN_PROGRESS -> {
                 // Reouverture apres une resolution jugee incomplete
                 if (ticket.getStatus() == TicketStatus.RESOLVED) {
-                    ticket.setResolvedAt(null);
+                    ticket.clearResolution();
                     ticket.addHistoryEntry(TicketHistory.builder()
                             .action(HistoryAction.REOPENED)
                             .comment("Resolution jugee incomplete")

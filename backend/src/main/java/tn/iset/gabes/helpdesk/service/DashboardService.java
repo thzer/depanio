@@ -65,7 +65,7 @@ public class DashboardService {
                 resolved,
                 breached,
                 thisMonth,
-                ticketRepository.averageResolutionTimeInHours(scope),
+                averageResolutionHours(scope),
                 computeComplianceRate(total, breached),
                 byStatus,
                 mapPriorityCounts(scope),
@@ -74,6 +74,20 @@ public class DashboardService {
                 mapMonthlyTrend(scope),
                 findUrgentTickets()
         );
+    }
+
+    /**
+     * Delai moyen de resolution, converti en heures.
+     * <p>
+     * La base renvoie des minutes : c'est l'unite dans laquelle la duree
+     * est figee a la resolution. La conversion a lieu ici, au plus pres de
+     * l'affichage.
+     *
+     * @return le delai moyen en heures, ou null si aucun ticket n'est resolu
+     */
+    private Double averageResolutionHours(Long scope) {
+        Double minutes = ticketRepository.averageResolutionMinutes(scope);
+        return minutes == null ? null : Math.round(minutes / 60.0 * 10.0) / 10.0;
     }
 
     /**

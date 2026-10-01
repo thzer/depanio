@@ -26,9 +26,9 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
             SELECT e FROM Equipment e
             WHERE (:establishmentId IS NULL OR e.establishment.id = :establishmentId)
               AND (:type IS NULL OR e.type = :type)
-              AND (:search IS NULL
-                   OR LOWER(e.name)         LIKE LOWER(CONCAT('%', :search, '%'))
-                   OR LOWER(e.serialNumber) LIKE LOWER(CONCAT('%', :search, '%')))
+              AND (CAST(:search AS string) IS NULL
+                   OR LOWER(e.name)         LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                   OR LOWER(e.serialNumber) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
             """)
     Page<Equipment> search(@Param("establishmentId") Long establishmentId,
                            @Param("type") EquipmentType type,

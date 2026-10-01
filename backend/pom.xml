@@ -99,10 +99,22 @@
             <version>${zxing.version}</version>
         </dependency>
 
-        <!-- Pilote MySQL / MariaDB -->
+        <!--
+            Pilotes de base de donnees.
+            Les deux sont embarques : l'application ne contient plus aucune
+            requete propre a un moteur, elle fonctionne donc indifferemment
+            sur MySQL ou sur PostgreSQL. Le choix se fait par la seule URL
+            de connexion, ce qui laisse le champ libre au moment de choisir
+            un hebergeur.
+        -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 

@@ -53,9 +53,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
               AND (:onlyOpen = false OR t.status NOT IN (
                         tn.iset.gabes.helpdesk.entity.enums.TicketStatus.CLOSED,
                         tn.iset.gabes.helpdesk.entity.enums.TicketStatus.CANCELLED))
-              AND (:search IS NULL
-                   OR LOWER(t.reference) LIKE LOWER(CONCAT('%', :search, '%'))
-                   OR LOWER(t.title)     LIKE LOWER(CONCAT('%', :search, '%')))
+              AND (CAST(:search AS string) IS NULL
+                   OR LOWER(t.reference) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                   OR LOWER(t.title)     LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
             """)
     Page<Ticket> search(@Param("establishmentId") Long establishmentId,
                         @Param("assignedToId") Long assignedToId,
@@ -161,17 +161,19 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Object[]> countOpenGroupedByTechnician();
 
     /**
-     * Delai moyen de resolution, exprime en heures.
-     * TIMESTAMPDIFF est une fonction du moteur MySQL / MariaDB appelee ici
-     * via la syntaxe generique de Hibernate.
+     * Delai moyen de resolution, exprime en minutes.
+     * <p>
+     * La duree de chaque ticket est figee a sa resolution : une simple
+     * moyenne suffit donc, sans fonction de calcul de dates. La requete
+     * reste ainsi valable sur MySQL comme sur PostgreSQL, ce qui laisse
+     * le choix de l'hebergeur ouvert.
      */
-    @Query(value = """
-            SELECT AVG(TIMESTAMPDIFF(MINUTE, t.created_at, t.resolved_at)) / 60.0
-            FROM tickets t
-            WHERE t.resolved_at IS NOT NULL
-              AND (:establishmentId IS NULL OR t.establishment_id = :establishmentId)
-            """, nativeQuery = true)
-    Double averageResolutionTimeInHours(@Param("establishmentId") Long establishmentId);
+    @Query("""
+            SELECT AVG(t.resolutionMinutes) FROM Ticket t
+            WHERE t.resolutionMinutes IS NOT NULL
+              AND (:establishmentId IS NULL OR t.establishment.id = :establishmentId)
+            """)
+    Double averageResolutionMinutes(@Param("establishmentId") Long establishmentId);
 
     long countByStatus(TicketStatus status);
 

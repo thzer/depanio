@@ -24,9 +24,9 @@ public interface EstablishmentRepository extends JpaRepository<Establishment, Lo
      */
     @Query("""
             SELECT e FROM Establishment e
-            WHERE (:search IS NULL
-                   OR LOWER(e.name) LIKE LOWER(CONCAT('%', :search, '%'))
-                   OR LOWER(e.city) LIKE LOWER(CONCAT('%', :search, '%')))
+            WHERE (CAST(:search AS string) IS NULL
+                   OR LOWER(e.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                   OR LOWER(e.city) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%')))
               AND (:type IS NULL OR e.type = :type)
               AND (:active IS NULL OR e.active = :active)
             """)

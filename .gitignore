@@ -19,6 +19,7 @@ npm-debug.log*
 # Les fichiers d environnement locaux ne sont jamais versionnes :
 # ils contiennent les mots de passe de base et les cles de signature.
 .env
+.env.production
 secrets.properties
 backend/secrets.properties
 .env.local
