@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import tn.iset.gabes.helpdesk.entity.Ticket;
 import tn.iset.gabes.helpdesk.entity.TicketHistory;
 import tn.iset.gabes.helpdesk.entity.User;
@@ -43,34 +44,67 @@ public class SlaMonitoringService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final PlatformTransactionManager transactionManager;
 
     /**
      * Point d'entree planifie. Volontairement court : il delegue aux deux
      * methodes correspondant aux deux roles decrits plus haut, chacune
      * dans sa propre transaction.
+     * <p>
+     * Les transactions sont ouvertes explicitement et non par l'annotation
+     * {@code @Transactional} : celle-ci serait sans effet ici, puisque les
+     * deux methodes sont appelees directement depuis cette classe et non
+     * via le proxy Spring qui porte le comportement transactionnel. Sans
+     * transaction ouverte, le chargement differe de l'historique du ticket
+     * echouerait.
+     * <p>
+     * Deux transactions distinctes plutot qu'une seule : l'echec du
+     * constat de depassement ne doit pas empecher l'envoi des alertes
+     * preventives, et reciproquement.
      */
     @Scheduled(cron = "${helpdesk.sla.check-cron:0 */5 * * * *}")
     public void monitorSlaDeadlines() {
+        TransactionTemplate transaction = new TransactionTemplate(transactionManager);
+
+        int breached = runSafely(transaction, this::markBreachedTickets,
+                "le constat des depassements");
+        int warned = runSafely(transaction, this::sendApproachingDeadlineWarnings,
+                "l'envoi des alertes preventives");
+
+        if (breached > 0 || warned > 0) {
+            log.info("Surveillance SLA : {} depassement(s) constate(s), {} alerte(s) envoyee(s)",
+                    breached, warned);
+        }
+    }
+
+    /**
+     * Execute une phase dans sa propre transaction.
+     * <p>
+     * Une erreur est journalisee sans etre propagee : la surveillance doit
+     * repasser a l'echeance suivante, meme apres un incident ponctuel.
+     *
+     * @return le resultat de la phase, ou 0 si elle a echoue
+     */
+    private int runSafely(TransactionTemplate transaction,
+                          java.util.function.Supplier<Integer> phase,
+                          String description) {
         try {
-            int breached = markBreachedTickets();
-            int warned = sendApproachingDeadlineWarnings();
-            if (breached > 0 || warned > 0) {
-                log.info("Surveillance SLA : {} depassement(s) constate(s), {} alerte(s) envoyee(s)",
-                        breached, warned);
-            }
+            Integer result = transaction.execute(status -> phase.get());
+            return result != null ? result : 0;
         } catch (Exception ex) {
-            // Une erreur ici ne doit pas empecher les executions suivantes
-            log.error("La surveillance des SLA a echoue : {}", ex.getMessage(), ex);
+            log.error("La surveillance des SLA a echoue pendant {} : {}",
+                    description, ex.getMessage(), ex);
+            return 0;
         }
     }
 
     /**
      * Marque les tickets dont l'echeance vient d'etre depassee.
+     * Doit etre appelee a l'interieur d'une transaction.
      *
      * @return le nombre de tickets concernes
      */
-    @Transactional
-    public int markBreachedTickets() {
+    int markBreachedTickets() {
         List<Ticket> breached = ticketRepository.findNewlyBreached(LocalDateTime.now());
         if (breached.isEmpty()) {
             return 0;
@@ -108,11 +142,11 @@ public class SlaMonitoringService {
 
     /**
      * Previent le technicien en charge lorsque l'echeance approche.
+     * Doit etre appelee a l'interieur d'une transaction.
      *
      * @return le nombre d'alertes envoyees
      */
-    @Transactional(readOnly = true)
-    public int sendApproachingDeadlineWarnings() {
+    int sendApproachingDeadlineWarnings() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime threshold = now.plusMinutes(WARNING_WINDOW_MINUTES);
 
