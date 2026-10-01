@@ -8,6 +8,14 @@ spring:
   profiles:
     active: dev
 
+  # Fichier de secrets local, facultatif et jamais versionne.
+  # Il porte les identifiants du compte administrateur initial, afin
+  # qu'ils ne figurent dans aucun fichier suivi par Git.
+  # En production, ces memes valeurs viennent de variables
+  # d'environnement ou de Secret Manager.
+  config:
+    import: optional:file:./secrets.properties
+
   jackson:
     default-property-inclusion: non_null
     serialization:
@@ -33,6 +41,17 @@ server:
 helpdesk:
   # URL publique du frontend (utilisee dans les QR codes)
   frontend-url: http://localhost:4200
+
+  # Compte administrateur cree au tout premier demarrage, et uniquement
+  # si la base est vide. A renseigner par variables d'environnement :
+  #     HELPDESK_ADMIN_EMAIL       HELPDESK_ADMIN_PASSWORD
+  # Aucune valeur par defaut n'est prevue : un mot de passe connu
+  # d'avance ouvrirait l'acces a toutes les donnees.
+  admin:
+    email: ${HELPDESK_ADMIN_EMAIL:}
+    password: ${HELPDESK_ADMIN_PASSWORD:}
+    full-name: ${HELPDESK_ADMIN_NAME:Administrateur}
+    phone: ${HELPDESK_ADMIN_PHONE:}
 
   security:
     jwt:

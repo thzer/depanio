@@ -10,6 +10,12 @@
         }
       </p>
     </div>
+    @if (auth.isAdmin()) {
+      <button type="button" class="btn btn--primary" (click)="openCreate()">
+        <app-icon name="plus" [size]="17" />
+        Nouveau materiel
+      </button>
+    }
   </div>
 
   <!-- ================================ Filtres ================================ -->
@@ -68,6 +74,7 @@
         <span class="card__title">Etiquette a coller sur la machine</span>
         <div class="row">
           <button type="button" class="btn btn--primary btn--sm" (click)="printQrCode()">
+            <app-icon name="print" [size]="16" />
             Imprimer
           </button>
           <button type="button" class="btn btn--secondary btn--sm" (click)="closeQrCode()">
@@ -111,8 +118,22 @@
     } @else if (page(); as p) {
       @if (p.content.length === 0) {
         <div class="empty">
+          <span class="empty__icon"><app-icon name="tool" [size]="24" /></span>
           <div class="empty__title">Aucun materiel enregistre</div>
-          <p>Aucun equipement ne correspond aux criteres de recherche.</p>
+          <p>
+            @if (auth.isAdmin()) {
+              Enregistrez les machines de vos clients : chacune recevra une
+              etiquette QR a coller dessus.
+            } @else {
+              Aucun equipement ne correspond aux criteres de recherche.
+            }
+          </p>
+          @if (auth.isAdmin()) {
+            <button type="button" class="btn btn--primary mt-4" (click)="openCreate()">
+              <app-icon name="plus" [size]="17" />
+              Enregistrer un materiel
+            </button>
+          }
         </div>
       } @else {
         <div class="table-wrapper">
@@ -165,14 +186,31 @@
                       <span class="badge status-cancelled">Hors service</span>
                     }
                   </td>
-                  <td class="text-right">
+                  <td class="text-right nowrap">
                     <button
                       type="button"
                       class="btn btn--ghost btn--sm"
                       (click)="showQrCode(equipment)"
                     >
-                      Etiquette QR
+                      <app-icon name="qr" [size]="15" />
+                      Etiquette
                     </button>
+                    @if (auth.isAdmin()) {
+                      <button
+                        type="button"
+                        class="btn btn--ghost btn--sm"
+                        (click)="openEdit(equipment)"
+                      >
+                        Modifier
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn--ghost btn--sm"
+                        (click)="setActive(equipment, !equipment.active)"
+                      >
+                        {{ equipment.active ? 'Hors service' : 'Remettre' }}
+                      </button>
+                    }
                   </td>
                 </tr>
               }
@@ -183,3 +221,118 @@
     }
   </div>
 </div>
+
+<!-- ====================== Creation et modification ====================== -->
+@if (formOpen()) {
+  <app-modal
+    [title]="editing() ? 'Modifier le materiel' : 'Nouveau materiel'"
+    [subtitle]="
+      editing()
+        ? 'L etiquette QR deja imprimee reste valable.'
+        : 'Une etiquette QR unique sera generee automatiquement.'
+    "
+    (closed)="closeForm()"
+  >
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field form-grid__full">
+          <label class="field__label" for="formEstablishment">Etablissement</label>
+          <select
+            id="formEstablishment"
+            formControlName="establishmentId"
+            [class.invalid]="
+              form.controls.establishmentId.touched && form.controls.establishmentId.invalid
+            "
+          >
+            <option [ngValue]="null">Choisir un etablissement</option>
+            @for (establishment of establishments(); track establishment.id) {
+              <option [ngValue]="establishment.id">
+                {{ establishment.name }} &mdash; {{ establishment.city }}
+              </option>
+            }
+          </select>
+          @if (establishments().length === 0) {
+            <span class="field__hint">
+              Aucun etablissement actif. Enregistrez d abord un client.
+            </span>
+          }
+          @if (form.controls.establishmentId.touched && form.controls.establishmentId.invalid) {
+            <span class="field__error">L etablissement est obligatoire.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="formName">Nom du materiel</label>
+          <input
+            id="formName"
+            type="text"
+            formControlName="name"
+            placeholder="Caisse comptoir"
+            [class.invalid]="form.controls.name.touched && form.controls.name.invalid"
+          />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <span class="field__error">Le nom est obligatoire.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="formType">Type</label>
+          <select id="formType" formControlName="type">
+            @for (option of types(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="brand">Marque</label>
+          <input id="brand" type="text" formControlName="brand" placeholder="Sunmi" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="model">Modele</label>
+          <input id="model" type="text" formControlName="model" placeholder="T2 Lite" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="serialNumber">Numero de serie</label>
+          <input
+            id="serialNumber"
+            type="text"
+            formControlName="serialNumber"
+            placeholder="SNM-4471"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="location">Emplacement</label>
+          <input
+            id="location"
+            type="text"
+            formControlName="location"
+            placeholder="Comptoir principal"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="installedAt">Date d installation</label>
+          <input id="installedAt" type="date" formControlName="installedAt" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="warrantyEnd">Fin de garantie</label>
+          <input id="warrantyEnd" type="date" formControlName="warrantyEnd" />
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <button type="submit" class="btn btn--primary" [disabled]="saving()">
+          {{ saving() ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+        <button type="button" class="btn btn--secondary" (click)="closeForm()">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}

@@ -1,21 +1,29 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Page, TechnicianWorkload, UserResponse } from '../../core/models/api.models';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  EstablishmentResponse,
+  Page,
+  TechnicianWorkload,
+  UserResponse,
+} from '../../core/models/api.models';
 import { EnumOption, Role } from '../../core/models/enums';
+import { AuthService } from '../../core/services/auth.service';
+import { EstablishmentService } from '../../core/services/establishment.service';
 import { ReferenceService } from '../../core/services/reference.service';
 import { ToastService } from '../../core/services/toast.service';
 import { UserService } from '../../core/services/user.service';
+import { Icon } from '../../shared/icon';
+import { Modal } from '../../shared/modal';
 
 /**
  * Administration des comptes utilisateurs.
  *
  * La charge de travail des techniciens est affichee a cote de la liste :
- * elle aide l administrateur a repartir les affectations sans ouvrir un
- * autre ecran.
+ * elle aide a repartir les affectations sans changer d ecran.
  */
 @Component({
   selector: 'app-user-list',
-  imports: [FormsModule],
+  imports: [FormsModule, ReactiveFormsModule, Icon, Modal],
   templateUrl: './user-list.html',
   styles: `
     .layout {
@@ -30,7 +38,7 @@ import { UserService } from '../../core/services/user.service';
       align-items: center;
       gap: var(--sp-3);
       padding: var(--sp-3) 0;
-      border-bottom: 1px solid var(--gray-100);
+      border-bottom: 1px solid var(--ink-100);
     }
 
     .workload:last-child {
@@ -43,10 +51,20 @@ import { UserService } from '../../core/services/user.service';
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: var(--primary-light);
-      color: var(--primary-dark);
+      background: var(--brand-50);
+      color: var(--brand-700);
       font-weight: 700;
       flex-shrink: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-4);
+    }
+
+    .form-grid__full {
+      grid-column: 1 / -1;
     }
 
     @media (max-width: 1000px) {
@@ -54,23 +72,46 @@ import { UserService } from '../../core/services/user.service';
         grid-template-columns: 1fr;
       }
     }
+
+    @media (max-width: 700px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   `,
 })
 export class UserListPage {
   private readonly userService = inject(UserService);
+  private readonly establishmentService = inject(EstablishmentService);
   private readonly referenceService = inject(ReferenceService);
   private readonly toast = inject(ToastService);
+  private readonly fb = inject(FormBuilder);
+  protected readonly auth = inject(AuthService);
 
   protected readonly page = signal<Page<UserResponse> | null>(null);
   protected readonly workload = signal<TechnicianWorkload[]>([]);
   protected readonly roles = signal<EnumOption[]>([]);
+  protected readonly establishments = signal<EstablishmentResponse[]>([]);
   protected readonly loading = signal(true);
+  protected readonly saving = signal(false);
+  protected readonly formOpen = signal(false);
 
   protected search = '';
   protected role: Role | '' = '';
 
+  protected readonly form = this.fb.nonNullable.group({
+    fullName: ['', [Validators.required, Validators.maxLength(120)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    role: ['TECHNICIAN' as Role, [Validators.required]],
+    phone: [''],
+    speciality: [''],
+    establishmentId: [null as number | null],
+  });
+
   constructor() {
     this.referenceService.all().subscribe((reference) => this.roles.set(reference.roles));
+    this.establishmentService.active().subscribe((list) => this.establishments.set(list));
     this.load();
     this.loadWorkload();
   }
@@ -94,6 +135,62 @@ export class UserListPage {
     this.search = '';
     this.role = '';
     this.load();
+  }
+
+  // ------------------------------------------------------------- Creation
+
+  protected openCreate(): void {
+    this.form.reset({ role: 'TECHNICIAN', establishmentId: null });
+    this.formOpen.set(true);
+  }
+
+  protected closeForm(): void {
+    this.formOpen.set(false);
+  }
+
+  /** Le role choisi determine les champs encore pertinents. */
+  protected get selectedRole(): Role {
+    return this.form.controls.role.value;
+  }
+
+  protected submit(): void {
+    const raw = this.form.getRawValue();
+
+    // Un compte client doit etre rattache a un etablissement : la regle
+    // est verifiee ici pour expliquer le probleme sur le champ concerne,
+    // et de nouveau par le serveur qui reste seul juge.
+    if (raw.role === 'CLIENT' && !raw.establishmentId) {
+      this.form.controls.establishmentId.setErrors({ required: true });
+    }
+
+    if (this.form.invalid || this.saving()) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.saving.set(true);
+    this.userService
+      .create({
+        fullName: raw.fullName.trim(),
+        email: raw.email.trim(),
+        password: raw.password,
+        role: raw.role,
+        phone: raw.phone || undefined,
+        speciality: raw.role === 'TECHNICIAN' ? raw.speciality || undefined : undefined,
+        establishmentId: raw.role === 'CLIENT' ? (raw.establishmentId ?? undefined) : undefined,
+      })
+      .subscribe({
+        next: (created) => {
+          this.saving.set(false);
+          this.formOpen.set(false);
+          this.toast.success(
+            `Le compte de ${created.fullName} a ete cree. Communiquez-lui son mot de passe.`,
+          );
+          this.load();
+          this.loadWorkload();
+        },
+        error: () => this.saving.set(false),
+      });
   }
 
   /**

@@ -25,6 +25,23 @@ public class HelpdeskProperties {
     private Security security = new Security();
     private Sla sla = new Sla();
     private Cors cors = new Cors();
+    private Admin admin = new Admin();
+
+    /**
+     * Compte administrateur cree au tout premier demarrage, lorsque la
+     * base est encore vide.
+     * <p>
+     * Aucune valeur par defaut : un compte administrateur dont le mot de
+     * passe serait connu d'avance ouvrirait l'acces a toutes les donnees.
+     */
+    @Getter
+    @Setter
+    public static class Admin {
+        private String email;
+        private String password;
+        private String fullName = "Administrateur";
+        private String phone;
+    }
 
     @Getter
     @Setter

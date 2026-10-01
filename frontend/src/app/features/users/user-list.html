@@ -6,6 +6,10 @@
         Comptes des administrateurs, des techniciens et des gerants clients
       </p>
     </div>
+    <button type="button" class="btn btn--primary" (click)="openCreate()">
+      <app-icon name="plus" [size]="17" />
+      Nouveau compte
+    </button>
   </div>
 
   <div class="layout">
@@ -55,7 +59,9 @@
         } @else if (page(); as p) {
           @if (p.content.length === 0) {
             <div class="empty">
+              <span class="empty__icon"><app-icon name="users" [size]="24" /></span>
               <div class="empty__title">Aucun compte trouve</div>
+              <p>Creez les comptes de vos techniciens et de vos clients.</p>
             </div>
           } @else {
             <div class="table-wrapper">
@@ -74,7 +80,12 @@
                 <tbody>
                   @for (user of p.content; track user.id) {
                     <tr>
-                      <td class="fw-600">{{ user.fullName }}</td>
+                      <td class="fw-600">
+                        {{ user.fullName }}
+                        @if (user.id === auth.currentUser()?.id) {
+                          <span class="text-xs text-faint">(vous)</span>
+                        }
+                      </td>
                       <td class="text-sm">{{ user.email }}</td>
                       <td>
                         <span
@@ -98,13 +109,15 @@
                         }
                       </td>
                       <td class="text-right">
-                        <button
-                          type="button"
-                          class="btn btn--ghost btn--sm"
-                          (click)="toggleActive(user)"
-                        >
-                          {{ user.active ? 'Desactiver' : 'Reactiver' }}
-                        </button>
+                        @if (user.id !== auth.currentUser()?.id) {
+                          <button
+                            type="button"
+                            class="btn btn--ghost btn--sm"
+                            (click)="toggleActive(user)"
+                          >
+                            {{ user.active ? 'Desactiver' : 'Reactiver' }}
+                          </button>
+                        }
                       </td>
                     </tr>
                   }
@@ -123,7 +136,10 @@
       </div>
       <div class="card__body">
         @if (workload().length === 0) {
-          <p class="text-muted text-sm">Aucun technicien actif.</p>
+          <p class="text-muted text-sm">
+            Aucun technicien actif. Creez un compte de role Technicien pour
+            pouvoir affecter des tickets.
+          </p>
         } @else {
           @for (technician of workload(); track technician.technicianId) {
             <div class="workload">
@@ -144,3 +160,141 @@
     </div>
   </div>
 </div>
+
+<!-- ============================== Creation ============================== -->
+@if (formOpen()) {
+  <app-modal
+    title="Nouveau compte"
+    subtitle="Le mot de passe est defini ici ; l utilisateur pourra le changer apres sa premiere connexion."
+    (closed)="closeForm()"
+  >
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field form-grid__full">
+          <label class="field__label" for="formRole">Role</label>
+          <select id="formRole" formControlName="role">
+            @for (option of roles(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          <span class="field__hint">
+            @switch (selectedRole) {
+              @case ('ADMIN') {
+                Acces complet : clients, materiel, comptes et statistiques.
+              }
+              @case ('TECHNICIAN') {
+                Traite les tickets qui lui sont affectes et la file d attente.
+              }
+              @case ('CLIENT') {
+                Gerant d un etablissement : declare et suit ses propres pannes.
+              }
+            }
+          </span>
+        </div>
+
+        @if (selectedRole === 'CLIENT') {
+          <div class="field form-grid__full">
+            <label class="field__label" for="formEstablishment">Etablissement</label>
+            <select
+              id="formEstablishment"
+              formControlName="establishmentId"
+              [class.invalid]="
+                form.controls.establishmentId.touched && form.controls.establishmentId.invalid
+              "
+            >
+              <option [ngValue]="null">Choisir un etablissement</option>
+              @for (establishment of establishments(); track establishment.id) {
+                <option [ngValue]="establishment.id">
+                  {{ establishment.name }} &mdash; {{ establishment.city }}
+                </option>
+              }
+            </select>
+            @if (establishments().length === 0) {
+              <span class="field__hint">
+                Aucun etablissement actif. Enregistrez d abord le client.
+              </span>
+            }
+            @if (form.controls.establishmentId.touched && form.controls.establishmentId.invalid) {
+              <span class="field__error">
+                Un compte client doit etre rattache a un etablissement.
+              </span>
+            }
+          </div>
+        }
+
+        <div class="field">
+          <label class="field__label" for="fullName">Nom complet</label>
+          <input
+            id="fullName"
+            type="text"
+            formControlName="fullName"
+            placeholder="Ahmed Trabelsi"
+            [class.invalid]="form.controls.fullName.touched && form.controls.fullName.invalid"
+          />
+          @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+            <span class="field__error">Le nom est obligatoire.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="phone">Telephone</label>
+          <input id="phone" type="tel" formControlName="phone" placeholder="98 111 222" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="email">Adresse electronique</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            autocomplete="off"
+            placeholder="ahmed@votre-societe.tn"
+            [class.invalid]="form.controls.email.touched && form.controls.email.invalid"
+          />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <span class="field__error">Adresse electronique invalide.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="password">Mot de passe initial</label>
+          <input
+            id="password"
+            type="text"
+            formControlName="password"
+            autocomplete="new-password"
+            placeholder="Au moins 8 caracteres"
+            [class.invalid]="form.controls.password.touched && form.controls.password.invalid"
+          />
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <span class="field__error">Au moins 8 caracteres.</span>
+          }
+        </div>
+
+        @if (selectedRole === 'TECHNICIAN') {
+          <div class="field form-grid__full">
+            <label class="field__label" for="speciality">Specialite</label>
+            <input
+              id="speciality"
+              type="text"
+              formControlName="speciality"
+              placeholder="Caisses et terminaux de paiement"
+            />
+            <span class="field__hint">
+              Affichee au moment de choisir a qui affecter un ticket.
+            </span>
+          </div>
+        }
+      </div>
+
+      <div class="row mt-5">
+        <button type="submit" class="btn btn--primary" [disabled]="saving()">
+          {{ saving() ? 'Creation...' : 'Creer le compte' }}
+        </button>
+        <button type="button" class="btn btn--secondary" (click)="closeForm()">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}

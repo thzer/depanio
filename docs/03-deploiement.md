@@ -134,6 +134,12 @@ printf '%s' "$MDP" | gcloud secrets create depanio-db-password --data-file=-
 # Clé de signature des jetons, tirée au hasard
 openssl rand -base64 48 | tr -d '\n' | \
   gcloud secrets create depanio-jwt --data-file=-
+
+# Mot de passe de votre compte administrateur.
+# Choisissez-en un d'au moins 10 caractères : c'est celui de votre
+# première connexion, vous pourrez le changer ensuite dans l'application.
+printf '%s' 'VOTRE_MOT_DE_PASSE' | \
+  gcloud secrets create depanio-admin-password --data-file=-
 ```
 
 ### 4.5 Autoriser le service à lire ces secrets
@@ -142,7 +148,7 @@ openssl rand -base64 48 | tr -d '\n' | \
 NUMERO="$(gcloud projects describe depanio-prod --format='value(projectNumber)')"
 COMPTE="${NUMERO}-compute@developer.gserviceaccount.com"
 
-for secret in depanio-db-password depanio-jwt; do
+for secret in depanio-db-password depanio-jwt depanio-admin-password; do
   gcloud secrets add-iam-policy-binding "$secret" \
     --member="serviceAccount:${COMPTE}" \
     --role="roles/secretmanager.secretAccessor"
@@ -160,6 +166,7 @@ gcloud projects add-iam-policy-binding depanio-prod \
 ```bash
 export GCP_PROJECT=depanio-prod
 export GCP_REGION=europe-west1
+export ADMIN_EMAIL=vous@votre-societe.tn
 
 ./deploy/deploy.sh
 ```
@@ -186,23 +193,24 @@ gcloud run services update depanio \
 
 L'application ne modifiera alors plus jamais le schéma d'elle-même.
 
-### Créer le premier administrateur
+### Le compte administrateur
 
-Le jeu de démonstration n'existe que sous le profil `dev` : la base de production
-démarre donc vide. Créez le compte initial directement en base :
+La base de production démarre **entièrement vide**. L'application crée alors un
+seul compte administrateur, à partir des valeurs que vous avez fournies — c'est
+le rôle des variables `ADMIN_EMAIL` et du secret `depanio-admin-password`
+définis plus haut.
 
-```bash
-gcloud sql connect depanio-sql --user=depanio --database=depanio
-```
+Ce compte n'est créé **que si la table des utilisateurs est vide**. Aucun
+redémarrage ultérieur ne peut écraser votre mot de passe ni recréer un compte
+que vous auriez désactivé.
 
-```sql
--- Remplacez l'empreinte par celle de votre mot de passe.
--- Générez-la avec un outil BCrypt, par exemple bcrypt-generator.com
-INSERT INTO users (full_name, email, password, role, active, created_at)
-VALUES ('Votre Nom', 'vous@depanio.tn',
-        '$2a$10$REMPLACEZ_PAR_VOTRE_EMPREINTE_BCRYPT',
-        'ADMIN', true, NOW());
-```
+Une fois connecté, changez votre mot de passe depuis l'application, puis créez
+vos clients, votre matériel et les comptes de vos techniciens.
+
+> Si la base est vide et qu'aucun compte n'est configuré, l'application démarre
+> normalement mais inscrit un avertissement dans ses journaux. Aucun compte par
+> défaut n'est jamais créé : un mot de passe connu d'avance ouvrirait l'accès à
+> toutes les données de vos clients.
 
 ---
 

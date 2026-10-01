@@ -141,29 +141,41 @@ L'application s'ouvre sur `http://localhost:4200`.
 
 ---
 
-## Comptes de démonstration
+## Premier démarrage
 
-Au premier démarrage en développement, si la base est vide, un jeu complet est
-créé : 4 établissements, 10 matériels, une quinzaine de tickets à différents
-stades, et les comptes ci-dessous.
+**La base démarre vide.** Aucun client, aucun matériel, aucun ticket, aucune
+donnée d'exemple : vous saisissez votre activité réelle dès la première
+connexion.
 
-**Mot de passe commun : `Passer@123`**
+Un **unique compte administrateur** est créé au tout premier lancement, à partir
+de votre configuration locale :
 
-| Rôle | Adresse | Spécialité |
-|---|---|---|
-| Administrateur | `admin@helpdesk.tn` | Accès complet |
-| Technicien | `ahmed.tech@helpdesk.tn` | Caisses et terminaux |
-| Technicien | `salma.tech@helpdesk.tn` | Froid et machines à café |
-| Technicien | `karim.tech@helpdesk.tn` | Réseau |
-| Client | `hichem@elmedina.tn` | Café El Medina |
-| Client | `nadia@darzaman.tn` | Restaurant Dar Zaman |
-| Client | `olfa@yasmine.tn` | Salon de Thé Yasmine |
-| Client | `sami@oasisfood.tn` | Oasis Fast Food |
+```bash
+cd backend
+cp secrets.properties.example secrets.properties
+```
 
-L'écran de connexion propose ces comptes en un clic.
+Renseignez-y votre adresse et un mot de passe d'au moins 10 caractères :
 
-> Ces comptes n'existent que sous le profil `dev`. Ils ne sont **jamais** créés
-> en production.
+```properties
+helpdesk.admin.email=vous@votre-societe.tn
+helpdesk.admin.password=votre-mot-de-passe
+helpdesk.admin.full-name=Votre Nom
+```
+
+Ce fichier est exclu de Git : vos identifiants ne partent jamais dans le dépôt.
+
+> Le compte n'est créé **que si la table des utilisateurs est vide**. Une fois en
+> place, modifier ce fichier n'a plus aucun effet : changez votre mot de passe
+> depuis l'application. Aucun compte par défaut n'existe, car un mot de passe
+> connu d'avance ouvrirait l'accès à toutes les données.
+
+### Les premiers pas dans l'application
+
+1. **Établissements** → enregistrez votre premier client
+2. **Matériel** → ajoutez ses machines ; chacune reçoit une étiquette QR à imprimer
+3. **Utilisateurs** → créez les comptes de vos techniciens et du gérant
+4. Le gérant peut dès lors déclarer ses pannes, en scannant ou depuis son écran
 
 ---
 
@@ -251,6 +263,8 @@ Toutes les valeurs sensibles se surchargent par variables d'environnement.
 | `DB_USERNAME` | Utilisateur de la base | `root` |
 | `DB_PASSWORD` | Mot de passe | *(vide, défaut XAMPP)* |
 | `JWT_SECRET` | Clé de signature | valeur de développement |
+| `HELPDESK_ADMIN_EMAIL` | Adresse du compte initial | *(aucune)* |
+| `HELPDESK_ADMIN_PASSWORD` | Mot de passe du compte initial | *(aucun)* |
 | `FRONTEND_URL` | Adresse publique, encodée dans les QR codes | `http://localhost:4200` |
 | `SWAGGER_ENABLED` | Documentation de l'API | activée en développement |
 

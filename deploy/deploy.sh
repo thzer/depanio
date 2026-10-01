@@ -30,6 +30,11 @@ UTILISATEUR_SQL="${SQL_USER:-depanio}"
 
 SECRET_JWT="${JWT_SECRET_NAME:-depanio-jwt}"
 SECRET_MDP="${DB_PASSWORD_SECRET:-depanio-db-password}"
+SECRET_ADMIN="${ADMIN_PASSWORD_SECRET:-depanio-admin-password}"
+
+# Compte administrateur cree au tout premier demarrage, sur base vide.
+# Passe ce premier lancement, ces valeurs n ont plus aucun effet.
+ADMIN_EMAIL="${ADMIN_EMAIL:?Definissez ADMIN_EMAIL avec l adresse de votre compte administrateur}"
 
 IMAGE="${REGION}-docker.pkg.dev/${PROJET}/depanio/${SERVICE}"
 
@@ -104,7 +109,9 @@ gcloud run deploy "${SERVICE}" \
   --set-env-vars "DB_USERNAME=${UTILISATEUR_SQL}" \
   --set-env-vars "JPA_DDL_AUTO=update" \
   --set-secrets "DB_PASSWORD=${SECRET_MDP}:latest" \
-  --set-secrets "JWT_SECRET=${SECRET_JWT}:latest"
+  --set-secrets "JWT_SECRET=${SECRET_JWT}:latest" \
+  --set-env-vars "HELPDESK_ADMIN_EMAIL=${ADMIN_EMAIL}" \
+  --set-secrets "HELPDESK_ADMIN_PASSWORD=${SECRET_ADMIN}:latest"
 
 # ------------------------------------------------- 4. Adresse publique
 # L adresse n est connue qu apres le premier deploiement : elle est donc

@@ -6,6 +6,12 @@
         Cafes, restaurants et salons de the couverts par un contrat de maintenance
       </p>
     </div>
+    @if (auth.isAdmin()) {
+      <button type="button" class="btn btn--primary" (click)="openCreate()">
+        <app-icon name="plus" [size]="17" />
+        Nouvel etablissement
+      </button>
+    }
   </div>
 
   <div class="card mb-4">
@@ -53,8 +59,18 @@
     } @else if (page(); as p) {
       @if (p.content.length === 0) {
         <div class="empty">
+          <span class="empty__icon"><app-icon name="store" [size]="24" /></span>
           <div class="empty__title">Aucun etablissement</div>
-          <p>Aucun client ne correspond aux criteres de recherche.</p>
+          <p>
+            Enregistrez votre premier client pour commencer a suivre ses
+            interventions.
+          </p>
+          @if (auth.isAdmin()) {
+            <button type="button" class="btn btn--primary mt-4" (click)="openCreate()">
+              <app-icon name="plus" [size]="17" />
+              Enregistrer un etablissement
+            </button>
+          }
         </div>
       } @else {
         <div class="table-wrapper">
@@ -87,7 +103,7 @@
                     }
                   </td>
                   <td class="mono text-sm">{{ establishment.contractNumber ?? '—' }}</td>
-                  <td class="text-center">{{ establishment.equipmentCount }}</td>
+                  <td class="text-center tnum">{{ establishment.equipmentCount }}</td>
                   <td class="text-center">
                     @if (establishment.openTicketCount > 0) {
                       <span class="badge status-progress">
@@ -105,7 +121,14 @@
                     }
                   </td>
                   @if (auth.isAdmin()) {
-                    <td class="text-right">
+                    <td class="text-right nowrap">
+                      <button
+                        type="button"
+                        class="btn btn--ghost btn--sm"
+                        (click)="openEdit(establishment)"
+                      >
+                        Modifier
+                      </button>
                       <button
                         type="button"
                         class="btn btn--ghost btn--sm"
@@ -124,3 +147,117 @@
     }
   </div>
 </div>
+
+<!-- ====================== Creation et modification ====================== -->
+@if (formOpen()) {
+  <app-modal
+    [title]="editing() ? 'Modifier l etablissement' : 'Nouvel etablissement'"
+    [subtitle]="
+      editing()
+        ? 'Les tickets et le materiel existants ne sont pas affectes.'
+        : 'Le client pourra ensuite recevoir son materiel et ses comptes.'
+    "
+    (closed)="closeForm()"
+  >
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <div class="field form-grid__full">
+          <label class="field__label" for="name">Nom de l etablissement</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="Cafe El Medina"
+            [class.invalid]="form.controls.name.touched && form.controls.name.invalid"
+          />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <span class="field__error">Le nom est obligatoire.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="formType">Type</label>
+          <select id="formType" formControlName="type">
+            @for (option of types(); track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="city">Ville</label>
+          <input
+            id="city"
+            type="text"
+            formControlName="city"
+            placeholder="Gabes"
+            [class.invalid]="form.controls.city.touched && form.controls.city.invalid"
+          />
+          @if (form.controls.city.touched && form.controls.city.invalid) {
+            <span class="field__error">La ville est obligatoire.</span>
+          }
+        </div>
+
+        <div class="field form-grid__full">
+          <label class="field__label" for="address">Adresse</label>
+          <input
+            id="address"
+            type="text"
+            formControlName="address"
+            placeholder="Avenue Farhat Hached"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="contactName">Personne a contacter</label>
+          <input
+            id="contactName"
+            type="text"
+            formControlName="contactName"
+            placeholder="Nom du gerant"
+          />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="phone">Telephone</label>
+          <input id="phone" type="tel" formControlName="phone" placeholder="75 270 100" />
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="contactEmail">Adresse electronique</label>
+          <input
+            id="contactEmail"
+            type="email"
+            formControlName="contactEmail"
+            placeholder="contact@etablissement.tn"
+            [class.invalid]="
+              form.controls.contactEmail.touched && form.controls.contactEmail.invalid
+            "
+          />
+          @if (form.controls.contactEmail.touched && form.controls.contactEmail.invalid) {
+            <span class="field__error">Le format de l adresse est invalide.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="contractNumber">Numero de contrat</label>
+          <input
+            id="contractNumber"
+            type="text"
+            formControlName="contractNumber"
+            placeholder="CT-2026-001"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <button type="submit" class="btn btn--primary" [disabled]="saving()">
+          {{ saving() ? 'Enregistrement...' : 'Enregistrer' }}
+        </button>
+        <button type="button" class="btn btn--secondary" (click)="closeForm()">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}
