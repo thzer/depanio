@@ -21,6 +21,7 @@ npm-debug.log*
 .env
 .env.production
 A-COLLER-DANS-RENDER.txt
+.render-key
 secrets.properties
 backend/secrets.properties
 .env.local
