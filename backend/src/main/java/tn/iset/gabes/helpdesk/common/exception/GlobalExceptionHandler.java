@@ -10,6 +10,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,6 +60,23 @@ public class GlobalExceptionHandler {
                 .body(ApiError.withFieldErrors(400, "Bad Request",
                         "Les donnees envoyees sont invalides.",
                         request.getRequestURI(), fieldErrors));
+    }
+
+    /**
+     * Adresse inconnue cote serveur.
+     * <p>
+     * Sans ce traitement, l'absence d'une ressource remonterait jusqu'au
+     * filet de securite et serait signalee comme une erreur interne. Une
+     * adresse qui n'existe pas n'est pas une panne : la confondre avec une
+     * vraie erreur noierait les incidents reels dans les journaux.
+     */
+    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
+    public ResponseEntity<ApiError> handleUnknownPath(Exception ex,
+                                                      HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiError.of(404, "Not Found",
+                        "Cette adresse n'existe pas.", request.getRequestURI()));
     }
 
     @ExceptionHandler(AuthenticationException.class)
