@@ -181,15 +181,27 @@ Ce fichier est exclu de Git : vos identifiants ne partent jamais dans le dépôt
 
 ## Mise en production
 
-Tout est automatisé :
+Deux chemins, détaillés dans **[docs/03-deploiement.md](docs/03-deploiement.md)** :
+
+| | Pour qui | Carte bancaire | Coût |
+|---|---|---|---|
+| **Render** | Mettre en ligne aujourd'hui, montrer le produit | Non | 0 € |
+| **Google Cloud Run** | Clients payants, pas de mise en veille | Oui | 12 à 25 €/mois |
+
+La base de données est la même dans les deux cas : **PostgreSQL chez Neon**,
+gratuite. L'application ne contient aucune requête propre à un moteur : elle
+fonctionne indifféremment sur PostgreSQL ou MySQL, seule l'URL change.
+
+Sur Render, le fichier `render.yaml` configure le service tout seul : il suffit
+de connecter le dépôt et de coller les valeurs secrètes.
+
+Sur Google Cloud, tout est automatisé :
 
 ```bash
 export GCP_PROJECT=votre-projet
+export ADMIN_EMAIL=vous@votre-societe.tn
 ./deploy/deploy.sh
 ```
-
-La préparation du compte Google Cloud, les coûts attendus et l'exploitation
-courante sont décrits dans **[docs/03-deploiement.md](docs/03-deploiement.md)**.
 
 ### Essayer l'image de production en local
 
@@ -280,7 +292,7 @@ une base de développement.
 |---|---|
 | [docs/01-cahier-des-charges.md](docs/01-cahier-des-charges.md) | Problématique, besoins, règles de gestion |
 | [docs/02-conception.md](docs/02-conception.md) | Diagrammes de cas d'utilisation, de classes, de séquence, d'états |
-| [docs/03-deploiement.md](docs/03-deploiement.md) | Mise en production sur Google Cloud |
+| [docs/03-deploiement.md](docs/03-deploiement.md) | Mise en production : Render ou Google Cloud |
 
 ---
 

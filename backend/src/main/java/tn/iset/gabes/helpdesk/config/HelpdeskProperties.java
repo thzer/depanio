@@ -19,8 +19,27 @@ import java.util.List;
 @ConfigurationProperties(prefix = "helpdesk")
 public class HelpdeskProperties {
 
-    /** URL publique du frontend, utilisee pour construire le contenu des QR codes. */
+    /** Adresse publique de l'application, encodee dans les QR codes. */
     private String frontendUrl = "http://localhost:4200";
+
+    /**
+     * Adresse publique normalisee.
+     * <p>
+     * Certains hebergeurs fournissent seulement le nom d'hote, sans
+     * protocole. Un QR code contenant {@code exemple.com/scan/...} ne
+     * s'ouvrirait pas au scan : le protocole est donc ajoute si besoin,
+     * et la barre oblique finale retiree pour eviter les doublons.
+     */
+    public String getFrontendUrl() {
+        if (frontendUrl == null || frontendUrl.isBlank()) {
+            return "";
+        }
+        String value = frontendUrl.trim();
+        if (!value.startsWith("http://") && !value.startsWith("https://")) {
+            value = (value.startsWith("localhost") ? "http://" : "https://") + value;
+        }
+        return value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
+    }
 
     private Security security = new Security();
     private Sla sla = new Sla();

@@ -1,0 +1,73 @@
+# =============================================================================
+#  Depanio — mise en ligne sur Render
+#
+#  Render lit ce fichier et configure le service tout seul : vous n'avez
+#  rien a regler dans son interface, sinon coller quatre valeurs secretes.
+#
+#  Pourquoi Render pour demarrer : l'offre gratuite ne demande pas de
+#  carte bancaire. Elle suffit pour montrer le produit et accueillir vos
+#  premiers clients. Sa seule limite est la mise en veille apres quinze
+#  minutes sans visite : la requete suivante attend environ une minute,
+#  le temps que le service redemarre.
+#
+#  Quand l'activite le justifiera, le script deploy/deploy.sh bascule la
+#  meme image sur Google Cloud Run, sans mise en veille.
+# =============================================================================
+
+services:
+  - type: web
+    name: depanio
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+
+    # Francfort : le centre le plus proche de la Tunisie parmi les
+    # emplacements proposes en offre gratuite.
+    region: frankfurt
+
+    # Render interroge cette adresse pour savoir si le service est vivant.
+    healthCheckPath: /actuator/health
+
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # Au tout premier deploiement, les tables sont creees.
+      # Passez ensuite cette valeur a "validate" depuis l'interface de
+      # Render : le schema ne pourra plus etre modifie automatiquement.
+      - key: JPA_DDL_AUTO
+        value: update
+
+      # --- Valeurs a saisir dans Render au premier deploiement ---
+      # sync: false signifie que Render vous les demandera, et ne les
+      # inscrira jamais dans ce fichier ni dans votre depot.
+
+      # Base PostgreSQL, hebergee chez Neon. Format attendu :
+      #   jdbc:postgresql://HOTE/depanio?sslmode=require
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+      # Cle de signature des jetons.  openssl rand -base64 48
+      - key: JWT_SECRET
+        sync: false
+
+      # Compte administrateur, cree au tout premier demarrage si la base
+      # est vide. Ensuite, ces valeurs n'ont plus aucun effet.
+      - key: HELPDESK_ADMIN_EMAIL
+        sync: false
+      - key: HELPDESK_ADMIN_PASSWORD
+        sync: false
+      - key: HELPDESK_ADMIN_NAME
+        sync: false
+
+      # Adresse publique du service, encodee dans les etiquettes QR.
+      # Render la fournit lui-meme une fois le service cree.
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: depanio
+          property: host

@@ -1,12 +1,107 @@
-# Mise en production sur Google Cloud
+# Mise en production
 
-Ce guide décrit le déploiement de **Depanio** sur Google Cloud, de la création
-du projet jusqu'au nom de domaine. Comptez une heure la première fois, puis une
-minute pour chaque mise à jour.
+Deux chemins sont décrits ici :
+
+| | Pour qui | Carte bancaire | Coût |
+|---|---|---|---|
+| **[A — Render](#chemin-a--render-gratuit-sans-carte)** | Mettre en ligne aujourd'hui, montrer le produit, démarrer | Non | 0 € |
+| **[B — Google Cloud](#chemin-b--google-cloud)** | Clients payants, pas de mise en veille | Oui | 12 à 25 €/mois |
+
+La base de données est la même dans les deux cas : **PostgreSQL chez Neon**,
+gratuite. L'application fonctionne indifféremment sur PostgreSQL ou MySQL ;
+seule l'URL de connexion change.
+
+Commencez par le chemin A. Vous basculerez sur le B quand le chiffre d'affaires
+le justifiera : c'est la même image, le même code, une seule commande.
 
 ---
 
-## 1. Architecture retenue
+## Chemin A — Render, gratuit, sans carte
+
+### Ce que vous devez faire vous-même
+
+Ces trois étapes demandent **vos comptes** ; personne ne peut les faire à votre
+place :
+
+1. un compte **GitHub** ([github.com](https://github.com)) — gratuit ;
+2. un compte **Render** ([render.com](https://render.com)) — gratuit, connexion
+   par GitHub, aucune carte demandée ;
+3. publier ce dossier dans un dépôt GitHub (commandes ci-dessous).
+
+### A.1 Publier le code sur GitHub
+
+Créez un dépôt **privé** nommé `depanio` sur GitHub, puis, depuis le dossier du
+projet :
+
+```bash
+git remote add origin https://github.com/VOTRE-COMPTE/depanio.git
+git branch -M main
+git push -u origin main
+```
+
+> Le dépôt doit rester **privé** : il porte le code que vous comptez vendre.
+> Aucun mot de passe ne s'y trouve — les fichiers de secrets sont exclus — mais
+> le code lui-même est votre produit.
+
+### A.2 Créer le service sur Render
+
+1. Sur Render : **New → Blueprint**
+2. Sélectionnez le dépôt `depanio`
+3. Render lit le fichier `render.yaml` et configure tout seul le service
+
+Il vous demande ensuite les valeurs secrètes. Elles se trouvent dans votre
+fichier local **`.env.production`** :
+
+| Variable | Où la trouver |
+|---|---|
+| `DB_URL` | dans `.env.production` |
+| `DB_USERNAME` | dans `.env.production` |
+| `DB_PASSWORD` | dans `.env.production` |
+| `JWT_SECRET` | dans `.env.production` |
+| `HELPDESK_ADMIN_EMAIL` | votre adresse |
+| `HELPDESK_ADMIN_PASSWORD` | dans `.env.production` |
+| `HELPDESK_ADMIN_NAME` | votre nom |
+
+Le premier déploiement dure une dizaine de minutes : Render compile le frontend,
+puis le backend, puis démarre l'image.
+
+### A.3 Votre application est en ligne
+
+Render affiche une adresse du type :
+
+```
+https://depanio.onrender.com
+```
+
+Connectez-vous avec le compte administrateur. La base est vide : enregistrez
+votre premier établissement, son matériel, puis les comptes de vos techniciens.
+
+### A.4 Après le premier démarrage
+
+Dans Render → **Environment**, passez `JPA_DDL_AUTO` de `update` à `validate` :
+le schéma est en place, l'application ne doit plus pouvoir le modifier seule.
+
+### Ce qu'il faut savoir sur l'offre gratuite
+
+- **Mise en veille** après quinze minutes sans visite. La requête suivante
+  attend environ une minute. Acceptable pour une démonstration ; à surveiller
+  dès qu'un client appelle en urgence.
+- **750 heures par mois**, largement suffisant pour un service.
+- Chaque `git push` redéploie automatiquement.
+
+Le jour où la mise en veille devient gênante : soit l'offre payante de Render
+(7 $/mois), soit le chemin B ci-dessous.
+
+---
+
+## Chemin B — Google Cloud
+
+Ce chemin est décrit en détail dans tout ce qui suit. Comptez une heure la
+première fois, puis une minute pour chaque mise à jour.
+
+---
+
+## B.1 Architecture retenue
 
 ```
                   ┌──────────────────────────────┐
@@ -98,7 +193,7 @@ gcloud services enable \
   secretmanager.googleapis.com
 ```
 
-### 4.3 Créer la base de données
+### B.4.3 Créer la base de données
 
 ```bash
 gcloud sql instances create depanio-sql \
