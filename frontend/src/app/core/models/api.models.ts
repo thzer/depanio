@@ -327,6 +327,32 @@ export interface Dashboard {
   urgentTickets: TicketSummary[];
 }
 
+// ------------------------------------------- Demandes de demonstration
+
+export interface DemoRequestForm {
+  contactName: string;
+  email: string;
+  phone?: string;
+  companyName?: string;
+  establishmentCount?: string;
+  message?: string;
+  /** Champ piege : laisse vide par un visiteur, rempli par un robot. */
+  website?: string;
+}
+
+export interface DemoRequest {
+  id: number;
+  contactName: string;
+  email: string;
+  phone?: string;
+  companyName?: string;
+  establishmentCount?: string;
+  message?: string;
+  handled: boolean;
+  handledAt?: string;
+  createdAt: string;
+}
+
 // ------------------------------------------------------------------------ Erreurs
 
 /** Format unique des reponses d'erreur de l'API. */

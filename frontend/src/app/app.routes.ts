@@ -87,6 +87,14 @@ export const routes: Routes = [
       },
 
       {
+        path: 'demandes',
+        title: 'Demandes de demonstration',
+        canActivate: [roleGuard('ADMIN')],
+        loadComponent: () =>
+          import('./features/leads/demo-request-list').then((m) => m.DemoRequestListPage),
+      },
+
+      {
         // Adresse ouverte par la lecture d'une etiquette QR
         path: 'scan/:qrToken',
         title: 'Declarer une panne',

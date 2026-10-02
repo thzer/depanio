@@ -45,6 +45,7 @@ export class Shell {
       roles: ['ADMIN', 'TECHNICIAN'],
     },
     { path: '/utilisateurs', label: 'Utilisateurs', icon: 'users', roles: ['ADMIN'] },
+    { path: '/demandes', label: 'Demandes', icon: 'send', roles: ['ADMIN'] },
   ];
 
   /** Entrees de menu visibles pour le role courant. */

@@ -13,7 +13,7 @@
 
       <div class="nav__actions">
         <a class="btn btn--secondary btn--sm" routerLink="/login">Se connecter</a>
-        <a class="btn btn--primary btn--sm" [href]="contactLink">Demander une demo</a>
+        <button type="button" class="btn btn--primary btn--sm" (click)="openForm()">Demander une demo</button>
       </div>
     </div>
   </header>
@@ -38,10 +38,10 @@
       </p>
 
       <div class="hero__actions">
-        <a class="btn btn--primary btn--lg" [href]="contactLink">
+        <button type="button" class="btn btn--primary btn--lg" (click)="openForm()">
           Demander une demonstration
           <app-icon name="chevronRight" [size]="17" />
-        </a>
+        </button>
         <a class="btn btn--secondary btn--lg" href="#fonctionnement">Voir comment</a>
       </div>
 
@@ -204,14 +204,15 @@
               }
             </div>
 
-            <a
+            <button
+              type="button"
               class="btn btn--lg plan__cta"
               [class.btn--primary]="plan.highlighted"
               [class.btn--secondary]="!plan.highlighted"
-              [href]="contactLink"
+              (click)="openForm()"
             >
               {{ plan.cta }}
-            </a>
+            </button>
 
             <ul class="plan__features">
               @for (item of plan.features; track item) {
@@ -260,10 +261,10 @@
         materiel. Vous declarez une premiere panne le jour meme, et vous jugez
         sur piece.
       </p>
-      <a class="btn btn--lg cta__btn" [href]="contactLink">
+      <button type="button" class="btn btn--lg cta__btn" (click)="openForm()">
         Demander une demonstration
         <app-icon name="chevronRight" [size]="17" />
-      </a>
+      </button>
     </div>
   </section>
 
@@ -282,3 +283,8 @@
     </div>
   </footer>
 </div>
+
+<!-- ====================== Demande de demonstration ====================== -->
+@if (formOpen()) {
+  <app-demo-form (closed)="closeForm()" />
+}
