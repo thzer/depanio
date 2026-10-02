@@ -3,6 +3,7 @@ package tn.iset.gabes.helpdesk.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,28 @@ public class AuthController {
     @SecurityRequirements
     @Operation(summary = "Se connecter",
             description = "Verifie les identifiants et renvoie un jeton d'acces "
-                    + "ainsi qu'un jeton de renouvellement.")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+                    + "ainsi qu'un jeton de renouvellement. Les echecs repetes "
+                    + "suspendent temporairement les tentatives.")
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request,
+                                              HttpServletRequest httpRequest) {
+        return ResponseEntity.ok(authService.login(request, origine(httpRequest)));
+    }
+
+    /**
+     * Adresse reseau de l'appelant.
+     * <p>
+     * L'application est servie derriere un repartiteur de charge :
+     * l'adresse directe est celle de ce dernier, identique pour tout le
+     * monde. La veritable origine figure dans l'en-tete transmis par le
+     * repartiteur, dont seul le premier element est fiable, les suivants
+     * pouvant etre forges par l'appelant.
+     */
+    private String origine(HttpServletRequest request) {
+        String transmis = request.getHeader("X-Forwarded-For");
+        if (transmis != null && !transmis.isBlank()) {
+            return transmis.split(",")[0].trim();
+        }
+        return request.getRemoteAddr();
     }
 
     @PostMapping("/refresh")

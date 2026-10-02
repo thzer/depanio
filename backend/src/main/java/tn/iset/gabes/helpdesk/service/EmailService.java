@@ -117,6 +117,9 @@ public class EmailService {
     }
 
     private String sujet(NotificationType type, Ticket ticket) {
+        // La reference est generee par l'application, pas saisie :
+        // elle ne peut pas contenir de retour a la ligne, qui permettrait
+        // d'ajouter des en-tetes au message.
         String reference = ticket != null ? ticket.getReference() : "";
         return switch (type) {
             case TICKET_ASSIGNED -> "[" + reference + "] Une intervention vous est confiee";
@@ -187,8 +190,10 @@ public class EmailService {
                     Message automatique de Depanio. Inutile d'y repondre.
                   </p>
                 </div>
-                """.formatted(accent, accent, destinataire.getFullName(), message,
-                details.toString(), lien, accent);
+                """.formatted(accent, accent,
+                echapper(destinataire.getFullName()), echapper(message),
+                // Le tableau est deja construit avec des valeurs echappees
+                details.toString(), echapper(lien), accent);
     }
 
     private void ajouter(StringBuilder table, String libelle, String valeur) {
@@ -201,7 +206,29 @@ public class EmailService {
                 vertical-align:top">%s</td>
                   <td style="padding:5px 0;font-weight:600">%s</td>
                 </tr>
-                """.formatted(libelle, valeur));
+                """.formatted(echapper(libelle), echapper(valeur)));
+    }
+
+    /**
+     * Neutralise les caracteres qui ont un sens en HTML.
+     * <p>
+     * Le titre d'un ticket, le nom d'un etablissement ou celui d'un
+     * materiel sont saisis par des utilisateurs. Inseres tels quels dans
+     * un courriel en HTML, ils permettraient d'y glisser des balises, et
+     * donc de fabriquer un faux message a l'interieur d'un courriel qui
+     * parait venir de l'application : une invitation a cliquer sur un lien
+     * frauduleux, par exemple.
+     */
+    private String echapper(String valeur) {
+        if (valeur == null) {
+            return "";
+        }
+        return valeur
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
     private boolean isBlank(String value) {

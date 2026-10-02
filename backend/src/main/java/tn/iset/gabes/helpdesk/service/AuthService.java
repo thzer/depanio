@@ -21,6 +21,7 @@ import tn.iset.gabes.helpdesk.entity.User;
 import tn.iset.gabes.helpdesk.mapper.UserMapper;
 import tn.iset.gabes.helpdesk.repository.UserRepository;
 import tn.iset.gabes.helpdesk.security.JwtService;
+import tn.iset.gabes.helpdesk.security.LoginAttemptService;
 import tn.iset.gabes.helpdesk.security.SecurityUtils;
 import tn.iset.gabes.helpdesk.security.UserPrincipal;
 
@@ -37,6 +38,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final UserMapper userMapper;
+    private final LoginAttemptService loginAttemptService;
 
     /**
      * Verifie les identifiants et delivre les jetons.
@@ -44,25 +46,56 @@ public class AuthService {
      * Le message d'erreur reste identique que l'adresse soit inconnue ou
      * le mot de passe faux : distinguer les deux cas permettrait de
      * determiner quelles adresses existent dans le systeme.
+     * <p>
+     * Les echecs repetes sont comptes, par adresse visee et par origine.
+     * Sans cela, rien n'empecherait d'essayer des milliers de mots de
+     * passe : aucun mot de passe choisi par un humain n'y resisterait.
+     *
+     * @param origine adresse reseau de l'appelant, pour le comptage
      */
     @Transactional(readOnly = true)
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request, String origine) {
+        String email = request.email();
+
+        refuserSiBloque(email);
+        refuserSiBloque(origine);
+
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.email(), request.password()));
+                    new UsernamePasswordAuthenticationToken(email, request.password()));
 
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-            log.info("Connexion reussie : {} ({})", principal.getEmail(), principal.getRole());
+            loginAttemptService.reussite(email);
+            loginAttemptService.reussite(origine);
 
+            log.info("Connexion reussie : {} ({})", principal.getEmail(), principal.getRole());
             return buildAuthResponse(principal);
 
         } catch (DisabledException ex) {
+            // Un compte desactive n'est pas une erreur d'identifiants :
+            // le compter comme telle bloquerait un utilisateur legitime
+            // qui ignore simplement que son acces a ete suspendu.
             throw new BusinessException(
                     "Ce compte est desactive. Contactez votre administrateur.");
+
         } catch (BadCredentialsException ex) {
-            log.warn("Echec de connexion pour l'adresse {}", request.email());
+            loginAttemptService.echec(email);
+            loginAttemptService.echec(origine);
+            log.warn("Echec de connexion pour une adresse");
             throw new BusinessException("Adresse electronique ou mot de passe incorrect.");
+        }
+    }
+
+    /**
+     * Interrompt la tentative si la cle est sous blocage, en indiquant le
+     * delai restant : un utilisateur legitime qui s'est trompe doit savoir
+     * quand reessayer, plutot que de buter sur un refus inexplique.
+     */
+    private void refuserSiBloque(String cle) {
+        if (cle != null && loginAttemptService.estBloque(cle)) {
+            throw new BusinessException(
+                    "Trop de tentatives. Reessayez dans "
+                            + loginAttemptService.minutesRestantes(cle) + " minutes.");
         }
     }
 

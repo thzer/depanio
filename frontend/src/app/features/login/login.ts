@@ -47,6 +47,25 @@ export class LoginPage {
     this.passwordVisible.update((visible) => !visible);
   }
 
+  /**
+   * Valide la destination demandee avant de s y rendre.
+   *
+   * Cette valeur vient de l adresse de la page, donc de l exterieur. Un
+   * lien forge pourrait y placer un site tiers et, apres une connexion
+   * reussie, deposer l utilisateur sur une fausse page qui lui reclame de
+   * nouveau ses identifiants. Seuls les chemins internes sont acceptes.
+   *
+   * Le double slash est ecarte en plus du reste : "//exemple.com" est une
+   * adresse absolue, bien qu il commence par une barre oblique.
+   */
+  private destinationSure(demande: string | null): string {
+    const defaut = '/tableau-de-bord';
+    if (!demande || !demande.startsWith('/') || demande.startsWith('//')) {
+      return defaut;
+    }
+    return demande;
+  }
+
   protected fillDemoAccount(email: string): void {
     this.form.patchValue({ email, password: 'Passer@123' });
   }
@@ -63,8 +82,8 @@ export class LoginPage {
     this.auth.login(this.form.getRawValue()).subscribe({
       next: () => {
         // L adresse demandee avant la connexion est restauree si elle existe
-        const redirect = new URLSearchParams(window.location.search).get('redirect');
-        void this.router.navigateByUrl(redirect ?? '/tableau-de-bord');
+        const demande = new URLSearchParams(window.location.search).get('redirect');
+        void this.router.navigateByUrl(this.destinationSure(demande));
       },
       error: (error) => {
         this.submitting.set(false);

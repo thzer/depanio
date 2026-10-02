@@ -38,6 +38,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    /**
+     * Politique de securite du contenu.
+     * <p>
+     * Elle enumere les seules origines dont le navigateur accepte de
+     * charger quelque chose. Si du code etranger parvenait malgre tout a
+     * etre injecte dans une page, il ne pourrait ni se charger depuis un
+     * serveur exterieur, ni renvoyer les donnees ailleurs.
+     * <p>
+     * {@code 'unsafe-inline'} n'est tolere que pour les styles : Angular
+     * injecte ses feuilles de style dans la page. Les scripts, eux, ne
+     * peuvent venir que de l'application elle-meme, ce qui est la
+     * protection qui compte vraiment.
+     */
+    private static final String CONTENT_SECURITY_POLICY = String.join("; ",
+            "default-src 'self'",
+            "script-src 'self'",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com data:",
+            "img-src 'self' data: blob:",
+            "connect-src 'self' ws: wss:",
+            "frame-ancestors 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "object-src 'none'");
+
     /** Points d'entree de l'API ouverts sans authentification. */
     private static final String[] PUBLIC_API_PATHS = {
             "/api/auth/login",
@@ -61,6 +86,38 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers
+                        // Interdit l'affichage du site dans un cadre : empeche
+                        // qu'une page tierce le superpose pour capter les clics.
+                        .frameOptions(frame -> frame.deny())
+
+                        // Impose HTTPS pour un an. Le navigateur refusera
+                        // ensuite toute connexion en clair, meme si un lien
+                        // ou un reseau hostile tente de l'y ramener.
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31_536_000))
+
+                        // L'adresse consultee n'est pas transmise aux sites
+                        // tiers : une URL contenant un identifiant de ticket
+                        // ne doit pas fuiter vers un service externe.
+                        .referrerPolicy(referrer -> referrer.policy(
+                                org.springframework.security.web.header.writers
+                                        .ReferrerPolicyHeaderWriter.ReferrerPolicy
+                                        .STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+
+                        .contentSecurityPolicy(csp ->
+                                csp.policyDirectives(CONTENT_SECURITY_POLICY))
+
+                        .addHeaderWriter((request, response) ->
+                                // L'application n'utilise ni camera, ni micro,
+                                // ni position : on retire explicitement ces
+                                // permissions, pour qu'un code injecte ne
+                                // puisse pas les demander.
+                                response.setHeader("Permissions-Policy",
+                                        "camera=(), microphone=(), geolocation=(), "
+                                                + "payment=(), usb=(), interest-cohort=()"))
+                )
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(entryPoint))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_API_PATHS).permitAll()
