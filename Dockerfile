@@ -34,9 +34,13 @@ FROM maven:3.9-eclipse-temurin-17 AS backend
 
 WORKDIR /build
 
-# Meme principe : les dependances Maven d'abord, le code ensuite
+# Meme principe : les dependances Maven d'abord, le code ensuite.
+# L'echec de cette etape n'est pas bloquant : elle ne sert qu'a remplir
+# le cache. Ce qui manquerait serait de toute facon telecharge a l'etape
+# suivante, alors qu'un echec ici ferait inutilement rater la
+# construction entiere.
 COPY backend/pom.xml ./
-RUN mvn -B dependency:go-offline
+RUN mvn -B dependency:go-offline || true
 
 COPY backend/src ./src
 
@@ -57,6 +61,8 @@ FROM eclipse-temurin:17-jre-alpine AS runtime
 RUN addgroup -S depanio && adduser -S depanio -G depanio
 
 WORKDIR /app
+
+# Maven produit aussi un fichier .jar.original, que ce motif ne capte pas.
 COPY --from=backend /build/target/helpdesk-*.jar app.jar
 RUN chown -R depanio:depanio /app
 
