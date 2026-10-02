@@ -64,10 +64,6 @@ services:
       - key: HELPDESK_ADMIN_NAME
         sync: false
 
-      # Adresse publique du service, encodee dans les etiquettes QR.
-      # Render la fournit lui-meme une fois le service cree.
-      - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: depanio
-          property: host
+      # L'adresse publique n'a pas a etre saisie : Render la publie dans
+      # RENDER_EXTERNAL_URL, que l'application lit d'elle-meme pour
+      # construire le contenu des etiquettes QR.

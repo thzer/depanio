@@ -52,7 +52,11 @@ server:
     min-response-size: 1024
 
 helpdesk:
-  frontend-url: ${FRONTEND_URL}
+  # Adresse publique, encodee dans les etiquettes QR.
+  # Render publie l'adresse du service dans RENDER_EXTERNAL_URL : elle
+  # sert de valeur de repli, ce qui evite d'avoir a la recopier une fois
+  # le service cree. Sur un autre hebergeur, FRONTEND_URL reste a fournir.
+  frontend-url: ${FRONTEND_URL:${RENDER_EXTERNAL_URL:}}
   security:
     jwt:
       secret: ${JWT_SECRET}
@@ -61,7 +65,7 @@ helpdesk:
   cors:
     # Le frontend etant servi par la meme application, cette liste ne
     # sert que si une application mobile ou un domaine tiers l'appelle.
-    allowed-origins: ${CORS_ORIGINS:${FRONTEND_URL}}
+    allowed-origins: ${CORS_ORIGINS:${FRONTEND_URL:${RENDER_EXTERNAL_URL:http://localhost:4200}}}
 
 springdoc:
   # La documentation interactive est fermee par defaut en production :

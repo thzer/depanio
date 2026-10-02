@@ -20,6 +20,7 @@ npm-debug.log*
 # ils contiennent les mots de passe de base et les cles de signature.
 .env
 .env.production
+A-COLLER-DANS-RENDER.txt
 secrets.properties
 backend/secrets.properties
 .env.local
