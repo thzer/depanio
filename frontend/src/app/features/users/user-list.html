@@ -263,11 +263,11 @@
             type="text"
             formControlName="password"
             autocomplete="new-password"
-            placeholder="Au moins 8 caracteres"
+            placeholder="Au moins 10 caracteres"
             [class.invalid]="form.controls.password.touched && form.controls.password.invalid"
           />
           @if (form.controls.password.touched && form.controls.password.invalid) {
-            <span class="field__error">Au moins 8 caracteres.</span>
+            <span class="field__error">Au moins 10 caracteres.</span>
           }
         </div>
 

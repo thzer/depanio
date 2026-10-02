@@ -293,6 +293,7 @@ une base de développement.
 | [docs/01-cahier-des-charges.md](docs/01-cahier-des-charges.md) | Problématique, besoins, règles de gestion |
 | [docs/02-conception.md](docs/02-conception.md) | Diagrammes de cas d'utilisation, de classes, de séquence, d'états |
 | [docs/03-deploiement.md](docs/03-deploiement.md) | Mise en production : Render ou Google Cloud |
+| [docs/04-securite.md](docs/04-securite.md) | Analyse de sécurité : défauts corrigés, limites assumées |
 
 ---
 

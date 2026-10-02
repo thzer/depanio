@@ -102,7 +102,7 @@ export class UserListPage {
   protected readonly form = this.fb.nonNullable.group({
     fullName: ['', [Validators.required, Validators.maxLength(120)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [Validators.required, Validators.minLength(10)]],
     role: ['TECHNICIAN' as Role, [Validators.required]],
     phone: [''],
     speciality: [''],

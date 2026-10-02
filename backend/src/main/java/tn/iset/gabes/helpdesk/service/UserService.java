@@ -193,9 +193,9 @@ public class UserService {
     /** Reinitialisation du mot de passe par un administrateur. */
     @Transactional
     public void resetPassword(Long id, String newPassword) {
-        if (newPassword == null || newPassword.length() < 8) {
+        if (newPassword == null || newPassword.length() < 10) {
             throw new BusinessException(
-                    "Le mot de passe doit contenir au moins 8 caracteres.");
+                    "Le mot de passe doit contenir au moins 10 caracteres.");
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur", id));

@@ -35,7 +35,7 @@ export class ChangePasswordPage {
   protected readonly form = this.fb.nonNullable.group(
     {
       currentPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      newPassword: ['', [Validators.required, Validators.minLength(10)]],
       confirmation: ['', [Validators.required]],
     },
     { validators: [passwordsMatch] },
@@ -51,7 +51,7 @@ export class ChangePasswordPage {
   constructor() {
     this.form.controls.newPassword.valueChanges.subscribe((value) => {
       this.checks.set([
-        { label: 'Au moins 8 caracteres', ok: value.length >= 8 },
+        { label: 'Au moins 10 caracteres', ok: value.length >= 10 },
         { label: 'Une majuscule', ok: /[A-Z]/.test(value) },
         { label: 'Un chiffre', ok: /[0-9]/.test(value) },
         { label: 'Un caractere special', ok: /[^A-Za-z0-9]/.test(value) },
