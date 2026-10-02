@@ -301,6 +301,17 @@
 
 .profile__menu-item:hover {
   background: var(--ink-50);
+  color: var(--brand-700);
+  text-decoration: none;
+}
+
+/* La deconnexion est signalee differemment : c est la seule action
+   du menu qui interrompt la session. */
+.profile__menu-item--danger {
+  border-top: 1px solid var(--border);
+}
+
+.profile__menu-item--danger:hover {
   color: var(--danger);
 }
 

@@ -44,6 +44,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final EmailService emailService;
 
     /**
      * Cree une notification pour un destinataire et la pousse en temps reel.
@@ -67,7 +68,13 @@ public class NotificationService {
                 .read(false)
                 .build());
 
+        // Canal immediat, pour qui a l'application ouverte
         push(recipient.getEmail(), toResponse(notification));
+
+        // Canal durable, pour qui est en deplacement. Le service decide
+        // seul si le motif justifie un courriel, et l'envoi est asynchrone :
+        // la creation du ticket ne l'attend pas.
+        emailService.envoyer(recipient, type, message, ticket);
     }
 
     /**

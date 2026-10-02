@@ -83,6 +83,10 @@ export class Shell {
     this.profileOpen.update((open) => !open);
   }
 
+  protected closeProfile(): void {
+    this.profileOpen.set(false);
+  }
+
   protected logout(): void {
     this.profileOpen.set(false);
     this.auth.logout();

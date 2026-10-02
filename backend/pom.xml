@@ -61,6 +61,18 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!--
+            Envoi de courriels par SMTP.
+            Volontairement generique plutot que lie a un fournisseur :
+            les memes reglages fonctionnent avec Gmail, Resend, Brevo ou
+            le serveur d'un hebergeur. Changer de fournisseur ne demande
+            alors aucune modification du code.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
         <!-- JSON Web Token -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

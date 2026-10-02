@@ -45,6 +45,48 @@ public class HelpdeskProperties {
     private Sla sla = new Sla();
     private Cors cors = new Cors();
     private Admin admin = new Admin();
+    private Mail mail = new Mail();
+    private KeepAlive keepAlive = new KeepAlive();
+
+    /**
+     * Envoi de courriels.
+     * <p>
+     * Les notifications dans l'application ne suffisent pas : un technicien
+     * en deplacement n'a pas le navigateur ouvert. Le courriel est le seul
+     * canal qui le joigne sans rien installer ni rien payer.
+     * <p>
+     * Desactive tant qu'aucun serveur n'est configure : l'application
+     * fonctionne alors normalement, sans courriel.
+     */
+    @Getter
+    @Setter
+    public static class Mail {
+        private boolean enabled = false;
+
+        /** Adresse affichee comme expediteur. */
+        private String from = "";
+
+        /** Nom affiche a cote de l'adresse. */
+        private String fromName = "Depanio";
+    }
+
+    /**
+     * Maintien en eveil du service.
+     * <p>
+     * Sur une offre d'hebergement gratuite, le service est mis en veille
+     * apres quelques minutes sans visite. Or la surveillance des delais
+     * contractuels est une tache de fond : endormie, elle ne constate plus
+     * aucun depassement a l'heure. Une requete periodique sur sa propre
+     * adresse publique maintient le service actif.
+     */
+    @Getter
+    @Setter
+    public static class KeepAlive {
+        private boolean enabled = false;
+
+        /** Frequence de la requete d'eveil, au format cron. */
+        private String cron = "0 */10 * * * *";
+    }
 
     /**
      * Compte administrateur cree au tout premier demarrage, lorsque la

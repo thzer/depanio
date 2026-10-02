@@ -81,7 +81,15 @@
                 </div>
               }
             </div>
-            <button type="button" class="profile__menu-item" (click)="logout()">
+            <a
+              class="profile__menu-item"
+              routerLink="/mot-de-passe"
+              (click)="closeProfile()"
+            >
+              <app-icon name="shield" [size]="17" />
+              Changer mon mot de passe
+            </a>
+            <button type="button" class="profile__menu-item profile__menu-item--danger" (click)="logout()">
               <app-icon name="logout" [size]="17" />
               Se deconnecter
             </button>

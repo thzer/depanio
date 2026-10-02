@@ -99,6 +99,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/dashboard/notification-list').then((m) => m.NotificationListPage),
       },
+
+      {
+        path: 'mot-de-passe',
+        title: 'Mot de passe',
+        loadComponent: () =>
+          import('./features/profile/change-password').then((m) => m.ChangePasswordPage),
+      },
     ],
   },
 

@@ -26,6 +26,25 @@ spring:
       max-file-size: 5MB
       max-request-size: 10MB
 
+  # Serveur d'envoi de courriels.
+  # Volontairement generique : les memes reglages conviennent a Gmail,
+  # Resend, Brevo ou au serveur d'un hebergeur. Les valeurs sensibles
+  # viennent de variables d'environnement.
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+
 server:
   # Le port 8080 est souvent deja pris sur un poste de developpement, par
   # exemple par le listener Oracle ou par Tomcat de XAMPP. Le port est donc
@@ -73,6 +92,20 @@ helpdesk:
 
   cors:
     allowed-origins: http://localhost:4200,http://127.0.0.1:4200
+
+  # Courriels de notification.
+  # Desactives tant qu'aucun serveur SMTP n'est configure : l'application
+  # fonctionne alors normalement, sans courriel.
+  mail:
+    enabled: ${MAIL_ENABLED:false}
+    from: ${MAIL_FROM:}
+    from-name: ${MAIL_FROM_NAME:Depanio}
+
+  # Maintien en eveil, utile seulement sur un hebergement qui met le
+  # service en veille apres quelques minutes d'inactivite.
+  keep-alive:
+    enabled: ${KEEP_ALIVE_ENABLED:false}
+    cron: ${KEEP_ALIVE_CRON:0 */10 * * * *}
 
 # ------------------------------------------------------------
 #  Documentation de l'API
