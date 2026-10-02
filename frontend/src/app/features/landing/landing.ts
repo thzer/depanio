@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { Icon } from '../../shared/icon';
 import { Logo } from '../../shared/logo';
 
@@ -30,7 +31,11 @@ interface Question {
  * C est la vitrine du produit : elle s adresse au dirigeant d une societe
  * de maintenance, pas a l utilisateur quotidien. Elle enonce donc le
  * probleme avant la solution, montre un resultat chiffre, et conduit a un
- * seul geste : essayer la demonstration.
+ * seul geste : demander une demonstration.
+ *
+ * L appel a l action ouvre un courriel pre-redige plutot qu un formulaire :
+ * tant qu aucun service d envoi n est en place, un formulaire donnerait
+ * l illusion d un message parti alors que personne ne le recevrait.
  */
 @Component({
   selector: 'app-landing',
@@ -40,6 +45,25 @@ interface Question {
 })
 export class LandingPage {
   protected readonly year = new Date().getFullYear();
+
+  /**
+   * Courriel pre-redige pour demander une demonstration.
+   * Le sujet et le corps sont amorces : le prospect n a plus qu a
+   * completer et envoyer.
+   */
+  protected readonly contactLink =
+    `mailto:${environment.contactEmail}` +
+    '?subject=' +
+    encodeURIComponent('Demande de demonstration — Depanio') +
+    '&body=' +
+    encodeURIComponent(
+      'Bonjour,\n\n' +
+        'Je souhaite voir Depanio en fonctionnement.\n\n' +
+        'Societe :\n' +
+        'Nombre d etablissements suivis :\n' +
+        'Telephone :\n\n' +
+        'Merci.',
+    );
 
   /** Question dont la reponse est depliee, null si toutes sont fermees. */
   protected readonly openQuestion = signal<number | null>(0);
@@ -144,7 +168,7 @@ export class LandingPage {
         'Assistance prioritaire',
       ],
       highlighted: true,
-      cta: 'Essayer la demonstration',
+      cta: 'Demander une demonstration',
     },
     {
       name: 'Sur mesure',

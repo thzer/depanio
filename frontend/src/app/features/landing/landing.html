@@ -13,7 +13,7 @@
 
       <div class="nav__actions">
         <a class="btn btn--secondary btn--sm" routerLink="/login">Se connecter</a>
-        <a class="btn btn--primary btn--sm" routerLink="/login">Voir la demonstration</a>
+        <a class="btn btn--primary btn--sm" [href]="contactLink">Demander une demo</a>
       </div>
     </div>
   </header>
@@ -38,15 +38,15 @@
       </p>
 
       <div class="hero__actions">
-        <a class="btn btn--primary btn--lg" routerLink="/login">
-          Essayer la demonstration
+        <a class="btn btn--primary btn--lg" [href]="contactLink">
+          Demander une demonstration
           <app-icon name="chevronRight" [size]="17" />
         </a>
         <a class="btn btn--secondary btn--lg" href="#fonctionnement">Voir comment</a>
       </div>
 
       <p class="hero__note">
-        Demonstration complete, avec de vraies donnees. Aucune carte bancaire.
+        Reponse sous 24 heures. Mise en service le jour meme, sans installation.
       </p>
 
       <!-- Apercu du produit, reconstitue en elements reels plutot qu en image -->
@@ -208,7 +208,7 @@
               class="btn btn--lg plan__cta"
               [class.btn--primary]="plan.highlighted"
               [class.btn--secondary]="!plan.highlighted"
-              routerLink="/login"
+              [href]="contactLink"
             >
               {{ plan.cta }}
             </a>
@@ -254,13 +254,14 @@
   <!-- ============================= Appel final =============================== -->
   <section class="cta">
     <div class="cta__inner">
-      <h2>Essayez avec de vraies donnees, maintenant.</h2>
+      <h2>Voyez Depanio sur vos propres clients.</h2>
       <p>
-        La demonstration contient quatre etablissements, dix machines et une
-        quinzaine de tickets a differents stades. Un clic suffit pour entrer.
+        Nous mettons en place votre espace avec vos etablissements et votre
+        materiel. Vous declarez une premiere panne le jour meme, et vous jugez
+        sur piece.
       </p>
-      <a class="btn btn--lg cta__btn" routerLink="/login">
-        Ouvrir la demonstration
+      <a class="btn btn--lg cta__btn" [href]="contactLink">
+        Demander une demonstration
         <app-icon name="chevronRight" [size]="17" />
       </a>
     </div>

@@ -16,5 +16,7 @@ export const environment = {
   wsUrl: 'ws://localhost:8081/ws',
 
   /** Nom de l'application, affiche dans l'interface. */
+  /** Adresse a laquelle les prospects demandent une demonstration. */
+  contactEmail: 'mohamedyahyabenyaflah@gmail.com',
   appName: 'Depanio',
 };

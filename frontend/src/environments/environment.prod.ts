@@ -9,5 +9,7 @@ export const environment = {
 
   apiUrl: '/api',
   wsUrl: `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`,
+  /** Adresse a laquelle les prospects demandent une demonstration. */
+  contactEmail: 'mohamedyahyabenyaflah@gmail.com',
   appName: 'Depanio',
 };
