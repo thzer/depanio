@@ -17,6 +17,6 @@ export const environment = {
 
   /** Nom de l'application, affiche dans l'interface. */
   /** Adresse a laquelle les prospects demandent une demonstration. */
-  contactEmail: 'mohamedyahyabenyaflah@gmail.com',
+  contactEmail: 'borjiayoub1@gmail.com',
   appName: 'Depanio',
 };
