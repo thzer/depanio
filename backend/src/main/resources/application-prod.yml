@@ -85,6 +85,12 @@ management:
       show-details: never
       probes:
         enabled: true
+  health:
+    # Voir application.yml : le courriel ne conditionne pas la sante du
+    # service. C'est l'adresse interrogee par l'hebergeur pour decider si
+    # la version deployee est utilisable.
+    mail:
+      enabled: false
 
 logging:
   level:

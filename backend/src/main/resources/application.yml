@@ -129,6 +129,13 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+  health:
+    # Le courriel est un confort, pas une dependance vitale : une
+    # messagerie absente ou en panne ne doit pas faire declarer
+    # l'application hors service. Sans cette ligne, l'hebergeur
+    # refuserait le deploiement d'une application pourtant saine.
+    mail:
+      enabled: false
 
 logging:
   level:
