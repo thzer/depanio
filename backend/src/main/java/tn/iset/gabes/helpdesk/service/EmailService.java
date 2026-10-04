@@ -1,6 +1,8 @@
 package tn.iset.gabes.helpdesk.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tn.iset.gabes.helpdesk.config.HelpdeskProperties;
@@ -58,6 +60,37 @@ public class EmailService {
         // message, elle n'a pas a savoir comment il circule.
         this.transports = transports;
         this.properties = properties;
+    }
+
+    /**
+     * Annonce au demarrage l'etat de l'envoi de courriels.
+     * <p>
+     * Sans cette ligne, une configuration incomplete ne produit aucun
+     * signe : les notifications restent visibles a l'ecran, les courriels
+     * ne partent pas, et rien dans les journaux ne le dit. L'exploitant
+     * ne s'en apercoit que le jour ou un technicien se plaint de ne pas
+     * avoir ete prevenu. Le detail affiche ici nomme exactement ce qui
+     * manque.
+     */
+    @EventListener(ApplicationReadyEvent.class)
+    public void annoncerEtat() {
+        MailTransport transport = transportRetenu();
+        if (transport != null) {
+            log.info("Courriels actifs : acheminement par {}, expediteur {}",
+                    transport.name(), properties.getMail().getFrom());
+            return;
+        }
+
+        List<String> disponibles = transports.stream()
+                .filter(MailTransport::isAvailable)
+                .map(MailTransport::name)
+                .toList();
+
+        log.warn("Courriels inactifs : enabled={}, expediteur=\"{}\", moyens disponibles={} sur {}",
+                properties.getMail().isEnabled(),
+                properties.getMail().getFrom(),
+                disponibles,
+                transports.stream().map(MailTransport::name).toList());
     }
 
     /**
