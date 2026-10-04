@@ -226,6 +226,7 @@ cd backend && ./mvnw test
 | `TenantIsolationIntegrationTest` | Le cloisonnement, par de vraies requêtes HTTP |
 | `LoginAttemptServiceTest` | La limitation des essais de mot de passe |
 | `EmailTransportSelectionTest` | Le choix du moyen d'envoi, et son échec sans conséquence |
+| `SmtpMailTransportTest` | Qu'un serveur de messagerie vide ne passe pas pour configuré |
 
 Les tests s'exécutent sur une base H2 en mémoire : aucune base externe requise,
 et la base de développement n'est jamais touchée.

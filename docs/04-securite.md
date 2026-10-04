@@ -232,7 +232,7 @@ actuel du produit.
 |---|---|
 | Lecture du code | Injection dans les courriels, redirection non contrôlée |
 | Requêtes sur l'application en service | Absence de limitation des tentatives, en-têtes manquants |
-| Tests automatisés | 41 tests, dont 8 sur le cloisonnement et 6 sur la limitation |
+| Tests automatisés | 44 tests, dont 8 sur le cloisonnement et 6 sur la limitation |
 | Vérification après correction | Chaque correctif retesté sur l'application en ligne |
 
 Les corrections décrites ici ont toutes été **vérifiées après déploiement**, et

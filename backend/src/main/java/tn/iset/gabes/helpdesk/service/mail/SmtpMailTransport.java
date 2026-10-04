@@ -2,6 +2,7 @@ package tn.iset.gabes.helpdesk.service.mail;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,19 +26,33 @@ public class SmtpMailTransport implements MailTransport {
 
     private final ObjectProvider<JavaMailSender> sender;
     private final HelpdeskProperties properties;
+    private final String host;
 
     public SmtpMailTransport(ObjectProvider<JavaMailSender> sender,
-                             HelpdeskProperties properties) {
+                             HelpdeskProperties properties,
+                             @Value("${spring.mail.host:}") String host) {
         // ObjectProvider plutot qu'injection directe : le bean d'envoi
         // n'existe que si un serveur est configure, et son absence ne doit
         // pas empecher l'application de demarrer.
         this.sender = sender;
         this.properties = properties;
+        this.host = host;
     }
 
+    /**
+     * Le nom du serveur est verifie en plus de la presence du bean
+     * d'envoi.
+     * <p>
+     * La nuance a son importance : lorsque la variable {@code MAIL_HOST}
+     * n'est pas renseignee, elle vaut la chaine vide et non rien du tout.
+     * Spring considere alors la propriete comme presente et construit tout
+     * de meme le bean d'envoi. Sans ce controle, ce transport se declarait
+     * disponible sans serveur a joindre : il etait retenu, et chaque
+     * courriel echouait sur une adresse vide.
+     */
     @Override
     public boolean isAvailable() {
-        return sender.getIfAvailable() != null;
+        return host != null && !host.isBlank() && sender.getIfAvailable() != null;
     }
 
     @Override
