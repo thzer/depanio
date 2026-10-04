@@ -88,9 +88,91 @@ le schéma est en place, l'application ne doit plus pouvoir le modifier seule.
   dès qu'un client appelle en urgence.
 - **750 heures par mois**, largement suffisant pour un service.
 - Chaque `git push` redéploie automatiquement.
+- **Les ports du protocole SMTP sont fermés** en sortie. Voir la section
+  « Courriels » ci-dessous : l'application en tient compte.
 
 Le jour où la mise en veille devient gênante : soit l'offre payante de Render
 (7 $/mois), soit le chemin B ci-dessous.
+
+---
+
+## Courriels de notification
+
+Les notifications affichées dans l'application ne suffisent pas : un technicien
+en déplacement n'a pas le navigateur ouvert. Le courriel est le seul canal qui
+le joigne sans rien installer sur son téléphone.
+
+### Pourquoi deux moyens d'envoi
+
+L'application sait envoyer un courriel de deux façons, et choisit seule :
+
+| Moyen | Quand il est retenu | Contrainte |
+|---|---|---|
+| **Requête HTTPS** | dès que `MAIL_API_KEY` est renseignée | dépend du fournisseur choisi |
+| **SMTP** | sinon, si `MAIL_HOST` est renseigné | exige un port sortant ouvert |
+
+Cette dualité n'est pas un luxe. Les hébergeurs mutualisés — Render, Vercel,
+l'offre gratuite de la plupart des plateformes — **ferment les ports sortants
+25, 465 et 587** pour ne pas devenir des relais de courriels non sollicités. Un
+envoi SMTP n'y échoue pas avec un refus clair : la connexion expire au bout de
+dix secondes, et seule la lecture des journaux révèle la cause.
+
+> Cette panne a réellement été rencontrée sur ce projet. Le journal indiquait
+> `MailConnectException: Couldn't connect to host, port: smtp.resend.com, 587`
+> alors que la configuration SMTP était correcte. Le port 443, lui, est partout
+> ouvert : d'où l'envoi par requête HTTPS, prioritaire.
+
+Le SMTP reste en place car il est le bon choix pour une installation chez le
+client ou sur un serveur loué : il n'enferme dans aucun fournisseur et accepte
+aussi bien Gmail que le serveur interne d'une société.
+
+### Configuration
+
+Sur Render → **Environment** :
+
+| Variable | Valeur |
+|---|---|
+| `MAIL_ENABLED` | `true` |
+| `MAIL_FROM` | adresse d'expédition |
+| `MAIL_FROM_NAME` | `Depanio` |
+| `MAIL_API_KEY` | la clé fournie par votre service d'envoi |
+
+`MAIL_API_URL` vaut par défaut `https://api.resend.com/emails` ; changez-la pour
+un autre fournisseur au format de requête équivalent.
+
+Pour un envoi en SMTP (serveur loué, Google Cloud, poste du client) :
+`MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`, et **pas** de
+`MAIL_API_KEY`.
+
+Sans aucune de ces valeurs, l'application fonctionne normalement : les
+notifications restent visibles à l'écran, elles ne partent simplement pas par
+courriel.
+
+### La limite à lever avant le premier client
+
+Tant qu'aucun **domaine n'est vérifié** chez le service d'envoi, l'adresse
+d'expédition est une adresse de test (`onboarding@resend.dev`) qui **n'atteint
+que votre propre boîte**. Les courriels destinés à vos techniciens et à vos
+clients sont refusés.
+
+Pour les joindre, il faut un domaine à vous :
+
+1. Déclarer le domaine chez le service d'envoi
+2. Ajouter les enregistrements DNS qu'il indique (SPF, DKIM)
+3. Attendre la vérification, puis mettre `MAIL_FROM=notifications@votre-domaine.tn`
+
+C'est aussi ce qui évite que vos messages partent en indésirables : un courriel
+envoyé depuis un domaine non authentifié est filtré par Gmail et Outlook.
+
+### Quels événements donnent lieu à un courriel
+
+Volontairement restreint à quatre motifs : ticket affecté, ticket déclaré,
+échéance proche, délai dépassé. Un courriel pour chaque commentaire finirait en
+règle de filtrage dans la boîte du technicien, et les alertes vraiment urgentes
+seraient perdues avec le reste.
+
+Un échec d'envoi est journalisé et n'a aucune autre conséquence : une messagerie
+en panne ne doit jamais empêcher d'enregistrer une panne de caisse.
 
 ---
 

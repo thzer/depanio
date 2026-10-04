@@ -94,12 +94,18 @@ helpdesk:
     allowed-origins: http://localhost:4200,http://127.0.0.1:4200
 
   # Courriels de notification.
-  # Desactives tant qu'aucun serveur SMTP n'est configure : l'application
+  # Desactives tant qu'aucun moyen d'envoi n'est configure : l'application
   # fonctionne alors normalement, sans courriel.
   mail:
     enabled: ${MAIL_ENABLED:false}
     from: ${MAIL_FROM:}
     from-name: ${MAIL_FROM_NAME:Depanio}
+    # Envoi par requete HTTPS, prefere au SMTP des qu'une cle est fournie.
+    # Les hebergeurs mutualises ferment les ports sortants du protocole SMTP
+    # (25, 465, 587) pour ne pas devenir des relais de courriels non
+    # sollicites ; le port 443 reste toujours ouvert.
+    api-url: ${MAIL_API_URL:https://api.resend.com/emails}
+    api-key: ${MAIL_API_KEY:}
 
   # Maintien en eveil, utile seulement sur un hebergement qui met le
   # service en veille apres quelques minutes d'inactivite.

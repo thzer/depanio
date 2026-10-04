@@ -224,6 +224,8 @@ cd backend && ./mvnw test
 | `TicketStatusTest` | Le cycle de vie : transitions, états finaux, absence de retour arrière |
 | `JwtServiceTest` | Production, expiration et rejet d'un jeton forgé |
 | `TenantIsolationIntegrationTest` | Le cloisonnement, par de vraies requêtes HTTP |
+| `LoginAttemptServiceTest` | La limitation des essais de mot de passe |
+| `EmailTransportSelectionTest` | Le choix du moyen d'envoi, et son échec sans conséquence |
 
 Les tests s'exécutent sur une base H2 en mémoire : aucune base externe requise,
 et la base de développement n'est jamais touchée.
@@ -279,6 +281,16 @@ Toutes les valeurs sensibles se surchargent par variables d'environnement.
 | `HELPDESK_ADMIN_PASSWORD` | Mot de passe du compte initial | *(aucun)* |
 | `FRONTEND_URL` | Adresse publique, encodée dans les QR codes | `http://localhost:4200` |
 | `SWAGGER_ENABLED` | Documentation de l'API | activée en développement |
+| `MAIL_ENABLED` | Envoi des courriels de notification | `false` |
+| `MAIL_FROM` | Adresse d'expédition | *(aucune)* |
+| `MAIL_API_KEY` | Clé du service d'envoi, pour l'envoi en HTTPS | *(aucune)* |
+| `MAIL_HOST` | Serveur SMTP, si l'envoi passe par SMTP | *(aucun)* |
+
+Sur les **courriels** : l'application sait les envoyer par requête HTTPS ou par
+SMTP, et retient le premier moyen configuré, HTTPS d'abord. Ce n'est pas un
+luxe — les hébergeurs mutualisés ferment les ports sortants du protocole SMTP,
+où la connexion expire sans message d'erreur clair. Détail et limites dans
+[docs/03-deploiement.md](docs/03-deploiement.md).
 
 Le profil `prod` n'accepte **aucun** défaut pour la base : l'application refuse
 de démarrer si la configuration manque, plutôt que de se connecter par erreur à

@@ -1,18 +1,15 @@
 package tn.iset.gabes.helpdesk.service;
 
-import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import tn.iset.gabes.helpdesk.config.HelpdeskProperties;
 import tn.iset.gabes.helpdesk.entity.Ticket;
 import tn.iset.gabes.helpdesk.entity.User;
 import tn.iset.gabes.helpdesk.entity.enums.NotificationType;
+import tn.iset.gabes.helpdesk.service.mail.MailTransport;
 
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * Envoi des courriels de notification.
@@ -51,15 +48,15 @@ public class EmailService {
             NotificationType.TICKET_CREATED
     );
 
-    private final ObjectProvider<JavaMailSender> mailSender;
+    private final List<MailTransport> transports;
     private final HelpdeskProperties properties;
 
-    public EmailService(ObjectProvider<JavaMailSender> mailSender,
+    public EmailService(List<MailTransport> transports,
                         HelpdeskProperties properties) {
-        // ObjectProvider plutot qu'injection directe : le bean d'envoi
-        // n'existe que si un serveur est configure, et son absence ne doit
-        // pas empecher l'application de demarrer.
-        this.mailSender = mailSender;
+        // La liste est triee par Spring selon l'annotation @Order : le
+        // premier moyen utilisable est retenu. Cette classe redige le
+        // message, elle n'a pas a savoir comment il circule.
+        this.transports = transports;
         this.properties = properties;
     }
 
@@ -84,36 +81,43 @@ public class EmailService {
             return;
         }
 
-        JavaMailSender sender = mailSender.getIfAvailable();
-        if (sender == null) {
+        MailTransport transport = transportRetenu();
+        if (transport == null) {
             return;
         }
 
         try {
-            MimeMessage courriel = sender.createMimeMessage();
-            MimeMessageHelper aide =
-                    new MimeMessageHelper(courriel, true, StandardCharsets.UTF_8.name());
+            transport.send(destinataire.getEmail(),
+                    sujet(type, ticket),
+                    corps(destinataire, type, message, ticket));
 
-            aide.setFrom(properties.getMail().getFrom(), properties.getMail().getFromName());
-            aide.setTo(destinataire.getEmail());
-            aide.setSubject(sujet(type, ticket));
-            aide.setText(corps(destinataire, type, message, ticket), true);
-
-            sender.send(courriel);
-            log.debug("Courriel envoye a {} ({})", destinataire.getEmail(), type);
+            log.info("Courriel envoye a {} par {} ({})",
+                    destinataire.getEmail(), transport.name(), type);
 
         } catch (Exception ex) {
             // Un serveur de messagerie en panne ne doit pas empecher
             // d'enregistrer une intervention : on journalise et on continue.
-            log.warn("Envoi du courriel impossible vers {} : {}",
-                    destinataire.getEmail(), ex.getMessage());
+            log.warn("Envoi du courriel impossible vers {} par {} : {}",
+                    destinataire.getEmail(), transport.name(), ex.getMessage());
         }
     }
 
+    /**
+     * @return le premier moyen d'acheminement utilisable, null s'il n'y en
+     *         a aucun ou si les courriels sont desactives
+     */
+    private MailTransport transportRetenu() {
+        if (!properties.getMail().isEnabled() || isBlank(properties.getMail().getFrom())) {
+            return null;
+        }
+        return transports.stream()
+                .filter(MailTransport::isAvailable)
+                .findFirst()
+                .orElse(null);
+    }
+
     private boolean isConfigured() {
-        return properties.getMail().isEnabled()
-                && !isBlank(properties.getMail().getFrom())
-                && mailSender.getIfAvailable() != null;
+        return transportRetenu() != null;
     }
 
     private String sujet(NotificationType type, Ticket ticket) {

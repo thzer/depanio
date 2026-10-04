@@ -68,6 +68,18 @@ public class HelpdeskProperties {
 
         /** Nom affiche a cote de l'adresse. */
         private String fromName = "Depanio";
+
+        /**
+         * Adresse de l'interface d'envoi en HTTPS.
+         * <p>
+         * Renseignee avec {@code apiKey}, elle est preferee au SMTP : les
+         * hebergeurs mutualises ferment les ports sortants du protocole
+         * SMTP, alors que le port 443 reste toujours ouvert.
+         */
+        private String apiUrl = "https://api.resend.com/emails";
+
+        /** Cle d'acces a l'interface d'envoi. Vide : le SMTP est utilise. */
+        private String apiKey = "";
     }
 
     /**
