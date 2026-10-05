@@ -317,6 +317,13 @@ a:hover {
   letter-spacing: 0.055em;
   color: var(--text-faint);
   font-weight: 600;
+
+  /* Deux lignes reservees, occupees ou non : sans cela, un intitule plus
+     long que les autres decalait son chiffre vers le bas et la rangee
+     d'indicateurs perdait sa ligne de lecture commune. */
+  min-height: 2.2em;
+  display: flex;
+  align-items: flex-start;
 }
 
 .kpi__value {
@@ -360,7 +367,7 @@ table.data {
 
 table.data th {
   text-align: left;
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-3);
   background: var(--surface-sunken);
   border-bottom: 1px solid var(--border);
   font-size: 0.71rem;
@@ -372,7 +379,7 @@ table.data th {
 }
 
 table.data td {
-  padding: var(--sp-4);
+  padding: var(--sp-3);
   border-bottom: 1px solid var(--ink-100);
   vertical-align: middle;
 }
@@ -393,6 +400,51 @@ table.data tbody tr:last-child td {
   font-family: var(--font-mono);
   font-size: 0.83em;
   letter-spacing: -0.01em;
+}
+
+/* ---------------------------------------- Largeurs de colonnes
+   Une table laissee libre repartit la largeur au prorata du texte : la
+   colonne la plus utile, l'objet du ticket, se retrouvait comprimee en
+   cinq lignes pendant que la ville tenait confortablement sur une. Les
+   classes ci-dessous redonnent la place a ce qui se lit, et retirent
+   celle de ce qui se survole.                                          */
+
+table.data {
+  table-layout: auto;
+}
+
+/* Reference, date, duree : jamais coupees au milieu. */
+.col-fixe {
+  white-space: nowrap;
+  width: 1%;
+}
+
+/* Colonne principale : prend la place restante. */
+.col-principale {
+  width: 26%;
+  min-width: 210px;
+}
+
+/* Colonne secondaire : utile, mais cede le pas. */
+.col-secondaire {
+  max-width: 150px;
+}
+
+.col-secondaire > * {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Le titre peut aller jusqu'a deux lignes, puis s'abrege. */
+.titre-cellule {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 600;
 }
 
 /* ======================================================= 7. Formulaires */
@@ -569,9 +621,40 @@ select {
   background: var(--brand-50);
 }
 
+/**
+ * Action destructrice, mais discrete.
+ *
+ * Un aplat rouge attire l'oeil avant tout le reste. Place sur
+ * « Annuler la demande », il faisait de l'abandon du ticket l'action la
+ * plus visible de l'ecran, devant « Declarer resolu ». La couleur reste,
+ * puisqu'elle avertit, mais elle ne domine plus : le rouge passe au
+ * texte et au filet.
+ */
+.btn--danger-discret {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger-border);
+  box-shadow: none;
+}
+.btn--danger-discret:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+}
+
 .btn--sm {
   padding: 6px var(--sp-3);
   font-size: 0.82rem;
+}
+
+/**
+ * Bouton pleine largeur.
+ *
+ * Dans la colonne laterale, un bouton etroit sous un champ pleine largeur
+ * donne un bord gauche en escalier. L'aligner sur le champ qu'il valide
+ * rend la colonne lisible d'un seul regard.
+ */
+.btn--bloc {
+  width: 100%;
 }
 
 .btn--lg {

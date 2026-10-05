@@ -1,15 +1,15 @@
 <div class="page">
   <div class="page-header">
     <div>
-      <h1>Etablissements</h1>
+      <h1>Établissements</h1>
       <p class="page-header__subtitle">
-        Cafes, restaurants et salons de the couverts par un contrat de maintenance
+        Cafés, restaurants et salons de the couverts par un contrat de maintenance
       </p>
     </div>
     @if (auth.isAdmin()) {
       <button type="button" class="btn btn--primary" (click)="openCreate()">
         <app-icon name="plus" [size]="17" />
-        Nouvel etablissement
+        Nouvel établissement
       </button>
     }
   </div>
@@ -43,7 +43,7 @@
             Rechercher
           </button>
           <button type="button" class="btn btn--secondary" (click)="resetFilters()">
-            Reinitialiser
+            Réinitialiser
           </button>
         </div>
       </form>
@@ -54,13 +54,13 @@
     @if (loading()) {
       <div class="loader">
         <span class="loader__spinner"></span>
-        Chargement des etablissements...
+        Chargement des établissements...
       </div>
     } @else if (page(); as p) {
       @if (p.content.length === 0) {
         <div class="empty">
           <span class="empty__icon"><app-icon name="store" [size]="24" /></span>
-          <div class="empty__title">Aucun etablissement</div>
+          <div class="empty__title">Aucun établissement</div>
           <p>
             Enregistrez votre premier client pour commencer a suivre ses
             interventions.
@@ -68,7 +68,7 @@
           @if (auth.isAdmin()) {
             <button type="button" class="btn btn--primary mt-4" (click)="openCreate()">
               <app-icon name="plus" [size]="17" />
-              Enregistrer un etablissement
+              Enregistrer un établissement
             </button>
           }
         </div>
@@ -77,14 +77,14 @@
           <table class="data">
             <thead>
               <tr>
-                <th>Etablissement</th>
+                <th>Établissement</th>
                 <th>Type</th>
                 <th>Ville</th>
                 <th>Contact</th>
                 <th>Contrat</th>
-                <th class="text-center">Materiel</th>
+                <th class="text-center">Matériel</th>
                 <th class="text-center">Tickets ouverts</th>
-                <th>Etat</th>
+                <th>État</th>
                 @if (auth.isAdmin()) {
                   <th></th>
                 }
@@ -162,12 +162,12 @@
     <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="form-grid">
         <div class="field form-grid__full">
-          <label class="field__label" for="name">Nom de l etablissement</label>
+          <label class="field__label" for="name">Nom de l’établissement</label>
           <input
             id="name"
             type="text"
             formControlName="name"
-            placeholder="Cafe El Medina"
+            placeholder="Café El Medina"
             [class.invalid]="form.controls.name.touched && form.controls.name.invalid"
           />
           @if (form.controls.name.touched && form.controls.name.invalid) {
@@ -190,7 +190,7 @@
             id="city"
             type="text"
             formControlName="city"
-            placeholder="Gabes"
+            placeholder="Gabès"
             [class.invalid]="form.controls.city.touched && form.controls.city.invalid"
           />
           @if (form.controls.city.touched && form.controls.city.invalid) {
@@ -209,38 +209,38 @@
         </div>
 
         <div class="field">
-          <label class="field__label" for="contactName">Personne a contacter</label>
+          <label class="field__label" for="contactName">Personne à contacter</label>
           <input
             id="contactName"
             type="text"
             formControlName="contactName"
-            placeholder="Nom du gerant"
+            placeholder="Nom du gérant"
           />
         </div>
 
         <div class="field">
-          <label class="field__label" for="phone">Telephone</label>
+          <label class="field__label" for="phone">Téléphone</label>
           <input id="phone" type="tel" formControlName="phone" placeholder="75 270 100" />
         </div>
 
         <div class="field">
-          <label class="field__label" for="contactEmail">Adresse electronique</label>
+          <label class="field__label" for="contactEmail">Adresse électronique</label>
           <input
             id="contactEmail"
             type="email"
             formControlName="contactEmail"
-            placeholder="contact@etablissement.tn"
+            placeholder="contact@établissement.tn"
             [class.invalid]="
               form.controls.contactEmail.touched && form.controls.contactEmail.invalid
             "
           />
           @if (form.controls.contactEmail.touched && form.controls.contactEmail.invalid) {
-            <span class="field__error">Le format de l adresse est invalide.</span>
+            <span class="field__error">Le format de l’adresse est invalide.</span>
           }
         </div>
 
         <div class="field">
-          <label class="field__label" for="contractNumber">Numero de contrat</label>
+          <label class="field__label" for="contractNumber">Numéro de contrat</label>
           <input
             id="contractNumber"
             type="text"

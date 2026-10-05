@@ -109,7 +109,7 @@ public class EstablishmentService {
             if (openTickets > 0) {
                 throw new BusinessException(
                         "Cet etablissement a encore " + openTickets + " ticket(s) ouvert(s). "
-                                + "Cloturez-les avant de le desactiver.");
+                                + "Clôturez-les avant de le désactiver.");
             }
         }
 

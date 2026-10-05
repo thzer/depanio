@@ -37,10 +37,10 @@ export class Shell {
   private readonly allItems: NavItem[] = [
     { path: '/tableau-de-bord', label: 'Tableau de bord', icon: 'dashboard' },
     { path: '/tickets', label: 'Tickets', icon: 'ticket' },
-    { path: '/materiel', label: 'Materiel', icon: 'tool' },
+    { path: '/materiel', label: 'Matériel', icon: 'tool' },
     {
       path: '/etablissements',
-      label: 'Etablissements',
+      label: 'Établissements',
       icon: 'store',
       roles: ['ADMIN', 'TECHNICIAN'],
     },

@@ -7,7 +7,7 @@ import { roleGuard } from './core/guards/role.guard';
  * Plan de navigation de l'application.
  *
  * Chaque ecran est charge a la demande (import dynamique) : le navigateur
- * ne telecharge pas l'administration des comptes pour un gerant de cafe
+ * ne telecharge pas l'administration des comptes pour un gérant de café
  * qui n'y aura jamais acces.
  *
  * Les adresses sont en francais car l'application est destinee a des
@@ -20,7 +20,7 @@ export const routes: Routes = [
     // Un utilisateur deja connecte est renvoye a son tableau de bord.
     path: '',
     pathMatch: 'full',
-    title: 'Depanio — Assistance technique pour cafes et restaurants',
+    title: 'Depanio — Assistance technique pour cafés et restaurants',
     canActivate: [publicOnlyGuard],
     loadComponent: () => import('./features/landing/landing').then((m) => m.LandingPage),
   },
@@ -57,21 +57,21 @@ export const routes: Routes = [
       },
       {
         path: 'tickets/:id',
-        title: 'Detail du ticket',
+        title: 'Détail du ticket',
         loadComponent: () =>
           import('./features/tickets/ticket-detail').then((m) => m.TicketDetailPage),
       },
 
       {
         path: 'materiel',
-        title: 'Materiel',
+        title: 'Matériel',
         loadComponent: () =>
           import('./features/equipment/equipment-list').then((m) => m.EquipmentListPage),
       },
 
       {
         path: 'etablissements',
-        title: 'Etablissements',
+        title: 'Établissements',
         canActivate: [roleGuard('ADMIN', 'TECHNICIAN')],
         loadComponent: () =>
           import('./features/establishments/establishment-list').then(
@@ -88,16 +88,16 @@ export const routes: Routes = [
 
       {
         path: 'demandes',
-        title: 'Demandes de demonstration',
+        title: 'Demandes de démonstration',
         canActivate: [roleGuard('ADMIN')],
         loadComponent: () =>
           import('./features/leads/demo-request-list').then((m) => m.DemoRequestListPage),
       },
 
       {
-        // Adresse ouverte par la lecture d'une etiquette QR
+        // Adresse ouverte par la lecture d'une étiquette QR
         path: 'scan/:qrToken',
-        title: 'Declarer une panne',
+        title: 'Déclarer une panne',
         loadComponent: () => import('./features/scan/scan').then((m) => m.ScanPage),
       },
 

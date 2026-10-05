@@ -6,13 +6,13 @@ package tn.iset.gabes.helpdesk.entity.enums;
 public enum NotificationType {
 
     TICKET_CREATED("Nouveau ticket"),
-    TICKET_ASSIGNED("Ticket affecte"),
-    TICKET_UPDATED("Ticket mis a jour"),
-    TICKET_RESOLVED("Ticket resolu"),
-    TICKET_CLOSED("Ticket cloture"),
+    TICKET_ASSIGNED("Ticket affecté"),
+    TICKET_UPDATED("Ticket mis à jour"),
+    TICKET_RESOLVED("Ticket résolu"),
+    TICKET_CLOSED("Ticket clôturé"),
     NEW_COMMENT("Nouveau commentaire"),
-    SLA_WARNING("Delai bientot depasse"),
-    SLA_BREACHED("Delai depasse");
+    SLA_WARNING("Délai bientôt dépassé"),
+    SLA_BREACHED("Délai dépassé");
 
     private final String label;
 

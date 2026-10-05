@@ -43,7 +43,7 @@ export class PriorityBadge {
   template: `
     @if (breached() || isOverdue()) {
       <span class="sla-breached" [title]="dueAt() ?? ''">
-        Depasse{{ lateText() }}
+        Dépassé{{ lateText() }}
       </span>
     } @else if (hours() === undefined || hours() === null) {
       <span class="text-faint">&mdash;</span>
@@ -58,7 +58,7 @@ export class SlaIndicator {
   /** Heures restantes avant l'echeance ; negatif si elle est depassee. */
   readonly hours = input<number | null | undefined>();
 
-  /** Depassement deja constate par le serveur. */
+  /** Depassement deja constaté par le serveur. */
   readonly breached = input(false);
 
   readonly dueAt = input<string | null | undefined>();
@@ -76,12 +76,35 @@ export class SlaIndicator {
     return ` de ${this.format(Math.abs(value))}`;
   });
 
+  /**
+   * « 1 h restante », « 3 j restants », « moins d'une heure ».
+   *
+   * L'accord n'est pas un detail d'esthetique : un tableau qui affiche
+   * « 1 h restantes » se lit comme un travail bacle, et c'est la premiere
+   * chose que voit un client a qui l'on vend l'outil.
+   */
   protected readonly remainingText = computed(() => {
     const value = this.hours();
     if (value === undefined || value === null) {
       return '';
     }
-    return `${this.format(value)} restantes`;
+
+    const duree = this.format(value);
+    if (duree.startsWith('moins')) {
+      return duree;
+    }
+
+    const quantite = Number.parseInt(duree, 10);
+    const jours = duree.endsWith('j');
+    const accord = jours
+      ? quantite > 1
+        ? 'restants'
+        : 'restant'
+      : quantite > 1
+        ? 'restantes'
+        : 'restante';
+
+    return `${duree} ${accord}`;
   });
 
   /** Au-dela de 48 heures, un nombre de jours se lit plus vite. */
@@ -90,7 +113,7 @@ export class SlaIndicator {
       return `${Math.round(hours / 24)} j`;
     }
     if (hours < 1) {
-      return 'moins d une heure';
+      return 'moins d’une heure';
     }
     return `${Math.round(hours)} h`;
   }

@@ -13,22 +13,22 @@ import tn.iset.gabes.helpdesk.entity.enums.Role;
 public record CreateUserRequest(
 
         @NotBlank(message = "Le nom complet est obligatoire.")
-        @Size(max = 120, message = "Le nom ne peut pas depasser 120 caracteres.")
+        @Size(max = 120, message = "Le nom ne peut pas dépasser 120 caractères.")
         String fullName,
 
-        @NotBlank(message = "L'adresse electronique est obligatoire.")
-        @Email(message = "Le format de l'adresse electronique est invalide.")
+        @NotBlank(message = "L’adresse électronique est obligatoire.")
+        @Email(message = "Le format de l’adresse électronique est invalide.")
         String email,
 
         @NotBlank(message = "Le mot de passe est obligatoire.")
-        @Size(min = 10, message = "Le mot de passe doit contenir au moins 10 caracteres.")
+        @Size(min = 10, message = "Le mot de passe doit contenir au moins 10 caractères.")
         String password,
 
         @Pattern(regexp = "^$|^[0-9+ ]{8,20}$",
-                 message = "Le numero de telephone est invalide.")
+                 message = "Le numéro de téléphone est invalide.")
         String phone,
 
-        @NotNull(message = "Le role est obligatoire.")
+        @NotNull(message = "Le rôle est obligatoire.")
         Role role,
 
         /** Obligatoire pour le role CLIENT, ignore pour les autres roles. */

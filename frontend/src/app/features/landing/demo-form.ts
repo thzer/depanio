@@ -11,7 +11,7 @@ import { Modal } from '../../shared/modal';
  * visiteurs sans logiciel de messagerie configure — c'est-a-dire chez la
  * plupart. Un bouton qui ne fait rien coute un prospect a chaque clic.
  *
- * La demande part vers le serveur, qui l'enregistre et previent les
+ * La demande part vers le serveur, qui l'enregistre et prévient les
  * administrateurs. Elle survit donc a une panne de messagerie, et reste
  * visible tant qu'elle n'a pas ete traitee.
  */
@@ -20,11 +20,11 @@ import { Modal } from '../../shared/modal';
   imports: [ReactiveFormsModule, Icon, Modal],
   template: `
     <app-modal
-      [title]="sent() ? 'Demande envoyee' : 'Demander une demonstration'"
+      [title]="sent() ? 'Demande envoyée' : 'Demander une démonstration'"
       [subtitle]="
         sent()
           ? ''
-          : 'Nous vous rappelons sous 24 heures pour convenir d un creneau.'
+          : 'Nous vous rappelons sous 24 heures pour convenir d’un créneau.'
       "
       [width]="560"
       (closed)="closed.emit()"
@@ -32,10 +32,10 @@ import { Modal } from '../../shared/modal';
       @if (sent()) {
         <div class="done">
           <span class="done__icon"><app-icon name="check" [size]="26" /></span>
-          <p class="done__title">Merci, votre demande est bien enregistree.</p>
+          <p class="done__title">Merci, votre demande est bien enregistrée.</p>
           <p class="text-muted">
             Nous revenons vers vous sous 24 heures, a l adresse que vous avez
-            indiquee.
+            indiquée.
           </p>
           <button type="button" class="btn btn--primary mt-5" (click)="closed.emit()">
             Fermer
@@ -61,31 +61,31 @@ import { Modal } from '../../shared/modal';
             </div>
 
             <div class="field">
-              <label class="field__label" for="d-company">Societe</label>
+              <label class="field__label" for="d-company">Société</label>
               <input
                 id="d-company"
                 type="text"
                 formControlName="companyName"
-                placeholder="Votre societe de maintenance"
+                placeholder="Votre société de maintenance"
               />
             </div>
 
             <div class="field">
-              <label class="field__label" for="d-email">Adresse electronique</label>
+              <label class="field__label" for="d-email">Adresse électronique</label>
               <input
                 id="d-email"
                 type="email"
                 formControlName="email"
-                placeholder="vous@votre-societe.tn"
+                placeholder="vous@votre-société.tn"
                 [class.invalid]="form.controls.email.touched && form.controls.email.invalid"
               />
               @if (form.controls.email.touched && form.controls.email.invalid) {
-                <span class="field__error">Adresse electronique invalide.</span>
+                <span class="field__error">Adresse électronique invalide.</span>
               }
             </div>
 
             <div class="field">
-              <label class="field__label" for="d-phone">Telephone</label>
+              <label class="field__label" for="d-phone">Téléphone</label>
               <input
                 id="d-phone"
                 type="tel"
@@ -96,17 +96,17 @@ import { Modal } from '../../shared/modal';
 
             <div class="field grid-2__full">
               <label class="field__label" for="d-count">
-                Combien d etablissements suivez-vous ?
+                Combien d’établissements suivez-vous ?
               </label>
               <select id="d-count" formControlName="establishmentCount">
-                <option value="">Preferer ne pas repondre</option>
+                <option value="">Préférer ne pas répondre</option>
                 <option value="1-5">1 a 5</option>
                 <option value="6-15">6 a 15</option>
                 <option value="16-40">16 a 40</option>
                 <option value="40+">Plus de 40</option>
               </select>
               <span class="field__hint">
-                Cela nous permet de preparer une demonstration a votre echelle.
+                Cela nous permet de préparer une démonstration à votre échelle.
               </span>
             </div>
 
@@ -255,7 +255,7 @@ export class DemoForm {
         this.sending.set(false);
         this.errorMessage.set(
           error?.error?.message ??
-            'L envoi a echoue. Reessayez, ou ecrivez-nous directement.',
+            'L’envoi a échoué. Réessayez, ou écrivez-nous directement.',
         );
       },
     });

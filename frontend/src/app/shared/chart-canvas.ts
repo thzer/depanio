@@ -43,9 +43,9 @@ Chart.register(
  * Graphique reutilisable, alimente par une liste de points.
  *
  * Le composant encapsule entierement Chart.js : les ecrans se contentent
- * de fournir des donnees, sans connaitre la bibliotheque. Le graphique est
+ * de fournir des donnees, sans connaître la bibliotheque. Le graphique est
  * reconstruit a chaque changement de donnees et detruit a la fermeture de
- * l ecran, ce qui evite les fuites de memoire sur le canevas.
+ * l ecran, ce qui evite les fuites de mémoire sur le canevas.
  */
 @Component({
   selector: 'app-chart-canvas',

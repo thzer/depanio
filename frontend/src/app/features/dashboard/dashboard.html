@@ -6,7 +6,7 @@
         @if (auth.isClient()) {
           Suivi des demandes de {{ auth.currentUser()?.establishmentName }}
         } @else {
-          Vue d ensemble de l activite de maintenance
+          Vue d’ensemble de l’activité de maintenance
         }
       </p>
     </div>
@@ -30,7 +30,7 @@
       </div>
 
       <div class="kpi" [class.kpi--danger]="d.breachedTickets > 0">
-        <div class="kpi__label">Delais depasses</div>
+        <div class="kpi__label">Délais dépassés</div>
         <div class="kpi__value">{{ d.breachedTickets }}</div>
         <div class="kpi__hint">Engagement contractuel non tenu</div>
       </div>
@@ -40,13 +40,13 @@
         [class.kpi--success]="d.slaComplianceRate >= 90"
         [class.kpi--warning]="d.slaComplianceRate < 90"
       >
-        <div class="kpi__label">Respect des delais</div>
+        <div class="kpi__label">Respect des délais</div>
         <div class="kpi__value">{{ d.slaComplianceRate }}%</div>
-        <div class="kpi__hint">Sur l ensemble des tickets</div>
+        <div class="kpi__hint">Sur l’ensemble des tickets</div>
       </div>
 
       <div class="kpi">
-        <div class="kpi__label">Delai moyen de resolution</div>
+        <div class="kpi__label">Délai moyen de résolution</div>
         <div class="kpi__value">
           @if (d.averageResolutionHours !== undefined && d.averageResolutionHours !== null) {
             {{ d.averageResolutionHours | number: '1.0-1' }} h
@@ -54,7 +54,7 @@
             &mdash;
           }
         </div>
-        <div class="kpi__hint">De la declaration a la resolution</div>
+        <div class="kpi__hint">De la déclaration à la résolution</div>
       </div>
 
       <div class="kpi">
@@ -67,39 +67,39 @@
     <!-- ======================== Tickets a traiter en priorite ================= -->
     <div class="card mb-4">
       <div class="card__header">
-        <span class="card__title">Echeances les plus proches</span>
+        <span class="card__title">Échéances les plus proches</span>
         <a routerLink="/tickets" class="btn btn--ghost btn--sm">Voir tous les tickets</a>
       </div>
 
       @if (d.urgentTickets.length === 0) {
         <div class="empty">
           <div class="empty__title">Aucun ticket ouvert</div>
-          <p>Toutes les demandes ont ete traitees.</p>
+          <p>Toutes les demandes ont été traitées.</p>
         </div>
       } @else {
         <div class="table-wrapper">
           <table class="data">
             <thead>
               <tr>
-                <th>Reference</th>
-                <th>Objet</th>
-                <th>Etablissement</th>
-                <th>Priorite</th>
+                <th class="col-fixe">Référence</th>
+                <th class="col-principale">Objet</th>
+                <th class="col-secondaire">Établissement</th>
+                <th>Priorité</th>
                 <th>Statut</th>
-                <th>Technicien</th>
-                <th>Delai</th>
+                <th class="col-secondaire">Technicien</th>
+                <th class="col-fixe">Délai</th>
               </tr>
             </thead>
             <tbody>
               @for (ticket of d.urgentTickets; track ticket.id) {
                 <tr>
-                  <td>
+                  <td class="col-fixe">
                     <a class="mono" [routerLink]="['/tickets', ticket.id]">
                       {{ ticket.reference }}
                     </a>
                   </td>
-                  <td>{{ ticket.title }}</td>
-                  <td class="text-muted">{{ ticket.establishmentName }}</td>
+                  <td class="col-principale"><span class="titre-cellule">{{ ticket.title }}</span></td>
+                  <td class="text-muted col-secondaire"><span>{{ ticket.establishmentName }}</span></td>
                   <td>
                     <app-priority-badge
                       [priority]="ticket.priority"
@@ -109,7 +109,7 @@
                   <td>
                     <app-status-badge [status]="ticket.status" [label]="ticket.statusLabel" />
                   </td>
-                  <td class="text-muted">{{ ticket.assignedToName ?? 'Non affecte' }}</td>
+                  <td class="text-muted col-secondaire"><span>{{ ticket.assignedToName ?? 'Non affecté' }}</span></td>
                   <td>
                     <app-sla-indicator
                       [hours]="ticket.hoursRemaining"
@@ -128,19 +128,19 @@
     <!-- ============================== Graphiques ============================= -->
     <div class="grid grid--2">
       <div class="card">
-        <div class="card__header"><span class="card__title">Repartition par statut</span></div>
+        <div class="card__header"><span class="card__title">Répartition par statut</span></div>
         <div class="card__body">
           @if (d.byStatus.length) {
             <app-chart-canvas [data]="d.byStatus" type="doughnut" [showLegend]="true" />
           } @else {
-            <div class="empty">Aucune donnee</div>
+            <div class="empty">Aucune donnée</div>
           }
         </div>
       </div>
 
       <div class="card">
         <div class="card__header">
-          <span class="card__title">Tickets ouverts par priorite</span>
+          <span class="card__title">Tickets ouverts par priorité</span>
         </div>
         <div class="card__body">
           @if (d.byPriority.length) {
@@ -166,13 +166,13 @@
 
       <div class="card">
         <div class="card__header">
-          <span class="card__title">Nature des problemes declares</span>
+          <span class="card__title">Nature des problèmes déclarés</span>
         </div>
         <div class="card__body">
           @if (d.byCategory.length) {
             <app-chart-canvas [data]="d.byCategory" type="bar" />
           } @else {
-            <div class="empty">Aucune donnee</div>
+            <div class="empty">Aucune donnée</div>
           }
         </div>
       </div>
@@ -190,14 +190,14 @@
     </div>
 
     <p class="text-xs text-faint mt-4">
-      Donnees arretees au {{ now() | date: "dd/MM/yyyy 'a' HH:mm" }}
+      Données arrêtées au {{ now() | date: "dd/MM/yyyy 'à' HH:mm" }}
     </p>
   } @else {
     <div class="card">
       <div class="empty">
         <div class="empty__title">Indicateurs indisponibles</div>
-        <p>Le serveur n a pas repondu. Verifiez que l API est demarree.</p>
-        <button type="button" class="btn btn--primary mt-4" (click)="load()">Reessayer</button>
+        <p>Le serveur n’a pas répondu. Vérifiez que l’API est démarrée.</p>
+        <button type="button" class="btn btn--primary mt-4" (click)="load()">Réessayer</button>
       </div>
     </div>
   }

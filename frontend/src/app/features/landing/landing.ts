@@ -66,67 +66,67 @@ export class LandingPage {
       icon: 'ticket',
       title: 'Chaque appel devient un ticket',
       text:
-        'Un numero, une priorite, un responsable, une echeance. Plus rien ne ' +
-        'depend de la memoire de celui qui a decroche le telephone.',
+        'Un numéro, une priorité, un responsable, une échéance. Plus rien ne ' +
+        'dépend de la mémoire de celui qui a décroché le téléphone.',
     },
     {
       icon: 'clock',
-      title: 'Des delais que vous tenez',
+      title: 'Des délais que vous tenez',
       text:
-        'Le delai de resolution est calcule des la declaration. Le technicien ' +
-        'est prevenu avant l echeance, et tout depassement est constate ' +
+        'Le délai de résolution est calculé dès la déclaration. Le technicien ' +
+        'est prévenu avant l échéance, et tout dépassement est constaté ' +
         'automatiquement.',
     },
     {
       icon: 'qr',
-      title: 'Une etiquette QR par machine',
+      title: 'Une étiquette QR par machine',
       text:
-        'Le gerant scanne le code colle sur la caisse, decrit la panne, et ' +
-        'c est declare. Pas de compte a chercher, pas de liste a parcourir.',
+        'Le gérant scanne le code collé sur la caisse, décrit la panne, et ' +
+        'c’est déclaré. Pas de compte à chercher, pas de liste à parcourir.',
     },
     {
       icon: 'chart',
       title: 'Des chiffres pour vos contrats',
       text:
-        'Delai moyen de resolution, taux de respect des engagements, materiel ' +
-        'le plus defaillant. De quoi renegocier en position de force.',
+        'Délai moyen de résolution, taux de respect des engagements, matériel ' +
+        'le plus défaillant. De quoi renégocier en position de force.',
     },
     {
       icon: 'bell',
       title: 'Tout le monde au courant, en direct',
       text:
-        'Affectation, changement de statut, nouveau message : chacun recoit ' +
-        'ce qui le concerne, immediatement.',
+        'Affectation, changement de statut, nouveau message : chacun reçoit ' +
+        'ce qui le concerne, immédiatement.',
     },
     {
       icon: 'shield',
       title: 'Chaque client chez lui',
       text:
-        'Deux etablissements concurrents peuvent utiliser la meme plateforme ' +
-        'sans jamais voir les donnees de l autre.',
+        'Deux établissements concurrents peuvent utiliser la même plateforme ' +
+        'sans jamais voir les données de l’autre.',
     },
   ];
 
   protected readonly steps = [
     {
       number: '01',
-      title: 'Le gerant signale',
-      text: 'Depuis son telephone, en scannant l etiquette de la machine ou en quelques champs.',
+      title: 'Le gérant signale',
+      text: 'Depuis son téléphone, en scannant l’étiquette de la machine ou en quelques champs.',
     },
     {
       number: '02',
       title: 'Vous affectez',
-      text: 'La file d attente affiche les urgences en tete. Un clic pour confier le ticket au bon technicien.',
+      text: 'La file d’attente affiche les urgences en tête. Un clic pour confier le ticket au bon technicien.',
     },
     {
       number: '03',
       title: 'Le technicien intervient',
-      text: 'Il suit l avancement, echange avec le client, et documente la solution appliquee.',
+      text: 'Il suit l’avancement, échange avec le client, et documente la solution appliquée.',
     },
     {
       number: '04',
       title: 'Le client confirme',
-      text: 'Il valide la resolution et note la prestation. Le dossier est clos, et archive.',
+      text: 'Il valide la résolution et note la prestation. Le dossier est clos, et archivé.',
     },
   ];
 
@@ -135,12 +135,12 @@ export class LandingPage {
       name: 'Essentiel',
       price: '89',
       unit: 'DT / mois',
-      pitch: 'Pour une societe qui demarre son activite de maintenance.',
+      pitch: 'Pour une société qui demarre son activité de maintenance.',
       features: [
-        "Jusqu'a 10 etablissements clients",
-        'Tickets et echanges illimites',
-        'Delais contractuels et alertes',
-        'Etiquettes QR illimitees',
+        "Jusqu’à 10 établissements clients",
+        'Tickets et échanges illimités',
+        'Délais contractuels et alertes',
+        'Étiquettes QR illimitées',
         'Tableau de bord',
         'Assistance par courriel',
       ],
@@ -151,30 +151,30 @@ export class LandingPage {
       name: 'Professionnel',
       price: '219',
       unit: 'DT / mois',
-      pitch: 'Pour une equipe structuree avec plusieurs techniciens.',
+      pitch: 'Pour une équipe structurée avec plusieurs techniciens.',
       features: [
-        'Etablissements clients illimites',
+        'Établissements clients illimités',
         'Tout le contenu de la formule Essentiel',
         'Charge de travail par technicien',
-        'Historique complet et piste d audit',
-        'Export des donnees',
+        'Historique complet et piste d’audit',
+        'Export des données',
         'Assistance prioritaire',
       ],
       highlighted: true,
-      cta: 'Demander une demonstration',
+      cta: 'Demander une démonstration',
     },
     {
       name: 'Sur mesure',
       price: 'Nous consulter',
       unit: '',
-      pitch: 'Pour un deploiement a votre nom et a vos regles.',
+      pitch: 'Pour un déploiement a votre nom et a vos règles.',
       features: [
         'Tout le contenu de la formule Professionnelle',
         'Votre logo et vos couleurs',
-        'Delais contractuels adaptes par contrat',
-        'Hebergement dedie',
-        'Reprise de vos donnees existantes',
-        'Formation de vos equipes',
+        'Délais contractuels adaptés par contrat',
+        'Hébergement dédié',
+        'Reprise de vos données existantes',
+        'Formation de vos équipes',
       ],
       highlighted: false,
       cta: 'Nous contacter',
@@ -186,36 +186,36 @@ export class LandingPage {
       q: 'Faut-il installer quelque chose chez mes clients ?',
       a:
         'Non. Depanio fonctionne dans un navigateur, sur ordinateur comme sur ' +
-        'telephone. La seule chose a installer physiquement est une etiquette ' +
+        'téléphone. La seule chose à installer physiquement est une étiquette ' +
         'QR autocollante sur les machines, que vous imprimez depuis la ' +
         'plateforme.',
     },
     {
       q: 'Mes clients doivent-ils apprendre a utiliser un logiciel ?',
       a:
-        'Un gerant de cafe n a que trois gestes a connaitre : scanner, decrire, ' +
-        'confirmer. L interface a ete concue pour quelqu un qui a trente ' +
+        'Un gérant de café n’a que trois gestes à connaître : scanner, décrire, ' +
+        'confirmer. L’interface a été conçue pour quelqu’un qui a trente ' +
         'secondes entre deux services, pas pour un informaticien.',
     },
     {
-      q: 'Que se passe-t-il si un delai est depasse ?',
+      q: 'Que se passe-t-il si un délai est dépassé ?',
       a:
-        'Le systeme le constate seul, marque le ticket, previent les ' +
-        'responsables et inscrit l evenement dans l historique. Vous savez donc ' +
-        'ou vous en etes avant que le client ne vous appelle pour s en plaindre.',
+        'Le système le constaté seul, marque le ticket, prévient les ' +
+        'responsables et inscrit l événement dans l historique. Vous savez donc ' +
+        'où vous en êtes avant que le client ne vous appelle pour s’en plaindre.',
     },
     {
-      q: 'Mes donnees et celles de mes clients sont-elles separees ?',
+      q: 'Mes données et celles de mes clients sont-elles séparées ?',
       a:
-        'Chaque etablissement ne voit que ses propres tickets, son propre ' +
-        'materiel et sa propre fiche. Cette separation est appliquee par le ' +
-        'serveur a chaque requete, pas seulement masquee dans l affichage.',
+        'Chaque établissement ne voit que ses propres tickets, son propre ' +
+        'matériel et sa propre fiche. Cette séparation est appliquée par le ' +
+        'serveur à chaque requête, pas seulement masquée dans l’affichage.',
     },
     {
-      q: 'Puis-je recuperer mes donnees si j arrete ?',
+      q: 'Puis-je récupérer mes données si j’arrête ?',
       a:
-        'Oui. Vos donnees vous appartiennent et restent exportables a tout ' +
-        'moment, sans frais et sans delai.',
+        'Oui. Vos données vous appartiennent et restent exportables à tout ' +
+        'moment, sans frais et sans délai.',
     },
   ];
 

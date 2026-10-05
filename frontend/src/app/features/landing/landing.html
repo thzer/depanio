@@ -6,14 +6,14 @@
 
       <nav class="nav__links">
         <a href="#fonctionnement">Fonctionnement</a>
-        <a href="#fonctionnalites">Fonctionnalites</a>
+        <a href="#fonctionnalites">Fonctionnalités</a>
         <a href="#tarifs">Tarifs</a>
         <a href="#questions">Questions</a>
       </nav>
 
       <div class="nav__actions">
         <a class="btn btn--secondary btn--sm" routerLink="/login">Se connecter</a>
-        <button type="button" class="btn btn--primary btn--sm" (click)="openForm()">Demander une demo</button>
+        <button type="button" class="btn btn--primary btn--sm" (click)="openForm()">Demander une démo</button>
       </div>
     </div>
   </header>
@@ -23,30 +23,30 @@
     <div class="hero__inner">
       <span class="pill">
         <span class="pill__dot"></span>
-        Concu pour les societes de maintenance en Tunisie
+        Conçu pour les sociétés de maintenance en Tunisie
       </span>
 
       <h1>
         La caisse est en panne.<br />
-        <span class="hero__accent">Qui s en occupe, et depuis quand ?</span>
+        <span class="hero__accent">Qui s’en occupe, et depuis quand ?</span>
       </h1>
 
       <p class="hero__lead">
-        Depanio remplace les appels et les messages perdus par un circuit ecrit :
-        chaque panne de caisse, de terminal ou de machine a cafe devient un ticket
-        numerote, priorise, affecte et mesure.
+        Depanio remplace les appels et les messages perdus par un circuit écrit :
+        chaque panne de caisse, de terminal ou de machine a café devient un ticket
+        numéroté, priorisé, affecté et mesuré.
       </p>
 
       <div class="hero__actions">
         <button type="button" class="btn btn--primary btn--lg" (click)="openForm()">
-          Demander une demonstration
+          Demander une démonstration
           <app-icon name="chevronRight" [size]="17" />
         </button>
         <a class="btn btn--secondary btn--lg" href="#fonctionnement">Voir comment</a>
       </div>
 
       <p class="hero__note">
-        Reponse sous 24 heures. Mise en service le jour meme, sans installation.
+        Réponse sous 24 heures. Mise en service le jour même, sans installation.
       </p>
 
       <!-- Apercu du produit, reconstitue en elements reels plutot qu en image -->
@@ -62,15 +62,15 @@
               <span class="preview__kpi-value">10</span>
             </div>
             <div class="preview__kpi preview__kpi--danger">
-              <span class="preview__kpi-label">Delais depasses</span>
+              <span class="preview__kpi-label">Délais dépassés</span>
               <span class="preview__kpi-value">4</span>
             </div>
             <div class="preview__kpi preview__kpi--success">
-              <span class="preview__kpi-label">Respect des delais</span>
+              <span class="preview__kpi-label">Respect des délais</span>
               <span class="preview__kpi-value">76%</span>
             </div>
             <div class="preview__kpi">
-              <span class="preview__kpi-label">Delai moyen</span>
+              <span class="preview__kpi-label">Délai moyen</span>
               <span class="preview__kpi-value">6 h</span>
             </div>
           </div>
@@ -81,20 +81,20 @@
               <span class="preview__title">Tablette de commande ne se charge plus</span>
               <span class="badge priority-medium">Moyenne</span>
               <span class="badge status-progress">En cours</span>
-              <span class="sla-breached">Depasse de 30 h</span>
+              <span class="sla-breached">Dépassé de 30 h</span>
             </div>
             <div class="preview__row">
               <span class="preview__ref">TK-2026-0003</span>
-              <span class="preview__title">Vitrine refrigeree ne descend plus en temperature</span>
+              <span class="preview__title">Vitrine réfrigérée ne descend plus en température</span>
               <span class="badge priority-critical">Critique</span>
               <span class="badge status-progress">En cours</span>
-              <span class="sla-breached">Depasse de 4 h</span>
+              <span class="sla-breached">Dépassé de 4 h</span>
             </div>
             <div class="preview__row">
               <span class="preview__ref">TK-2026-0002</span>
               <span class="preview__title">Terminal de paiement refuse les cartes</span>
               <span class="badge priority-high">Haute</span>
-              <span class="badge status-assigned">Affecte</span>
+              <span class="badge status-assigned">Affecté</span>
               <span class="sla-ok">3 h restantes</span>
             </div>
           </div>
@@ -109,20 +109,20 @@
       <div class="problem">
         <div>
           <span class="eyebrow">Le quotidien sans Depanio</span>
-          <h2>Quatre appels, trois messages, et une panne oubliee.</h2>
+          <h2>Quatre appels, trois messages, et une panne oubliée.</h2>
         </div>
         <ul class="problem__list">
           <li>
             <app-icon name="close" [size]="16" />
-            Un appel recu en deplacement que personne ne note nulle part
+            Un appel reçu en déplacement que personne ne note nulle part
           </li>
           <li>
             <app-icon name="close" [size]="16" />
-            Une caisse hors service traitee apres une demande de menu
+            Une caisse hors service traitée après une demande de menu
           </li>
           <li>
             <app-icon name="close" [size]="16" />
-            Aucun moyen de dire combien de temps la reparation a pris
+            Aucun moyen de dire combien de temps la réparation a pris
           </li>
           <li>
             <app-icon name="close" [size]="16" />
@@ -138,8 +138,8 @@
     <div class="section__inner">
       <div class="section__head">
         <span class="eyebrow">Fonctionnement</span>
-        <h2>De la panne a la preuve, en quatre etapes</h2>
-        <p>Aucune formation necessaire. Chacun ne voit que ce qui le concerne.</p>
+        <h2>De la panne à la preuve, en quatre étapes</h2>
+        <p>Aucune formation nécessaire. Chacun ne voit que ce qui le concerne.</p>
       </div>
 
       <div class="steps">
@@ -158,8 +158,8 @@
   <section class="section section--sunken" id="fonctionnalites">
     <div class="section__inner">
       <div class="section__head">
-        <span class="eyebrow">Fonctionnalites</span>
-        <h2>Ce que la plateforme fait a votre place</h2>
+        <span class="eyebrow">Fonctionnalités</span>
+        <h2>Ce que la plateforme fait à votre place</h2>
       </div>
 
       <div class="features">
@@ -181,10 +181,10 @@
     <div class="section__inner">
       <div class="section__head">
         <span class="eyebrow">Tarifs</span>
-        <h2>Un prix par societe, pas par technicien</h2>
+        <h2>Un prix par société, pas par technicien</h2>
         <p>
-          Vos techniciens ne vous coutent pas plus cher parce qu ils travaillent
-          mieux. Engagement mensuel, resiliable a tout moment.
+          Vos techniciens ne vous coûtent pas plus cher parce qu’ils travaillent
+          mieux. Engagement mensuel, résiliable a tout moment.
         </p>
       </div>
 
@@ -232,8 +232,8 @@
   <section class="section section--sunken" id="questions">
     <div class="section__inner section__inner--narrow">
       <div class="section__head">
-        <span class="eyebrow">Questions frequentes</span>
-        <h2>Ce qu on nous demande avant de signer</h2>
+        <span class="eyebrow">Questions fréquentes</span>
+        <h2>Ce qu’on nous demande avant de signer</h2>
       </div>
 
       <div class="faq">
@@ -257,12 +257,12 @@
     <div class="cta__inner">
       <h2>Voyez Depanio sur vos propres clients.</h2>
       <p>
-        Nous mettons en place votre espace avec vos etablissements et votre
-        materiel. Vous declarez une premiere panne le jour meme, et vous jugez
-        sur piece.
+        Nous mettons en place votre espace avec vos établissements et votre
+        matériel. Vous déclarez une première panne le jour même, et vous jugez
+        sur pièce.
       </p>
       <button type="button" class="btn btn--lg cta__btn" (click)="openForm()">
-        Demander une demonstration
+        Demander une démonstration
         <app-icon name="chevronRight" [size]="17" />
       </button>
     </div>
@@ -274,11 +274,11 @@
       <div>
         <app-logo [size]="32" [showTagline]="false" />
         <p class="footer__text">
-          L assistance technique des cafes et des restaurants.
+          L’assistance technique des cafés et des restaurants.
         </p>
       </div>
       <div class="footer__legal">
-        &copy; {{ year }} Depanio. Tous droits reserves.
+        &copy; {{ year }} Depanio. Tous droits réservés.
       </div>
     </div>
   </footer>

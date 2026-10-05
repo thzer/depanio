@@ -102,7 +102,7 @@ public class EquipmentService {
     public EquipmentResponse getByQrToken(String qrToken) {
         Equipment equipment = equipmentRepository.findByQrToken(qrToken)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Aucun materiel ne correspond a cette etiquette QR."));
+                        "Aucun matériel ne correspond à cette étiquette QR."));
         assertCanAccess(equipment);
         return equipmentMapper.toResponse(equipment);
     }

@@ -51,7 +51,7 @@ export class ChangePasswordPage {
   constructor() {
     this.form.controls.newPassword.valueChanges.subscribe((value) => {
       this.checks.set([
-        { label: 'Au moins 10 caracteres', ok: value.length >= 10 },
+        { label: 'Au moins 10 caractères', ok: value.length >= 10 },
         { label: 'Une majuscule', ok: /[A-Z]/.test(value) },
         { label: 'Un chiffre', ok: /[0-9]/.test(value) },
         { label: 'Un caractere special', ok: /[^A-Za-z0-9]/.test(value) },
@@ -80,7 +80,7 @@ export class ChangePasswordPage {
       })
       .subscribe({
         next: () => {
-          this.toast.success('Votre mot de passe a ete modifie.');
+          this.toast.success('Votre mot de passe a été modifié.');
           void this.router.navigate(['/tableau-de-bord']);
         },
         error: (error) => {

@@ -14,8 +14,8 @@ import { ChartCanvas } from '../../shared/chart-canvas';
  * correspondent donc au meme instant de lecture, ce qui ne serait pas
  * garanti avec plusieurs appels paralleles.
  *
- * Le contenu s'adapte au role : un gerant ne voit que son etablissement,
- * et la repartition par technicien lui est masquee puisqu'elle concerne
+ * Le contenu s'adapte au role : un gérant ne voit que son établissement,
+ * et la répartition par technicien lui est masquée puisqu'elle concerne
  * l'organisation interne de la societe de maintenance.
  */
 @Component({

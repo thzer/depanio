@@ -5,10 +5,10 @@ package tn.iset.gabes.helpdesk.entity.enums;
  */
 public enum TicketCategory {
 
-    HARDWARE_FAILURE("Panne materielle"),
-    SOFTWARE_ISSUE("Probleme logiciel"),
-    NETWORK("Reseau et connexion"),
-    CONFIGURATION("Configuration et parametrage"),
+    HARDWARE_FAILURE("Panne matérielle"),
+    SOFTWARE_ISSUE("Problème logiciel"),
+    NETWORK("Réseau et connexion"),
+    CONFIGURATION("Configuration et paramétrage"),
     CONSUMABLE("Consommable"),
     TRAINING("Formation et assistance"),
     OTHER("Autre");

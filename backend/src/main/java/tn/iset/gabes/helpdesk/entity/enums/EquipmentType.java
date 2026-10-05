@@ -7,10 +7,10 @@ public enum EquipmentType {
 
     POS_TERMINAL("Caisse enregistreuse"),
     CARD_READER("Terminal de paiement"),
-    COFFEE_MACHINE("Machine a cafe"),
+    COFFEE_MACHINE("Machine à café"),
     PRINTER("Imprimante tickets"),
-    REFRIGERATION("Materiel frigorifique"),
-    NETWORK_DEVICE("Equipement reseau"),
+    REFRIGERATION("Matériel frigorifique"),
+    NETWORK_DEVICE("Équipement réseau"),
     SCALE("Balance"),
     TABLET("Tablette de commande"),
     OTHER("Autre");

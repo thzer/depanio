@@ -10,24 +10,24 @@ import jakarta.validation.constraints.Size;
 public record DemoRequestForm(
 
         @NotBlank(message = "Votre nom est obligatoire.")
-        @Size(max = 120, message = "Le nom ne peut pas depasser 120 caracteres.")
+        @Size(max = 120, message = "Le nom ne peut pas dépasser 120 caractères.")
         String contactName,
 
-        @NotBlank(message = "Votre adresse electronique est obligatoire.")
-        @Email(message = "Le format de l adresse electronique est invalide.")
+        @NotBlank(message = "Votre adresse électronique est obligatoire.")
+        @Email(message = "Le format de l’adresse électronique est invalide.")
         @Size(max = 120)
         String email,
 
-        @Size(max = 30, message = "Le numero de telephone est trop long.")
+        @Size(max = 30, message = "Le numéro de téléphone est trop long.")
         String phone,
 
-        @Size(max = 150, message = "Le nom de la societe est trop long.")
+        @Size(max = 150, message = "Le nom de la société est trop long.")
         String companyName,
 
         @Size(max = 40)
         String establishmentCount,
 
-        @Size(max = 2000, message = "Le message ne peut pas depasser 2000 caracteres.")
+        @Size(max = 2000, message = "Le message ne peut pas dépasser 2000 caractères.")
         String message,
 
         /**

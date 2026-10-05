@@ -3,7 +3,7 @@
     <div>
       <h1>Utilisateurs</h1>
       <p class="page-header__subtitle">
-        Comptes des administrateurs, des techniciens et des gerants clients
+        Comptes des administrateurs, des techniciens et des gérants clients
       </p>
     </div>
     <button type="button" class="btn btn--primary" (click)="openCreate()">
@@ -24,7 +24,7 @@
                 id="search"
                 type="search"
                 name="search"
-                placeholder="Nom ou adresse electronique"
+                placeholder="Nom ou adresse électronique"
                 [(ngModel)]="search"
               />
             </div>
@@ -43,7 +43,7 @@
               Rechercher
             </button>
             <button type="button" class="btn btn--secondary" (click)="resetFilters()">
-              Reinitialiser
+              Réinitialiser
             </button>
           </form>
         </div>
@@ -60,8 +60,8 @@
           @if (p.content.length === 0) {
             <div class="empty">
               <span class="empty__icon"><app-icon name="users" [size]="24" /></span>
-              <div class="empty__title">Aucun compte trouve</div>
-              <p>Creez les comptes de vos techniciens et de vos clients.</p>
+              <div class="empty__title">Aucun compte trouvé</div>
+              <p>Créez les comptes de vos techniciens et de vos clients.</p>
             </div>
           } @else {
             <div class="table-wrapper">
@@ -69,11 +69,11 @@
                 <thead>
                   <tr>
                     <th>Nom</th>
-                    <th>Adresse electronique</th>
+                    <th>Adresse électronique</th>
                     <th>Role</th>
                     <th>Rattachement</th>
-                    <th>Telephone</th>
-                    <th>Etat</th>
+                    <th>Téléphone</th>
+                    <th>État</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -105,7 +105,7 @@
                         @if (user.active) {
                           <span class="badge status-resolved">Actif</span>
                         } @else {
-                          <span class="badge status-cancelled">Desactive</span>
+                          <span class="badge status-cancelled">Désactivé</span>
                         }
                       </td>
                       <td class="text-right">
@@ -137,7 +137,7 @@
       <div class="card__body">
         @if (workload().length === 0) {
           <p class="text-muted text-sm">
-            Aucun technicien actif. Creez un compte de role Technicien pour
+            Aucun technicien actif. Créez un compte de role Technicien pour
             pouvoir affecter des tickets.
           </p>
         } @else {
@@ -165,7 +165,7 @@
 @if (formOpen()) {
   <app-modal
     title="Nouveau compte"
-    subtitle="Le mot de passe est defini ici ; l utilisateur pourra le changer apres sa premiere connexion."
+    subtitle="Le mot de passe est defini ici ; l’utilisateur pourra le changer après sa première connexion."
     (closed)="closeForm()"
   >
     <form [formGroup]="form" (ngSubmit)="submit()">
@@ -180,13 +180,13 @@
           <span class="field__hint">
             @switch (selectedRole) {
               @case ('ADMIN') {
-                Acces complet : clients, materiel, comptes et statistiques.
+                Accès complet : clients, matériel, comptes et statistiques.
               }
               @case ('TECHNICIAN') {
-                Traite les tickets qui lui sont affectes et la file d attente.
+                Traite les tickets qui lui sont affectés et la file d’attente.
               }
               @case ('CLIENT') {
-                Gerant d un etablissement : declare et suit ses propres pannes.
+                Gérant d’un établissement : déclare et suit ses propres pannes.
               }
             }
           </span>
@@ -194,7 +194,7 @@
 
         @if (selectedRole === 'CLIENT') {
           <div class="field form-grid__full">
-            <label class="field__label" for="formEstablishment">Etablissement</label>
+            <label class="field__label" for="formEstablishment">Établissement</label>
             <select
               id="formEstablishment"
               formControlName="establishmentId"
@@ -202,7 +202,7 @@
                 form.controls.establishmentId.touched && form.controls.establishmentId.invalid
               "
             >
-              <option [ngValue]="null">Choisir un etablissement</option>
+              <option [ngValue]="null">Choisir un établissement</option>
               @for (establishment of establishments(); track establishment.id) {
                 <option [ngValue]="establishment.id">
                   {{ establishment.name }} &mdash; {{ establishment.city }}
@@ -211,12 +211,12 @@
             </select>
             @if (establishments().length === 0) {
               <span class="field__hint">
-                Aucun etablissement actif. Enregistrez d abord le client.
+                Aucun établissement actif. Enregistrez d’abord le client.
               </span>
             }
             @if (form.controls.establishmentId.touched && form.controls.establishmentId.invalid) {
               <span class="field__error">
-                Un compte client doit etre rattache a un etablissement.
+                Un compte client doit être rattaché à un établissement.
               </span>
             }
           </div>
@@ -237,22 +237,22 @@
         </div>
 
         <div class="field">
-          <label class="field__label" for="phone">Telephone</label>
+          <label class="field__label" for="phone">Téléphone</label>
           <input id="phone" type="tel" formControlName="phone" placeholder="98 111 222" />
         </div>
 
         <div class="field">
-          <label class="field__label" for="email">Adresse electronique</label>
+          <label class="field__label" for="email">Adresse électronique</label>
           <input
             id="email"
             type="email"
             formControlName="email"
             autocomplete="off"
-            placeholder="ahmed@votre-societe.tn"
+            placeholder="ahmed@votre-société.tn"
             [class.invalid]="form.controls.email.touched && form.controls.email.invalid"
           />
           @if (form.controls.email.touched && form.controls.email.invalid) {
-            <span class="field__error">Adresse electronique invalide.</span>
+            <span class="field__error">Adresse électronique invalide.</span>
           }
         </div>
 
@@ -263,17 +263,17 @@
             type="text"
             formControlName="password"
             autocomplete="new-password"
-            placeholder="Au moins 10 caracteres"
+            placeholder="Au moins 10 caractères"
             [class.invalid]="form.controls.password.touched && form.controls.password.invalid"
           />
           @if (form.controls.password.touched && form.controls.password.invalid) {
-            <span class="field__error">Au moins 10 caracteres.</span>
+            <span class="field__error">Au moins 10 caractères.</span>
           }
         </div>
 
         @if (selectedRole === 'TECHNICIAN') {
           <div class="field form-grid__full">
-            <label class="field__label" for="speciality">Specialite</label>
+            <label class="field__label" for="speciality">Spécialité</label>
             <input
               id="speciality"
               type="text"
@@ -281,7 +281,7 @@
               placeholder="Caisses et terminaux de paiement"
             />
             <span class="field__hint">
-              Affichee au moment de choisir a qui affecter un ticket.
+              Affichée au moment de choisir à qui affecter un ticket.
             </span>
           </div>
         }

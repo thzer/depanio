@@ -13,7 +13,7 @@
 
       <form class="stack" [formGroup]="form" (ngSubmit)="submit()">
         <div class="field">
-          <label class="field__label" for="email">Adresse electronique</label>
+          <label class="field__label" for="email">Adresse électronique</label>
           <input
             id="email"
             type="email"
@@ -25,9 +25,9 @@
           @if (form.controls.email.touched && form.controls.email.invalid) {
             <span class="field__error">
               @if (form.controls.email.hasError('required')) {
-                Veuillez saisir votre adresse electronique.
+                Veuillez saisir votre adresse électronique.
               } @else {
-                Le format de l adresse est invalide.
+                Le format de l’adresse est invalide.
               }
             </span>
           }
@@ -74,26 +74,8 @@
         </button>
       </form>
 
-      @if (showDemoAccounts) {
-        <div class="auth__demo">
-          <div class="auth__demo-label">Essayer la demonstration</div>
-          <div class="auth__demo-grid">
-            @for (account of demoAccounts; track account.email) {
-              <button
-                type="button"
-                class="demo-card"
-                (click)="fillDemoAccount(account.email)"
-              >
-                <app-icon [name]="account.icon" [size]="17" />
-                <span>{{ account.label }}</span>
-              </button>
-            }
-          </div>
-        </div>
-      }
-
       <div class="auth__legal">
-        &copy; {{ year }} Depanio &mdash; Tous droits reserves
+        &copy; {{ year }} Depanio &mdash; Tous droits réservés
       </div>
     </div>
   </div>
@@ -101,47 +83,47 @@
   <!-- ============================== Argumentaire ============================== -->
   <div class="auth__aside">
     <div class="auth__aside-inner">
-      <span class="auth__eyebrow">La plateforme des societes de maintenance</span>
+      <span class="auth__eyebrow">La plateforme des sociétés de maintenance</span>
 
-      <h2>Plus une seule panne oubliee dans un fil de discussion.</h2>
+      <h2>Plus une seule panne oubliée dans un fil de discussion.</h2>
 
       <ul class="auth__list">
         <li>
           <app-icon name="ticket" [size]="18" />
           <div>
-            <strong>Chaque appel devient un ticket numerote</strong>
-            <span>Rien ne se perd entre deux deplacements.</span>
+            <strong>Chaque appel devient un ticket numéroté</strong>
+            <span>Rien ne se perd entre deux déplacements.</span>
           </div>
         </li>
         <li>
           <app-icon name="clock" [size]="18" />
           <div>
-            <strong>Un delai contractuel sur chaque demande</strong>
-            <span>Alerte avant l echeance, constat automatique du depassement.</span>
+            <strong>Un délai contractuel sur chaque demande</strong>
+            <span>Alerte avant l’échéance, constat automatique du dépassement.</span>
           </div>
         </li>
         <li>
           <app-icon name="qr" [size]="18" />
           <div>
-            <strong>Une etiquette QR sur chaque machine</strong>
-            <span>Le gerant scanne, decrit, c est parti. Dix secondes.</span>
+            <strong>Une étiquette QR sur chaque machine</strong>
+            <span>Le gérant scanne, décrit, c’est parti. Dix secondes.</span>
           </div>
         </li>
         <li>
           <app-icon name="chart" [size]="18" />
           <div>
             <strong>Des chiffres pour defendre votre contrat</strong>
-            <span>Delai moyen, taux de respect, materiel le plus fragile.</span>
+            <span>Délai moyen, taux de respect, matériel le plus fragile.</span>
           </div>
         </li>
       </ul>
 
       <div class="auth__quote">
         <p>
-          &laquo; La caisse tombe en panne un vendredi midi. Sans suivi ecrit,
-          personne ne sait qui s en occupe. &raquo;
+          &laquo; La caisse tombe en panne un vendredi midi. Sans suivi écrit,
+          personne ne sait qui s’en occupe. &raquo;
         </p>
-        <span>Le probleme que Depanio resout</span>
+        <span>Le problème que Depanio résout</span>
       </div>
     </div>
   </div>

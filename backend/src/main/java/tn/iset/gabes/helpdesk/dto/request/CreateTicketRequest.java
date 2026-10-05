@@ -16,17 +16,17 @@ import tn.iset.gabes.helpdesk.entity.enums.TicketCategory;
 public record CreateTicketRequest(
 
         @NotBlank(message = "Le titre est obligatoire.")
-        @Size(max = 150, message = "Le titre ne peut pas depasser 150 caracteres.")
+        @Size(max = 150, message = "Le titre ne peut pas dépasser 150 caractères.")
         String title,
 
         @NotBlank(message = "La description est obligatoire.")
-        @Size(min = 10, message = "La description doit contenir au moins 10 caracteres.")
+        @Size(min = 10, message = "La description doit contenir au moins 10 caractères.")
         String description,
 
-        @NotNull(message = "La categorie est obligatoire.")
+        @NotNull(message = "La catégorie est obligatoire.")
         TicketCategory category,
 
-        @NotNull(message = "La priorite est obligatoire.")
+        @NotNull(message = "La priorité est obligatoire.")
         Priority priority,
 
         /** Materiel concerne. Facultatif. */

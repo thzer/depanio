@@ -77,7 +77,7 @@ public class DemoRequestService {
         if (demoRequestRepository.countByCreatedAtAfter(depuis) >= MAX_GLOBAL) {
             log.warn("Limite horaire des demandes de demonstration atteinte.");
             throw new BusinessException(
-                    "Le formulaire est momentanement indisponible. Reessayez dans un moment.");
+                    "Le formulaire est momentanément indisponible. Réessayez dans un moment.");
         }
 
         DemoRequest demande = demoRequestRepository.save(DemoRequest.builder()

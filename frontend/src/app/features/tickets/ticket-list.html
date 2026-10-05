@@ -4,13 +4,13 @@
       <h1>Tickets</h1>
       <p class="page-header__subtitle">
         @if (page(); as p) {
-          {{ p.totalElements }} ticket(s) correspondant aux criteres
+          {{ p.totalElements }} {{ p.totalElements > 1 ? 'tickets correspondent' : 'ticket correspond' }} aux critères
         } @else {
-          Suivi des demandes d intervention
+          Suivi des demandes d’intervention
         }
       </p>
     </div>
-    <a class="btn btn--primary" routerLink="/tickets/nouveau">Declarer une panne</a>
+    <a class="btn btn--primary" routerLink="/tickets/nouveau">Déclarer une panne</a>
   </div>
 
   <!-- ================================ Filtres ================================ -->
@@ -23,7 +23,7 @@
             id="search"
             type="search"
             name="search"
-            placeholder="Reference ou objet du ticket"
+            placeholder="Référence ou objet du ticket"
             [(ngModel)]="search"
           />
         </div>
@@ -39,9 +39,9 @@
         </div>
 
         <div class="field">
-          <label class="field__label" for="priority">Priorite</label>
+          <label class="field__label" for="priority">Priorité</label>
           <select id="priority" name="priority" [(ngModel)]="priority">
-            <option value="">Toutes les priorites</option>
+            <option value="">Toutes les priorités</option>
             @for (option of priorities(); track option.value) {
               <option [value]="option.value">{{ option.label }}</option>
             }
@@ -58,7 +58,7 @@
             Rechercher
           </button>
           <button type="button" class="btn btn--secondary" (click)="resetFilters()">
-            Reinitialiser
+            Réinitialiser
           </button>
         </div>
       </form>
@@ -75,43 +75,43 @@
     } @else if (page(); as p) {
       @if (p.content.length === 0) {
         <div class="empty">
-          <div class="empty__title">Aucun ticket trouve</div>
-          <p>Modifiez les criteres de recherche ou declarez une nouvelle panne.</p>
+          <div class="empty__title">Aucun ticket trouvé</div>
+          <p>Modifiez les critères de recherche ou déclarez une nouvelle panne.</p>
         </div>
       } @else {
         <div class="table-wrapper">
           <table class="data">
             <thead>
               <tr>
-                <th>Reference</th>
-                <th>Objet</th>
+                <th class="col-fixe">Référence</th>
+                <th class="col-principale">Objet</th>
                 @if (!auth.isClient()) {
-                  <th>Etablissement</th>
+                  <th class="col-secondaire">Établissement</th>
                 }
-                <th>Materiel</th>
-                <th>Priorite</th>
+                <th class="col-secondaire">Matériel</th>
+                <th>Priorité</th>
                 <th>Statut</th>
-                <th>Technicien</th>
-                <th>Declare le</th>
-                <th>Delai</th>
+                <th class="col-secondaire">Technicien</th>
+                <th class="col-fixe">Déclaré le</th>
+                <th class="col-fixe">Délai</th>
               </tr>
             </thead>
             <tbody>
               @for (ticket of p.content; track ticket.id) {
                 <tr>
-                  <td>
+                  <td class="col-fixe">
                     <a class="mono fw-600" [routerLink]="['/tickets', ticket.id]">
                       {{ ticket.reference }}
                     </a>
                   </td>
-                  <td>
-                    <a [routerLink]="['/tickets', ticket.id]">{{ ticket.title }}</a>
+                  <td class="col-principale">
+                    <a class="titre-cellule" [routerLink]="['/tickets', ticket.id]">{{ ticket.title }}</a>
                     <div class="text-xs text-faint">{{ ticket.categoryLabel }}</div>
                   </td>
                   @if (!auth.isClient()) {
-                    <td class="text-muted">{{ ticket.establishmentName }}</td>
+                    <td class="text-muted col-secondaire"><span>{{ ticket.establishmentName }}</span></td>
                   }
-                  <td class="text-muted text-sm">{{ ticket.equipmentName ?? '—' }}</td>
+                  <td class="text-muted text-sm col-secondaire"><span>{{ ticket.equipmentName ?? '—' }}</span></td>
                   <td>
                     <app-priority-badge
                       [priority]="ticket.priority"
@@ -121,11 +121,9 @@
                   <td>
                     <app-status-badge [status]="ticket.status" [label]="ticket.statusLabel" />
                   </td>
-                  <td class="text-muted text-sm">
-                    {{ ticket.assignedToName ?? 'Non affecte' }}
-                  </td>
+                  <td class="text-muted text-sm col-secondaire"><span>{{ ticket.assignedToName ?? 'Non affecté' }}</span></td>
                   <td class="text-muted text-sm nowrap">
-                    {{ ticket.createdAt | date: 'dd/MM/yy HH:mm' }}
+                    {{ ticket.createdAt | date: 'dd/MM/yyyy' }}
                   </td>
                   <td class="text-sm nowrap">
                     <app-sla-indicator
@@ -152,7 +150,7 @@
               [disabled]="p.first"
               (click)="goToPage(p.page - 1)"
             >
-              Precedent
+              Précédent
             </button>
             <button
               type="button"

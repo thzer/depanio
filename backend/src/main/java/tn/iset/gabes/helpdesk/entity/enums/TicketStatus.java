@@ -12,12 +12,12 @@ import java.util.Set;
  */
 public enum TicketStatus {
 
-    CLOSED("Cloture", true),
-    CANCELLED("Annule", true),
-    RESOLVED("Resolu", false),
+    CLOSED("Clôturé", true),
+    CANCELLED("Annulé", true),
+    RESOLVED("Résolu", false),
     WAITING_CLIENT("En attente du client", false),
     IN_PROGRESS("En cours de traitement", false),
-    ASSIGNED("Affecte", false),
+    ASSIGNED("Affecté", false),
     NEW("Nouveau", false);
 
     private final String label;

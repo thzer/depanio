@@ -1,10 +1,10 @@
 <div class="page">
   <div class="page-header">
     <div>
-      <h1>Declarer une panne</h1>
+      <h1>Déclarer une panne</h1>
       <p class="page-header__subtitle">
-        Decrivez le probleme rencontre. Un numero de ticket vous sera attribue
-        immediatement, et le delai de prise en charge depend de l urgence choisie.
+        Décrivez le problème rencontré. Un numéro de ticket vous sera attribué
+        immédiatement, et le délai de prise en charge dépend de l’urgence choisie.
       </p>
     </div>
   </div>
@@ -13,12 +13,12 @@
     <form class="card__body stack" [formGroup]="form" (ngSubmit)="submit()">
       @if (!auth.isClient()) {
         <div class="field">
-          <label class="field__label" for="establishment">Etablissement concerne</label>
+          <label class="field__label" for="establishment">Établissement concerne</label>
           <select
             id="establishment"
             (change)="onEstablishmentChange($any($event.target).value)"
           >
-            <option value="">Choisir un etablissement</option>
+            <option value="">Choisir un établissement</option>
             @for (establishment of establishments(); track establishment.id) {
               <option [value]="establishment.id">
                 {{ establishment.name }} &mdash; {{ establishment.city }}
@@ -26,20 +26,20 @@
             }
           </select>
           <span class="field__hint">
-            Obligatoire lorsque la demande est saisie pour le compte d un client.
+            Obligatoire lorsque la demande est saisie pour le compte d’un client.
           </span>
         </div>
       } @else {
         <div class="field">
-          <span class="field__label">Etablissement</span>
+          <span class="field__label">Établissement</span>
           <input type="text" [value]="auth.currentUser()?.establishmentName" disabled />
         </div>
       }
 
       <div class="field">
-        <label class="field__label" for="equipment">Materiel concerne</label>
+        <label class="field__label" for="equipment">Matériel concerne</label>
         <select id="equipment" formControlName="equipmentId">
-          <option [ngValue]="null">Aucun materiel precis</option>
+          <option [ngValue]="null">Aucun matériel précis</option>
           @for (equipment of equipments(); track equipment.id) {
             <option [ngValue]="equipment.id">
               {{ equipment.name }}
@@ -50,19 +50,19 @@
           }
         </select>
         <span class="field__hint">
-          Facultatif, mais precieux : il permet de suivre les pannes repetees
-          d une meme machine.
+          Facultatif, mais précieux : il permet de suivre les pannes répétées
+          d’une même machine.
         </span>
       </div>
 
       <div class="field">
-        <label class="field__label" for="title">Objet du probleme</label>
+        <label class="field__label" for="title">Objet du problème</label>
         <input
           id="title"
           type="text"
           formControlName="title"
           maxlength="150"
-          placeholder="Par exemple : la caisse ne demarre plus"
+          placeholder="Par exemple : la caisse ne démarre plus"
           [class.invalid]="form.controls.title.touched && form.controls.title.invalid"
         />
         @if (form.controls.title.touched && form.controls.title.invalid) {
@@ -71,41 +71,41 @@
       </div>
 
       <div class="field">
-        <label class="field__label" for="description">Description detaillee</label>
+        <label class="field__label" for="description">Description détaillée</label>
         <textarea
           id="description"
           formControlName="description"
           rows="6"
-          placeholder="Depuis quand ? Dans quelles circonstances ? Un message d erreur s affiche-t-il ?"
+          placeholder="Depuis quand ? Dans quelles circonstances ? Un message d’erreur s’affiche-t-il ?"
           [class.invalid]="
             form.controls.description.touched && form.controls.description.invalid
           "
         ></textarea>
         @if (form.controls.description.touched && form.controls.description.invalid) {
           <span class="field__error">
-            Merci de decrire le probleme en au moins dix caracteres.
+            Merci de décrire le problème en au moins dix caractères.
           </span>
         }
         <span class="field__hint">
-          Plus la description est precise, plus le technicien arrive prepare.
+          Plus la description est précise, plus le technicien arrive préparé.
         </span>
       </div>
 
       <div class="grid grid--2">
         <div class="field">
-          <label class="field__label" for="category">Nature du probleme</label>
+          <label class="field__label" for="category">Nature du problème</label>
           <select
             id="category"
             formControlName="category"
             [class.invalid]="form.controls.category.touched && form.controls.category.invalid"
           >
-            <option value="">Choisir une categorie</option>
+            <option value="">Choisir une catégorie</option>
             @for (option of categories(); track option.value) {
               <option [value]="option.value">{{ option.label }}</option>
             }
           </select>
           @if (form.controls.category.touched && form.controls.category.invalid) {
-            <span class="field__error">La categorie est obligatoire.</span>
+            <span class="field__error">La catégorie est obligatoire.</span>
           }
         </div>
 
@@ -117,7 +117,7 @@
             }
           </select>
           <span class="field__hint">
-            Critique : 2 h &middot; Haute : 8 h &middot; Moyenne : 24 h &middot; Basse : 72 h
+            Critique : 2 h &middot; Haute : 8 h &middot; Moyenne : 24 h &middot; Basse : 72 h
           </span>
         </div>
       </div>

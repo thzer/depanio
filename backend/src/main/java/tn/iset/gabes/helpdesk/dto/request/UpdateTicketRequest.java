@@ -10,7 +10,7 @@ import tn.iset.gabes.helpdesk.entity.enums.TicketCategory;
  */
 public record UpdateTicketRequest(
 
-        @Size(max = 150, message = "Le titre ne peut pas depasser 150 caracteres.")
+        @Size(max = 150, message = "Le titre ne peut pas dépasser 150 caractères.")
         String title,
 
         String description,

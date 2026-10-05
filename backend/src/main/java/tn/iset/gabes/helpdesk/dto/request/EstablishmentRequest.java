@@ -11,11 +11,11 @@ import tn.iset.gabes.helpdesk.entity.enums.EstablishmentType;
  */
 public record EstablishmentRequest(
 
-        @NotBlank(message = "Le nom de l'etablissement est obligatoire.")
-        @Size(max = 120, message = "Le nom ne peut pas depasser 120 caracteres.")
+        @NotBlank(message = "Le nom de l’établissement est obligatoire.")
+        @Size(max = 120, message = "Le nom ne peut pas dépasser 120 caractères.")
         String name,
 
-        @NotNull(message = "Le type d'etablissement est obligatoire.")
+        @NotNull(message = "Le type d’établissement est obligatoire.")
         EstablishmentType type,
 
         String address,
@@ -27,7 +27,7 @@ public record EstablishmentRequest(
 
         String contactName,
 
-        @Email(message = "Le format de l'adresse electronique est invalide.")
+        @Email(message = "Le format de l’adresse électronique est invalide.")
         String contactEmail,
 
         String contractNumber,

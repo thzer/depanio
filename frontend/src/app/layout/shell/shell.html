@@ -22,14 +22,14 @@
     <div class="sidebar__cta">
       <a class="btn btn--primary" routerLink="/tickets/nouveau" (click)="closeSidebar()">
         <app-icon name="plus" [size]="17" />
-        Declarer une panne
+        Déclarer une panne
       </a>
     </div>
 
     <div class="sidebar__footer">
       <div class="connection" [class.connection--on]="notifications.isConnected()">
         <span class="connection__dot"></span>
-        {{ notifications.isConnected() ? 'Temps reel actif' : 'Temps reel inactif' }}
+        {{ notifications.isConnected() ? 'Temps réel actif' : 'Temps réel inactif' }}
       </div>
     </div>
   </aside>
@@ -91,7 +91,7 @@
             </a>
             <button type="button" class="profile__menu-item profile__menu-item--danger" (click)="logout()">
               <app-icon name="logout" [size]="17" />
-              Se deconnecter
+              Se déconnecter
             </button>
           </div>
         }

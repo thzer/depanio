@@ -13,11 +13,11 @@ import java.time.LocalDate;
  */
 public record EquipmentRequest(
 
-        @NotBlank(message = "Le nom du materiel est obligatoire.")
-        @Size(max = 120, message = "Le nom ne peut pas depasser 120 caracteres.")
+        @NotBlank(message = "Le nom du matériel est obligatoire.")
+        @Size(max = 120, message = "Le nom ne peut pas dépasser 120 caractères.")
         String name,
 
-        @NotNull(message = "Le type de materiel est obligatoire.")
+        @NotNull(message = "Le type de matériel est obligatoire.")
         EquipmentType type,
 
         String brand,
@@ -32,7 +32,7 @@ public record EquipmentRequest(
 
         LocalDate warrantyEnd,
 
-        @NotNull(message = "L'etablissement est obligatoire.")
+        @NotNull(message = "L’établissement est obligatoire.")
         Long establishmentId,
 
         Boolean active

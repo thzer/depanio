@@ -25,14 +25,14 @@ import { ToastService } from '../../core/services/toast.service';
       @if (loading()) {
         <div class="loader">
           <span class="loader__spinner"></span>
-          Identification du materiel...
+          Identification du matériel…
         </div>
       } @else if (equipment(); as e) {
         <div class="page-header">
           <div>
-            <h1>Declarer une panne</h1>
+            <h1>Déclarer une panne</h1>
             <p class="page-header__subtitle">
-              Materiel identifie par son etiquette QR
+              Matériel identifié par son étiquette QR
             </p>
           </div>
         </div>
@@ -41,7 +41,7 @@ import { ToastService } from '../../core/services/toast.service';
           <div class="card__body">
             <div class="identified">
               <div>
-                <div class="text-xs text-faint">Materiel</div>
+                <div class="text-xs text-faint">Matériel</div>
                 <div class="identified__name">{{ e.name }}</div>
                 <div class="text-sm text-muted">
                   {{ e.brand }} {{ e.model }}
@@ -73,12 +73,12 @@ import { ToastService } from '../../core/services/toast.service';
             </div>
 
             <div class="field">
-              <label class="field__label" for="description">Details</label>
+              <label class="field__label" for="description">Détails</label>
               <textarea
                 id="description"
                 formControlName="description"
                 rows="5"
-                placeholder="Depuis quand ? Un message d erreur s affiche-t-il ?"
+                placeholder="Depuis quand ? Un message d’erreur s’affiche-t-il ?"
                 [class.invalid]="
                   form.controls.description.touched && form.controls.description.invalid
                 "
@@ -87,7 +87,7 @@ import { ToastService } from '../../core/services/toast.service';
 
             <div class="grid grid--2">
               <div class="field">
-                <label class="field__label" for="category">Nature du probleme</label>
+                <label class="field__label" for="category">Nature du problème</label>
                 <select id="category" formControlName="category">
                   <option value="">Choisir</option>
                   @for (option of categories(); track option.value) {
@@ -118,10 +118,10 @@ import { ToastService } from '../../core/services/toast.service';
       } @else {
         <div class="card">
           <div class="empty">
-            <div class="empty__title">Etiquette non reconnue</div>
+            <div class="empty__title">Étiquette non reconnue</div>
             <p>
-              Ce code ne correspond a aucun materiel de votre etablissement.
-              Verifiez l etiquette ou contactez votre administrateur.
+              Ce code ne correspond à aucun matériel de votre établissement.
+              Vérifiez l’étiquette ou contactez votre administrateur.
             </p>
             <button type="button" class="btn btn--primary mt-4" (click)="goToTickets()">
               Retour aux tickets

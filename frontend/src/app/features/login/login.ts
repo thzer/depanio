@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth.service';
 import { Icon } from '../../shared/icon';
 import { Logo } from '../../shared/logo';
@@ -9,9 +8,10 @@ import { Logo } from '../../shared/logo';
 /**
  * Ecran de connexion.
  *
- * Les comptes de demonstration sont proposes en un clic : ils evitent de
- * ressaisir les identifiants pendant une presentation commerciale ou une
- * soutenance. Ce bloc disparait automatiquement en production.
+ * Aucun compte n'est propose ni prerempli : un identifiant affiche sur la
+ * page d'accueil d'un produit vendu est une porte ouverte, et les comptes
+ * de demonstration qui figuraient ici designaient de surcroit des acces
+ * supprimes avec le jeu d'essai.
  */
 @Component({
   selector: 'app-login',
@@ -24,7 +24,6 @@ export class LoginPage {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
 
-  protected readonly showDemoAccounts = !environment.production;
   protected readonly year = new Date().getFullYear();
 
   protected readonly submitting = signal(false);
@@ -35,13 +34,6 @@ export class LoginPage {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
-
-  /** Comptes du jeu de demonstration, pour un essai immediat. */
-  protected readonly demoAccounts = [
-    { label: 'Administrateur', email: 'admin@helpdesk.tn', icon: 'shield' },
-    { label: 'Technicien', email: 'ahmed.tech@helpdesk.tn', icon: 'tool' },
-    { label: 'Gerant de cafe', email: 'hichem@elmedina.tn', icon: 'store' },
-  ];
 
   protected togglePassword(): void {
     this.passwordVisible.update((visible) => !visible);
@@ -66,10 +58,6 @@ export class LoginPage {
     return demande;
   }
 
-  protected fillDemoAccount(email: string): void {
-    this.form.patchValue({ email, password: 'Passer@123' });
-  }
-
   protected submit(): void {
     if (this.form.invalid || this.submitting()) {
       this.form.markAllAsTouched();
@@ -88,7 +76,7 @@ export class LoginPage {
       error: (error) => {
         this.submitting.set(false);
         this.errorMessage.set(
-          error?.error?.message ?? 'Connexion impossible. Verifiez vos identifiants.',
+          error?.error?.message ?? 'Connexion impossible. Vérifiez vos identifiants.',
         );
       },
     });

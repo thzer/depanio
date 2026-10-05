@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public record AssignTicketRequest(
 
-        @NotNull(message = "L'identifiant du technicien est obligatoire.")
+        @NotNull(message = "L’identifiant du technicien est obligatoire.")
         Long technicianId
 ) {
 }

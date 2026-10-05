@@ -1,19 +1,19 @@
 <div class="page">
   <div class="page-header no-print">
     <div>
-      <h1>Materiel</h1>
+      <h1>Matériel</h1>
       <p class="page-header__subtitle">
         @if (auth.isClient()) {
-          Equipements installes dans votre etablissement
+          Équipements installés dans votre établissement
         } @else {
-          Parc installe chez les clients et etiquettes QR
+          Parc installé chez les clients et étiquettes QR
         }
       </p>
     </div>
     @if (auth.isAdmin()) {
       <button type="button" class="btn btn--primary" (click)="openCreate()">
         <app-icon name="plus" [size]="17" />
-        Nouveau materiel
+        Nouveau matériel
       </button>
     }
   </div>
@@ -28,13 +28,13 @@
             id="search"
             type="search"
             name="search"
-            placeholder="Nom ou numero de serie"
+            placeholder="Nom ou numéro de série"
             [(ngModel)]="search"
           />
         </div>
 
         <div class="field">
-          <label class="field__label" for="type">Type de materiel</label>
+          <label class="field__label" for="type">Type de matériel</label>
           <select id="type" name="type" [(ngModel)]="type">
             <option value="">Tous les types</option>
             @for (option of types(); track option.value) {
@@ -45,9 +45,9 @@
 
         @if (!auth.isClient()) {
           <div class="field">
-            <label class="field__label" for="establishment">Etablissement</label>
+            <label class="field__label" for="establishment">Établissement</label>
             <select id="establishment" name="establishment" [(ngModel)]="establishmentId">
-              <option [ngValue]="null">Tous les etablissements</option>
+              <option [ngValue]="null">Tous les établissements</option>
               @for (establishment of establishments(); track establishment.id) {
                 <option [ngValue]="establishment.id">{{ establishment.name }}</option>
               }
@@ -60,7 +60,7 @@
             Rechercher
           </button>
           <button type="button" class="btn btn--secondary" (click)="resetFilters()">
-            Reinitialiser
+            Réinitialiser
           </button>
         </div>
       </form>
@@ -71,7 +71,7 @@
   @if (qrEquipment(); as equipment) {
     <div class="card mb-4 qr-card">
       <div class="card__header no-print">
-        <span class="card__title">Etiquette a coller sur la machine</span>
+        <span class="card__title">Étiquette à coller sur la machine</span>
         <div class="row">
           <button type="button" class="btn btn--primary btn--sm" (click)="printQrCode()">
             <app-icon name="print" [size]="16" />
@@ -85,12 +85,12 @@
       <div class="card__body qr-print">
         <div class="qr-label">
           @if (qrImageUrl(); as url) {
-            <img [src]="url" alt="Etiquette QR" width="260" height="260" />
+            <img [src]="url" alt="Étiquette QR" width="260" height="260" />
           } @else {
             <div class="loader"><span class="loader__spinner"></span></div>
           }
           <div class="qr-label__text">
-            <div class="qr-label__title">Un probleme avec cette machine ?</div>
+            <div class="qr-label__title">Un problème avec cette machine ?</div>
             <div class="qr-label__name">{{ equipment.name }}</div>
             <div class="text-sm text-muted">
               {{ equipment.brand }} {{ equipment.model }}
@@ -99,7 +99,7 @@
               <div class="text-sm text-muted">{{ equipment.location }}</div>
             }
             <div class="qr-label__hint">
-              Scannez ce code avec votre telephone pour declarer la panne.
+              Scannez ce code avec votre téléphone pour déclarer la panne.
             </div>
             <div class="text-xs text-faint mono">{{ equipment.establishmentName }}</div>
           </div>
@@ -113,25 +113,25 @@
     @if (loading()) {
       <div class="loader">
         <span class="loader__spinner"></span>
-        Chargement du materiel...
+        Chargement du matériel...
       </div>
     } @else if (page(); as p) {
       @if (p.content.length === 0) {
         <div class="empty">
           <span class="empty__icon"><app-icon name="tool" [size]="24" /></span>
-          <div class="empty__title">Aucun materiel enregistre</div>
+          <div class="empty__title">Aucun matériel enregistré</div>
           <p>
             @if (auth.isAdmin()) {
-              Enregistrez les machines de vos clients : chacune recevra une
-              etiquette QR a coller dessus.
+              Enregistrez les machines de vos clients : chacune recevra une
+              étiquette QR a coller dessus.
             } @else {
-              Aucun equipement ne correspond aux criteres de recherche.
+              Aucun équipement ne correspond aux critères de recherche.
             }
           </p>
           @if (auth.isAdmin()) {
             <button type="button" class="btn btn--primary mt-4" (click)="openCreate()">
               <app-icon name="plus" [size]="17" />
-              Enregistrer un materiel
+              Enregistrer un matériel
             </button>
           }
         </div>
@@ -140,15 +140,15 @@
           <table class="data">
             <thead>
               <tr>
-                <th>Materiel</th>
+                <th>Matériel</th>
                 <th>Type</th>
                 @if (!auth.isClient()) {
-                  <th>Etablissement</th>
+                  <th>Établissement</th>
                 }
                 <th>Emplacement</th>
-                <th>Numero de serie</th>
+                <th>Numéro de série</th>
                 <th>Garantie</th>
-                <th>Etat</th>
+                <th>État</th>
                 <th></th>
               </tr>
             </thead>
@@ -193,7 +193,7 @@
                       (click)="showQrCode(equipment)"
                     >
                       <app-icon name="qr" [size]="15" />
-                      Etiquette
+                      Étiquette
                     </button>
                     @if (auth.isAdmin()) {
                       <button
@@ -236,7 +236,7 @@
     <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="form-grid">
         <div class="field form-grid__full">
-          <label class="field__label" for="formEstablishment">Etablissement</label>
+          <label class="field__label" for="formEstablishment">Établissement</label>
           <select
             id="formEstablishment"
             formControlName="establishmentId"
@@ -244,7 +244,7 @@
               form.controls.establishmentId.touched && form.controls.establishmentId.invalid
             "
           >
-            <option [ngValue]="null">Choisir un etablissement</option>
+            <option [ngValue]="null">Choisir un établissement</option>
             @for (establishment of establishments(); track establishment.id) {
               <option [ngValue]="establishment.id">
                 {{ establishment.name }} &mdash; {{ establishment.city }}
@@ -253,16 +253,16 @@
           </select>
           @if (establishments().length === 0) {
             <span class="field__hint">
-              Aucun etablissement actif. Enregistrez d abord un client.
+              Aucun établissement actif. Enregistrez d’abord un client.
             </span>
           }
           @if (form.controls.establishmentId.touched && form.controls.establishmentId.invalid) {
-            <span class="field__error">L etablissement est obligatoire.</span>
+            <span class="field__error">L’établissement est obligatoire.</span>
           }
         </div>
 
         <div class="field">
-          <label class="field__label" for="formName">Nom du materiel</label>
+          <label class="field__label" for="formName">Nom du matériel</label>
           <input
             id="formName"
             type="text"
@@ -290,12 +290,12 @@
         </div>
 
         <div class="field">
-          <label class="field__label" for="model">Modele</label>
+          <label class="field__label" for="model">Modèle</label>
           <input id="model" type="text" formControlName="model" placeholder="T2 Lite" />
         </div>
 
         <div class="field">
-          <label class="field__label" for="serialNumber">Numero de serie</label>
+          <label class="field__label" for="serialNumber">Numéro de série</label>
           <input
             id="serialNumber"
             type="text"
@@ -315,7 +315,7 @@
         </div>
 
         <div class="field">
-          <label class="field__label" for="installedAt">Date d installation</label>
+          <label class="field__label" for="installedAt">Date d’installation</label>
           <input id="installedAt" type="date" formControlName="installedAt" />
         </div>
 

@@ -171,12 +171,12 @@ public class UserService {
 
     private void applyActiveFlag(User user, boolean active) {
         if (!active && user.getId().equals(SecurityUtils.getCurrentUserId())) {
-            throw new BusinessException("Vous ne pouvez pas desactiver votre propre compte.");
+            throw new BusinessException("Vous ne pouvez pas désactiver votre propre compte.");
         }
         if (!active && user.getRole() == Role.ADMIN
                 && userRepository.findByRoleAndActiveTrue(Role.ADMIN).size() <= 1) {
             throw new BusinessException(
-                    "Le dernier administrateur actif ne peut pas etre desactive.");
+                    "Le dernier administrateur actif ne peut pas être désactivé.");
         }
         if (!active && user.getRole() == Role.TECHNICIAN) {
             long open = ticketRepository.countByAssignedToIdAndStatusNotIn(
@@ -195,7 +195,7 @@ public class UserService {
     public void resetPassword(Long id, String newPassword) {
         if (newPassword == null || newPassword.length() < 10) {
             throw new BusinessException(
-                    "Le mot de passe doit contenir au moins 10 caracteres.");
+                    "Le mot de passe doit contenir au moins 10 caractères.");
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur", id));

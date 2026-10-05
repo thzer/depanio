@@ -7,7 +7,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { Icon } from '../../shared/icon';
 
 /**
- * Demandes de demonstration recues depuis la page commerciale.
+ * Demandes de démonstration recues depuis la page commerciale.
  *
  * Elles arrivent ici plutot que dans une boite de courriel : rien ne se
  * perd dans un dossier indesirables, et chaque demande reste visible tant
@@ -20,7 +20,7 @@ import { Icon } from '../../shared/icon';
     <div class="page">
       <div class="page-header">
         <div>
-          <h1>Demandes de demonstration</h1>
+          <h1>Demandes de démonstration</h1>
           <p class="page-header__subtitle">
             Prospects qui ont rempli le formulaire de la page commerciale
           </p>
@@ -43,7 +43,7 @@ import { Icon } from '../../shared/icon';
               <span class="empty__icon"><app-icon name="send" [size]="24" /></span>
               <div class="empty__title">Aucune demande pour le moment</div>
               <p>
-                Les demandes laissees sur la page d accueil apparaitront ici, et
+                Les demandes laissées sur la page d’accueil apparaîtront ici, et
                 vous recevrez une notification a chaque nouvelle.
               </p>
             </div>
@@ -59,11 +59,11 @@ import { Icon } from '../../shared/icon';
                       }
                       @if (d.establishmentCount) {
                         <span class="badge status-closed">
-                          {{ d.establishmentCount }} etablissements
+                          {{ d.establishmentCount }} établissements
                         </span>
                       }
                       @if (d.handled) {
-                        <span class="badge status-resolved">Traitee</span>
+                        <span class="badge status-resolved">Traitée</span>
                       }
                       <div class="spacer"></div>
                       <span class="text-xs text-faint nowrap">
@@ -90,7 +90,7 @@ import { Icon } from '../../shared/icon';
                       class="btn btn--secondary btn--sm"
                       (click)="markHandled(d)"
                     >
-                      Marquer traitee
+                      Marquer traitée
                     </button>
                   }
                 </li>
@@ -192,7 +192,7 @@ export class DemoRequestListPage {
   protected markHandled(demande: DemoRequest): void {
     this.service.markHandled(demande.id).subscribe({
       next: () => {
-        this.toast.success(`Demande de ${demande.contactName} marquee comme traitee.`);
+        this.toast.success(`Demande de ${demande.contactName} marquée comme traitée.`);
         this.load();
       },
       error: () => undefined,

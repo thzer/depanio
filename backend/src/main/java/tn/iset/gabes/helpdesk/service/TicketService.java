@@ -78,7 +78,7 @@ public class TicketService {
     /**
      * Enregistre un nouveau ticket.
      * <p>
-     * L'etablissement retenu depend du role de l'auteur : impose a partir
+     * L’établissement retenu depend du role de l'auteur : impose a partir
      * de son compte pour un CLIENT, choisi dans la requete pour un ADMIN
      * ou un TECHNICIAN qui saisit un appel telephonique.
      */
@@ -90,7 +90,7 @@ public class TicketService {
         Establishment establishment = resolveEstablishment(request, principal);
         if (!establishment.isActive()) {
             throw new BusinessException(
-                    "L'etablissement " + establishment.getName() + " est desactive.");
+                    "L’établissement " + establishment.getName() + " est desactive.");
         }
 
         Equipment equipment = resolveEquipment(request.equipmentId(), establishment);
@@ -132,7 +132,7 @@ public class TicketService {
     public TicketResponse createFromQrToken(String qrToken, CreateTicketRequest request) {
         Equipment equipment = equipmentRepository.findByQrToken(qrToken)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Aucun materiel ne correspond a cette etiquette QR."));
+                        "Aucun matériel ne correspond à cette étiquette QR."));
 
         UserPrincipal principal = SecurityUtils.requireCurrentUser();
 
@@ -140,7 +140,7 @@ public class TicketService {
         if (principal.isClient()
                 && !equipment.getEstablishment().getId().equals(principal.getEstablishmentId())) {
             throw new AccessDeniedException(
-                    "Ce materiel n'appartient pas a votre etablissement.");
+                    "Ce matériel n’appartient pas à votre établissement.");
         }
 
         CreateTicketRequest enriched = new CreateTicketRequest(
@@ -171,7 +171,7 @@ public class TicketService {
         UserPrincipal principal = SecurityUtils.requireCurrentUser();
         Ticket ticket = ticketRepository.findByReference(reference)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Aucun ticket ne porte la reference " + reference));
+                        "Aucun ticket ne porte la référence " + reference));
         assertCanRead(ticket, principal);
         return toDetail(ticket, principal);
     }
@@ -287,10 +287,10 @@ public class TicketService {
 
         if (principal.isClient()) {
             throw new AccessDeniedException(
-                    "L'affectation d'un ticket est reservee a l'equipe technique.");
+                    "L’affectation d’un ticket est réservée à l’équipe technique.");
         }
         if (ticket.getStatus().isFinalState()) {
-            throw new BusinessException("Un ticket clos ne peut plus etre affecte.");
+            throw new BusinessException("Un ticket clos ne peut plus être affecté.");
         }
 
         User technician = loadUser(request.technicianId());
@@ -299,7 +299,7 @@ public class TicketService {
                     "Seul un compte de role Technicien peut recevoir un ticket.");
         }
         if (!technician.isActive()) {
-            throw new BusinessException("Ce technicien est desactive.");
+            throw new BusinessException("Ce technicien est désactivé.");
         }
 
         // Un technicien ne peut s'attribuer qu'un ticket libre, pas reprendre celui d'un collegue
@@ -426,7 +426,7 @@ public class TicketService {
             throw new AccessDeniedException(
                     "Le suivi technique du ticket est assure par l'equipe de maintenance.");
         }
-        throw new AccessDeniedException("Ce ticket ne vous est pas affecte.");
+        throw new AccessDeniedException("Ce ticket ne vous est pas affecté.");
     }
 
     /**
@@ -463,7 +463,7 @@ public class TicketService {
             case RESOLVED -> {
                 if (request.resolutionNote() == null || request.resolutionNote().isBlank()) {
                     throw new BusinessException(
-                            "La description de la solution appliquee est obligatoire "
+                            "La description de la solution appliquée est obligatoire "
                                     + "pour resoudre un ticket.");
                 }
                 ticket.setResolutionNote(request.resolutionNote().trim());
@@ -665,7 +665,7 @@ public class TicketService {
 
         if (request.establishmentId() == null) {
             throw new BusinessException(
-                    "L'etablissement concerne doit etre precise.");
+                    "L’établissement concerne doit etre precise.");
         }
         return loadEstablishment(request.establishmentId());
     }
@@ -683,7 +683,7 @@ public class TicketService {
 
         if (!equipment.getEstablishment().getId().equals(establishment.getId())) {
             throw new BusinessException(
-                    "Le materiel selectionne n'appartient pas a l'etablissement "
+                    "Le matériel sélectionné n’appartient pas à l’établissement "
                             + establishment.getName() + ".");
         }
         return equipment;

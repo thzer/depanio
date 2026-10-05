@@ -13,7 +13,7 @@ import { ToastService } from '../../core/services/toast.service';
 /**
  * Formulaire de declaration d un probleme.
  *
- * Le comportement depend du role :
+ * Le comportement dépend du role :
  *
  * - un **gerant** declare pour son propre etablissement, qui n est donc
  *   pas demande ; la liste de materiel est celle de son etablissement ;

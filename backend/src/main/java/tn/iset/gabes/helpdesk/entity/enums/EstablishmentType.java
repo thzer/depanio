@@ -5,11 +5,11 @@ package tn.iset.gabes.helpdesk.entity.enums;
  */
 public enum EstablishmentType {
 
-    CAFE("Cafe"),
+    CAFE("Café"),
     RESTAURANT("Restaurant"),
-    TEA_HOUSE("Salon de the"),
+    TEA_HOUSE("Salon de thé"),
     FAST_FOOD("Fast-food"),
-    PASTRY("Patisserie"),
+    PASTRY("Pâtisserie"),
     OTHER("Autre");
 
     private final String label;

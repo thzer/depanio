@@ -128,7 +128,7 @@ export class TicketDetailPage {
     }
 
     if (status === 'RESOLVED' && this.resolutionNote.trim().length === 0) {
-      this.toast.error('Merci de decrire la solution appliquee.');
+      this.toast.error('Merci de décrire la solution appliquee.');
       return;
     }
 
@@ -177,20 +177,45 @@ export class TicketDetailPage {
   /** Libelle de l action proposee pour un statut donne. */
   protected actionLabel(status: TicketStatus): string {
     const labels: Record<TicketStatus, string> = {
-      NEW: 'Remettre a nouveau',
-      ASSIGNED: 'Marquer comme affecte',
-      IN_PROGRESS: 'Demarrer le traitement',
+      NEW: 'Remettre à nouveau',
+      ASSIGNED: 'Marquer comme affecté',
+      IN_PROGRESS: 'Démarrer le traitement',
       WAITING_CLIENT: 'Mettre en attente du client',
-      RESOLVED: 'Declarer resolu',
-      CLOSED: 'Cloturer le ticket',
+      RESOLVED: 'Déclarer résolu',
+      CLOSED: 'Clôturer le ticket',
       CANCELLED: 'Annuler la demande',
     };
     return labels[status];
   }
 
+  /**
+   * Rang d'affichage des actions.
+   *
+   * Le serveur renvoie les transitions possibles dans l'ordre du cycle de
+   * vie, ou l'annulation vient en tete. A l'ecran, cela placait l'abandon
+   * du ticket au-dessus de sa resolution : le geste le plus visible etait
+   * celui qu'on souhaite le moins. L'ordre d'affichage suit donc
+   * l'intention, du plus constructif au plus definitif.
+   */
+  private static readonly RANGS: Record<TicketStatus, number> = {
+    RESOLVED: 0,
+    IN_PROGRESS: 1,
+    ASSIGNED: 2,
+    WAITING_CLIENT: 3,
+    CLOSED: 4,
+    NEW: 5,
+    CANCELLED: 9,
+  };
+
+  protected actionsOrdonnees(transitions: TicketStatus[]): TicketStatus[] {
+    return [...transitions].sort(
+      (a, b) => TicketDetailPage.RANGS[a] - TicketDetailPage.RANGS[b],
+    );
+  }
+
   /** Les actions destructrices sont presentees differemment. */
   protected actionClass(status: TicketStatus): string {
-    if (status === 'CANCELLED') return 'btn--danger';
+    if (status === 'CANCELLED') return 'btn--danger-discret';
     if (status === 'RESOLVED' || status === 'CLOSED') return 'btn--success';
     return 'btn--secondary';
   }

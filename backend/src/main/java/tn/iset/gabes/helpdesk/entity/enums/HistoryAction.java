@@ -6,16 +6,16 @@ package tn.iset.gabes.helpdesk.entity.enums;
  */
 public enum HistoryAction {
 
-    CREATED("Creation du ticket"),
+    CREATED("Création du ticket"),
     STATUS_CHANGED("Changement de statut"),
     ASSIGNED("Affectation"),
-    UNASSIGNED("Desaffectation"),
-    PRIORITY_CHANGED("Changement de priorite"),
-    COMMENT_ADDED("Ajout d'un commentaire"),
-    RESOLVED("Resolution"),
-    CLOSED("Cloture"),
-    REOPENED("Reouverture"),
-    SLA_BREACHED("Depassement du delai SLA");
+    UNASSIGNED("Désaffectation"),
+    PRIORITY_CHANGED("Changement de priorité"),
+    COMMENT_ADDED("Ajout d’un commentaire"),
+    RESOLVED("Résolution"),
+    CLOSED("Clôturé"),
+    REOPENED("Réouverture"),
+    SLA_BREACHED("Dépassement du délai contractuel");
 
     private final String label;
 

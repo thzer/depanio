@@ -10,10 +10,10 @@ import jakarta.validation.constraints.Size;
  */
 public record UpdateUserRequest(
 
-        @Size(max = 120, message = "Le nom ne peut pas depasser 120 caracteres.")
+        @Size(max = 120, message = "Le nom ne peut pas dépasser 120 caractères.")
         String fullName,
 
-        @Email(message = "Le format de l'adresse electronique est invalide.")
+        @Email(message = "Le format de l’adresse électronique est invalide.")
         String email,
 
         String phone,

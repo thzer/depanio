@@ -43,7 +43,7 @@ import { NotificationService } from '../../core/services/notification.service';
           @if (p.content.length === 0) {
             <div class="empty">
               <div class="empty__title">Aucune notification</div>
-              <p>Les alertes sur vos tickets apparaitront ici.</p>
+              <p>Les alertes sur vos tickets apparaîtront ici.</p>
             </div>
           } @else {
             <ul class="list">

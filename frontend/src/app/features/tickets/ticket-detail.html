@@ -19,7 +19,7 @@
           <app-priority-badge [priority]="t.priority" [label]="t.priorityLabel" />
           <span class="badge status-closed">{{ t.categoryLabel }}</span>
           @if (t.slaBreached) {
-            <span class="badge priority-critical">Delai depasse</span>
+            <span class="badge priority-critical">Délai dépassé</span>
           }
         </div>
       </div>
@@ -30,7 +30,7 @@
       <!-- ========================== Colonne principale ======================= -->
       <div class="stack">
         <div class="card">
-          <div class="card__header"><span class="card__title">Probleme declare</span></div>
+          <div class="card__header"><span class="card__title">Problème déclaré</span></div>
           <div class="card__body">
             <p class="description">{{ t.description }}</p>
           </div>
@@ -39,10 +39,10 @@
         @if (t.resolutionNote) {
           <div class="card card--resolution">
             <div class="card__header">
-              <span class="card__title">Solution appliquee</span>
+              <span class="card__title">Solution appliquée</span>
               @if (t.resolutionTimeHours !== undefined && t.resolutionTimeHours !== null) {
                 <span class="text-sm text-muted">
-                  Resolu en {{ t.resolutionTimeHours }} h
+                  Résolu en {{ t.resolutionTimeHours }} h
                 </span>
               }
             </div>
@@ -50,7 +50,7 @@
               <p class="description">{{ t.resolutionNote }}</p>
               @if (t.satisfactionRating) {
                 <p class="text-sm text-muted mt-3">
-                  Satisfaction du client : {{ t.satisfactionRating }}/5
+                  Satisfaction du client : {{ t.satisfactionRating }}/5
                 </p>
               }
             </div>
@@ -60,13 +60,13 @@
         <!-- ============================== Echanges ============================ -->
         <div class="card">
           <div class="card__header">
-            <span class="card__title">Echanges</span>
-            <span class="text-sm text-muted">{{ t.comments.length }} message(s)</span>
+            <span class="card__title">Échanges</span>
+            <span class="text-sm text-muted">{{ t.comments.length }} {{ t.comments.length > 1 ? 'messages' : 'message' }}</span>
           </div>
 
           <div class="card__body stack">
             @if (t.comments.length === 0) {
-              <p class="text-muted text-sm">Aucun echange pour le moment.</p>
+              <p class="text-muted text-sm">Aucun échange pour le moment.</p>
             } @else {
               @for (comment of t.comments; track comment.id) {
                 <div class="comment" [class.comment--internal]="comment.internalNote">
@@ -90,7 +90,7 @@
             <div class="comment-form">
               <textarea
                 rows="3"
-                placeholder="Ecrire un message..."
+                placeholder="Écrire un message…"
                 [(ngModel)]="newComment"
                 name="newComment"
               ></textarea>
@@ -120,7 +120,7 @@
           <div class="card__header">
             <span class="card__title">Historique</span>
             <span class="text-sm text-muted">
-              Piste d audit : {{ t.history.length }} evenement(s)
+              Piste d’audit : {{ t.history.length }} {{ t.history.length > 1 ? 'événements' : 'événement' }}
             </span>
           </div>
           <div class="card__body">
@@ -166,18 +166,18 @@
                 @if (status === 'RESOLVED') {
                   <div class="field mb-3">
                     <label class="field__label" for="resolution">
-                      Solution appliquee
+                      Solution appliquée
                     </label>
                     <textarea
                       id="resolution"
                       rows="4"
-                      placeholder="Decrivez l intervention realisee..."
+                      placeholder="Décrivez l’intervention réalisée..."
                       [(ngModel)]="resolutionNote"
                       name="resolutionNote"
                     ></textarea>
                     <span class="field__hint">
-                      Obligatoire : cette note constitue la trace technique de
-                      l intervention.
+                      Obligatoire : cette note constitue la trace technique de
+                      l’intervention.
                     </span>
                   </div>
                 }
@@ -203,7 +203,7 @@
                 @if (status === 'CANCELLED') {
                   <div class="field mb-3">
                     <label class="field__label" for="cancelReason">
-                      Motif de l annulation
+                      Motif de l’annulation
                     </label>
                     <textarea
                       id="cancelReason"
@@ -234,10 +234,10 @@
               </div>
             } @else if (t.allowedTransitions.length === 0) {
               <p class="text-muted text-sm">
-                Ce ticket est clos : aucune action n est plus possible.
+                Ce ticket est clos : aucune action n’est plus possible.
               </p>
             } @else {
-              @for (status of t.allowedTransitions; track status) {
+              @for (status of actionsOrdonnees(t.allowedTransitions); track status) {
                 <button
                   type="button"
                   class="btn {{ actionClass(status) }}"
@@ -262,7 +262,7 @@
                   name="technician"
                   [(ngModel)]="selectedTechnicianId"
                 >
-                  <option [ngValue]="null">Non affecte</option>
+                  <option [ngValue]="null">Non affecté</option>
                   @for (technician of technicians(); track technician.id) {
                     <option [ngValue]="technician.id">
                       {{ technician.fullName }}
@@ -273,10 +273,10 @@
                   }
                 </select>
               </div>
-              <div class="row">
+              <div class="stack">
                 <button
                   type="button"
-                  class="btn btn--primary btn--sm"
+                  class="btn btn--primary btn--bloc"
                   [disabled]="busy() || !selectedTechnicianId"
                   (click)="assign()"
                 >
@@ -285,7 +285,7 @@
                 @if (auth.isTechnician() && !t.assignedToId) {
                   <button
                     type="button"
-                    class="btn btn--secondary btn--sm"
+                    class="btn btn--secondary btn--bloc"
                     [disabled]="busy()"
                     (click)="takeOwnership()"
                   >
@@ -302,10 +302,10 @@
           <div class="card__header"><span class="card__title">Informations</span></div>
           <div class="card__body">
             <dl class="info">
-              <dt>Reference</dt>
+              <dt>Référence</dt>
               <dd class="mono">{{ t.reference }}</dd>
 
-              <dt>Etablissement</dt>
+              <dt>Établissement</dt>
               <dd>
                 {{ t.establishmentName }}
                 @if (t.establishmentCity) {
@@ -317,7 +317,7 @@
               </dd>
 
               @if (t.equipmentName) {
-                <dt>Materiel</dt>
+                <dt>Matériel</dt>
                 <dd>
                   {{ t.equipmentName }}
                   @if (t.equipmentLocation) {
@@ -326,34 +326,34 @@
                 </dd>
               }
 
-              <dt>Declare par</dt>
+              <dt>Déclaré par</dt>
               <dd>{{ t.createdByName }}</dd>
 
               <dt>Technicien</dt>
-              <dd>{{ t.assignedToName ?? 'Non affecte' }}</dd>
+              <dd>{{ t.assignedToName ?? 'Non affecté' }}</dd>
 
-              <dt>Declare le</dt>
-              <dd>{{ t.createdAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+              <dt>Déclaré le</dt>
+              <dd>{{ t.createdAt | date: "dd/MM/yyyy 'à' HH:mm" }}</dd>
 
               @if (t.assignedAt) {
-                <dt>Affecte le</dt>
-                <dd>{{ t.assignedAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+                <dt>Affecté le</dt>
+                <dd>{{ t.assignedAt | date: "dd/MM/yyyy 'à' HH:mm" }}</dd>
               }
 
               @if (t.resolvedAt) {
-                <dt>Resolu le</dt>
-                <dd>{{ t.resolvedAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+                <dt>Résolu le</dt>
+                <dd>{{ t.resolvedAt | date: "dd/MM/yyyy 'à' HH:mm" }}</dd>
               }
 
               @if (t.closedAt) {
-                <dt>Cloture le</dt>
-                <dd>{{ t.closedAt | date: "dd/MM/yyyy 'a' HH:mm" }}</dd>
+                <dt>Clôturé le</dt>
+                <dd>{{ t.closedAt | date: "dd/MM/yyyy 'à' HH:mm" }}</dd>
               }
 
-              <dt>Echeance</dt>
+              <dt>Échéance</dt>
               <dd>
                 @if (t.slaDueAt) {
-                  {{ t.slaDueAt | date: "dd/MM/yyyy 'a' HH:mm" }}
+                  {{ t.slaDueAt | date: "dd/MM/yyyy 'à' HH:mm" }}
                   <div class="text-xs">
                     <app-sla-indicator
                       [hours]="t.hoursRemaining"

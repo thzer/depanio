@@ -168,7 +168,7 @@ export class EquipmentListPage implements OnDestroy {
         this.toast.success(
           existing
             ? `${saved.name} a ete mis a jour.`
-            : `${saved.name} a ete enregistre. Son etiquette QR est prete.`,
+            : `${saved.name} a été enregistré. Son étiquette QR est prête.`,
         );
         this.load();
       },
@@ -184,7 +184,7 @@ export class EquipmentListPage implements OnDestroy {
 
     this.equipmentService.qrCodeBlob(equipment.id, 420).subscribe({
       next: (blob) => this.qrImageUrl.set(URL.createObjectURL(blob)),
-      error: () => this.toast.error('Impossible de generer l etiquette.'),
+      error: () => this.toast.error('Impossible de générer l’étiquette.'),
     });
   }
 
@@ -211,7 +211,7 @@ export class EquipmentListPage implements OnDestroy {
 
   /**
    * Libere l adresse temporaire de l image.
-   * Sans cela, chaque etiquette consultee resterait en memoire jusqu au
+   * Sans cela, chaque etiquette consultee resterait en mémoire jusqu au
    * rechargement de la page.
    */
   private releaseQrImage(): void {

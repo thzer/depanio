@@ -76,13 +76,13 @@ public class AuthService {
             // le compter comme telle bloquerait un utilisateur legitime
             // qui ignore simplement que son acces a ete suspendu.
             throw new BusinessException(
-                    "Ce compte est desactive. Contactez votre administrateur.");
+                    "Ce compte est désactivé. Contactez votre administrateur.");
 
         } catch (BadCredentialsException ex) {
             loginAttemptService.echec(email);
             loginAttemptService.echec(origine);
             log.warn("Echec de connexion pour une adresse");
-            throw new BusinessException("Adresse electronique ou mot de passe incorrect.");
+            throw new BusinessException("Adresse électronique ou mot de passe incorrect.");
         }
     }
 
@@ -109,19 +109,19 @@ public class AuthService {
 
         if (!jwtService.isTokenValid(refreshToken)) {
             throw new BusinessException(
-                    "Le jeton de renouvellement est invalide ou expire. Reconnectez-vous.");
+                    "Le jeton de renouvellement est invalide ou expiré. Reconnectez-vous.");
         }
         if (!jwtService.isRefreshToken(refreshToken)) {
-            throw new BusinessException("Le jeton fourni n'est pas un jeton de renouvellement.");
+            throw new BusinessException("Le jeton fourni n’est pas un jeton de renouvellement.");
         }
 
         String email = jwtService.extractEmail(refreshToken);
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Aucun compte ne correspond a ce jeton."));
+                        "Aucun compte ne correspond à ce jeton."));
 
         if (!user.isActive()) {
-            throw new BusinessException("Ce compte est desactive.");
+            throw new BusinessException("Ce compte est désactivé.");
         }
 
         return buildAuthResponse(new UserPrincipal(user));
@@ -151,7 +151,7 @@ public class AuthService {
         }
         if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
             throw new BusinessException(
-                    "Le nouveau mot de passe doit etre different de l'actuel.");
+                    "Le nouveau mot de passe doit être différent de l’actuel.");
         }
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
