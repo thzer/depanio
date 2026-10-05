@@ -88,7 +88,7 @@ export class TicketDetailPage {
       next: (updated) => {
         this.ticket.set(updated);
         this.busy.set(false);
-        this.toast.success(`Ticket affecte a ${updated.assignedToName}.`);
+        this.toast.success(`Ticket affecté à ${updated.assignedToName}.`);
       },
       error: () => this.busy.set(false),
     });

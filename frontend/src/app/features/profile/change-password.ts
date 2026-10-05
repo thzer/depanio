@@ -86,7 +86,7 @@ export class ChangePasswordPage {
         error: (error) => {
           this.submitting.set(false);
           this.errorMessage.set(
-            error?.error?.message ?? 'La modification a echoue. Reessayez.',
+            error?.error?.message ?? 'La modification a échoué. Réessayez.',
           );
         },
       });

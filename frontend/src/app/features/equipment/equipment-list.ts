@@ -167,7 +167,7 @@ export class EquipmentListPage implements OnDestroy {
         this.formOpen.set(false);
         this.toast.success(
           existing
-            ? `${saved.name} a ete mis a jour.`
+            ? `${saved.name} a été mis à jour.`
             : `${saved.name} a été enregistré. Son étiquette QR est prête.`,
         );
         this.load();

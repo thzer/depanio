@@ -44,7 +44,7 @@ import { Icon } from '../../shared/icon';
               <div class="empty__title">Aucune demande pour le moment</div>
               <p>
                 Les demandes laissées sur la page d’accueil apparaîtront ici, et
-                vous recevrez une notification a chaque nouvelle.
+                vous recevrez une notification à chaque nouvelle.
               </p>
             </div>
           } @else {

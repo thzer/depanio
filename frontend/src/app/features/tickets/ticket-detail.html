@@ -50,7 +50,7 @@
               <p class="description">{{ t.resolutionNote }}</p>
               @if (t.satisfactionRating) {
                 <p class="text-sm text-muted mt-3">
-                  Satisfaction du client : {{ t.satisfactionRating }}/5
+                  Satisfaction du client : {{ t.satisfactionRating }}/5
                 </p>
               }
             </div>
@@ -120,7 +120,7 @@
           <div class="card__header">
             <span class="card__title">Historique</span>
             <span class="text-sm text-muted">
-              Piste d’audit : {{ t.history.length }} {{ t.history.length > 1 ? 'événements' : 'événement' }}
+              Piste d’audit : {{ t.history.length }} {{ t.history.length > 1 ? 'événements' : 'événement' }}
             </span>
           </div>
           <div class="card__body">
@@ -176,7 +176,7 @@
                       name="resolutionNote"
                     ></textarea>
                     <span class="field__hint">
-                      Obligatoire : cette note constitue la trace technique de
+                      Obligatoire : cette note constitue la trace technique de
                       l’intervention.
                     </span>
                   </div>
@@ -234,7 +234,7 @@
               </div>
             } @else if (t.allowedTransitions.length === 0) {
               <p class="text-muted text-sm">
-                Ce ticket est clos : aucune action n’est plus possible.
+                Ce ticket est clos : aucune action n’est plus possible.
               </p>
             } @else {
               @for (status of actionsOrdonnees(t.allowedTransitions); track status) {

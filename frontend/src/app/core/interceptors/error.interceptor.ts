@@ -25,7 +25,7 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
         toast.error('Serveur injoignable. Vérifiez que l’API est démarrée.');
       } else if (error.status === 401 && !isLogin) {
         // Jeton expire ou revoque : la session est fermee
-        toast.error('Votre session a expire. Veuillez vous reconnecter.');
+        toast.error('Votre session a expiré. Veuillez vous reconnecter.');
         auth.logout();
       } else if (error.status === 403) {
         toast.error('Vous n’avez pas les droits nécessaires pour cette action.');

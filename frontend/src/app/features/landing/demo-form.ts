@@ -34,7 +34,7 @@ import { Modal } from '../../shared/modal';
           <span class="done__icon"><app-icon name="check" [size]="26" /></span>
           <p class="done__title">Merci, votre demande est bien enregistrée.</p>
           <p class="text-muted">
-            Nous revenons vers vous sous 24 heures, a l adresse que vous avez
+            Nous revenons vers vous sous 24 heures, à l’adresse que vous avez
             indiquée.
           </p>
           <button type="button" class="btn btn--primary mt-5" (click)="closed.emit()">
@@ -100,9 +100,9 @@ import { Modal } from '../../shared/modal';
               </label>
               <select id="d-count" formControlName="establishmentCount">
                 <option value="">Préférer ne pas répondre</option>
-                <option value="1-5">1 a 5</option>
-                <option value="6-15">6 a 15</option>
-                <option value="16-40">16 a 40</option>
+                <option value="1-5">1 à 5</option>
+                <option value="6-15">6 à 15</option>
+                <option value="16-40">16 à 40</option>
                 <option value="40+">Plus de 40</option>
               </select>
               <span class="field__hint">
@@ -116,7 +116,7 @@ import { Modal } from '../../shared/modal';
                 id="d-message"
                 rows="3"
                 formControlName="message"
-                placeholder="Facultatif : ce que vous cherchez a resoudre."
+                placeholder="Facultatif : ce que vous cherchez à résoudre."
               ></textarea>
             </div>
           </div>

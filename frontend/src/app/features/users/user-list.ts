@@ -184,7 +184,7 @@ export class UserListPage {
           this.saving.set(false);
           this.formOpen.set(false);
           this.toast.success(
-            `Le compte de ${created.fullName} a ete cree. Communiquez-lui son mot de passe.`,
+            `Le compte de ${created.fullName} a été créé. Communiquez-lui son mot de passe.`,
           );
           this.load();
           this.loadWorkload();

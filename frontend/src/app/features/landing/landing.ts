@@ -167,7 +167,7 @@ export class LandingPage {
       name: 'Sur mesure',
       price: 'Nous consulter',
       unit: '',
-      pitch: 'Pour un déploiement a votre nom et a vos règles.',
+      pitch: 'Pour un déploiement à votre nom et à vos règles.',
       features: [
         'Tout le contenu de la formule Professionnelle',
         'Votre logo et vos couleurs',
@@ -191,7 +191,7 @@ export class LandingPage {
         'plateforme.',
     },
     {
-      q: 'Mes clients doivent-ils apprendre a utiliser un logiciel ?',
+      q: 'Mes clients doivent-ils apprendre à utiliser un logiciel ?',
       a:
         'Un gérant de café n’a que trois gestes à connaître : scanner, décrire, ' +
         'confirmer. L’interface a été conçue pour quelqu’un qui a trente ' +
